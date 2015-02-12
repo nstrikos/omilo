@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>translations/omilo_el_GR.qm</file>
+        <file>translations/omilo_de.qm</file>
+    </qresource>
+</RCC>

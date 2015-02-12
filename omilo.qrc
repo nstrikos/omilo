@@ -1,0 +1,37 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/omilo.png</file>
+        <file>images/omilo-splash.png</file>
+        <file>images/about.png</file>
+        <file>images/cancel.png</file>
+        <file>images/clear.png</file>
+        <file>images/copy.png</file>
+        <file>images/cut.png</file>
+        <file>images/exit.png</file>
+        <file>images/export.png</file>
+        <file>images/install-voices.png</file>
+        <file>images/new.png</file>
+        <file>images/next.png</file>
+        <file>images/open.png</file>
+        <file>images/paste.png</file>
+        <file>images/play.png</file>
+        <file>images/previous.png</file>
+        <file>images/rate-down.png</file>
+        <file>images/rate-up.png</file>
+        <file>images/redo.png</file>
+        <file>images/save.png</file>
+        <file>images/save-as.png</file>
+        <file>images/select-all.png</file>
+        <file>images/speak.png</file>
+        <file>images/stop.png</file>
+        <file>images/toggle-splash.png</file>
+        <file>images/undo.png</file>
+        <file>images/voice-options.png</file>
+        <file>images/volume-down.png</file>
+        <file>images/volume-mute.png</file>
+        <file>images/volume-up.png</file>
+        <file>images/volume-active.png</file>
+        <file>images/toggle-toolbars.png</file>
+        <file>images/format-indent-more.png</file>
+    </qresource>
+</RCC>
