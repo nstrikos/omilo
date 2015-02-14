@@ -93,9 +93,9 @@ void MainWindow::initFunctions()
     createActions();
     createMenus();
     readSettings();
+    initVariables();
     setupSplashScreen();
     setupMaryStartupTimer();
-    initVariables();
     createToolBars();
     setupPlayer();
     setupLayout();
