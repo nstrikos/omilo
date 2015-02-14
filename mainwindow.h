@@ -93,6 +93,7 @@ private:
     void createToolBars();
     void readSettings();
     void setupSplashScreen();
+    void setupMaryStartupTimer();
     void setupPlayer();
     void setupLayout();
     void initVariables();
@@ -184,7 +185,7 @@ private:
     PlayerControls *controls;
     bool splashScreenIsDisabled;
     FliteSettingsDialog *fliteSettingsDialog;
-    QTimer *splashScreenTimer;
+    QTimer *maryStartupTimer;
     QTimer *checkInstalledVoiceTimer;
     SpeechEngineInfo *engineInfo;
     QString voice;
@@ -193,6 +194,7 @@ private:
     QProcess soxProcess;
     QFontComboBox *fontComboBox;
     QSpinBox *spinBox;
+    void showWindowWithoutCloseButton();
 };
 
 #endif // MAINWINDOW_H

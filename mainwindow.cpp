@@ -18,32 +18,33 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     initFunctions();
     connectSignalsToSlots();
-    setWindowFlags(Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
+    if (splashScreenIsDisabled)
+        showWindowWithoutCloseButton();
 }
 
 MainWindow::~MainWindow()
 {
     //hotKeyThread.stop();
     //hotKeyThread.wait();
-//    hotKeyThread.terminate();
-//    writeSettings();
-//    if (editorVoiceOptionsDialog != NULL)
-//        delete editorVoiceOptionsDialog;
-//    if (fliteSettingsDialog != NULL)
-//        delete fliteSettingsDialog;
-//    if (installVoicesAction != NULL)
-//        delete installVoicesDialog;
-//    if (startUpThread != NULL)
-//        delete startUpThread;
+//        hotKeyThread.terminate();
+//        writeSettings();
+//        if (editorVoiceOptionsDialog != NULL)
+//            delete editorVoiceOptionsDialog;
+//        if (fliteSettingsDialog != NULL)
+//            delete fliteSettingsDialog;
+//        if (installVoicesAction != NULL)
+//            delete installVoicesDialog;
+//        if (startUpThread != NULL)
+//            delete startUpThread;
 
-//    delete splashScreenTimer;
-//    delete checkInstalledVoiceTimer;
-//    delete engineInfo;
-//    delete player;
-//    delete playlist;
-//    delete engine;
-//    removeTempFiles();
-//    delete controls;
+//        delete splashScreenTimer;
+//        delete checkInstalledVoiceTimer;
+//        delete engineInfo;
+//        delete player;
+//        delete playlist;
+//        delete engine;
+//        removeTempFiles();
+//        delete controls;
     delete ui;
 }
 
@@ -63,7 +64,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if (startUpThread != NULL)
         delete startUpThread;
 
-    delete splashScreenTimer;
+    delete maryStartupTimer;
     delete checkInstalledVoiceTimer;
     delete engineInfo;
     delete player;
@@ -93,6 +94,7 @@ void MainWindow::initFunctions()
     createMenus();
     readSettings();
     setupSplashScreen();
+    setupMaryStartupTimer();
     initVariables();
     createToolBars();
     setupPlayer();
@@ -104,6 +106,8 @@ void MainWindow::initVariables()
     editorVoiceOptionsDialog = NULL;
     installVoicesDialog = NULL;
     fliteSettingsDialog = NULL;
+    splashScreen = NULL;
+    maryStartupTimer = NULL;
     engine = new SpeechEngine(engineVoice);
     startUpThread = new StartupThread(engine);
     engineInfo = new SpeechEngineInfo();
@@ -478,14 +482,10 @@ void MainWindow::createToolBars()
 
 void MainWindow::setupSplashScreen()
 {
-    splashScreenTimer = new QTimer();
-    connect(splashScreenTimer, SIGNAL(timeout()), this, SLOT(splashTimerExpired()));
-    splashScreenTimer->start(20000);
-    splashScreen = NULL;
-    splashScreen = new QSplashScreen();
-    splashScreen->setPixmap(QPixmap(":images/omilo-splash.png"));
     if (!splashScreenIsDisabled)
     {
+        splashScreen = new QSplashScreen();
+        splashScreen->setPixmap(QPixmap(":images/omilo-splash.png"));
         splashScreen->show();
         Qt::Alignment topRight = Qt::AlignRight | Qt::AlignTop;
         splashScreen->showMessage(tr("Loading Mary voices..."), topRight, Qt::black);
@@ -493,9 +493,15 @@ void MainWindow::setupSplashScreen()
     }
     else
     {
-        this->show();
         toggleSplashAction->setText(tr("Enable splash screen"));
     }
+}
+
+void MainWindow::setupMaryStartupTimer()
+{
+    maryStartupTimer = new QTimer();
+    connect(maryStartupTimer, SIGNAL(timeout()), this, SLOT(splashTimerExpired()));
+    maryStartupTimer->start(20000);
 }
 
 void MainWindow::documentModified()
@@ -926,8 +932,12 @@ void MainWindow::updateMaryStatus()
         delete splashScreen;
         splashScreen = NULL;
     }
-    this->show();
-    splashScreenTimer->stop();
+
+    if (maryStartupTimer != NULL)
+        maryStartupTimer->stop();
+
+    if (QMainWindow::isHidden())
+        showWindowWithoutCloseButton();
 }
 
 void MainWindow::removeTempFiles()
@@ -1070,11 +1080,16 @@ void MainWindow::splashTimerExpired()
         delete splashScreen;
         splashScreen = NULL;
     }
-    this->show();
-    splashScreenTimer->stop();
+    if (maryStartupTimer != NULL)
+        maryStartupTimer->stop();
+
+    if (QMainWindow::isHidden())
+        showWindowWithoutCloseButton();
+
     QMessageBox::warning(this, tr("Warning"),
                          tr("Loading takes too long\n"
                             "Mary voices may not be available\n"));
+
 }
 
 void MainWindow::setDefaultVoice()
@@ -1180,4 +1195,10 @@ void MainWindow::spinBoxValueChanged(int arg1)
 
     //Without this we cannot insert character with the new size
     ui->textEdit->setFontPointSize(this->spinBox->value());
+}
+
+void MainWindow::showWindowWithoutCloseButton()
+{
+    setWindowFlags(Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
+    this->show();
 }
