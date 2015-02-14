@@ -22,7 +22,7 @@
     <item row="0" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
       <item>
-       <widget class="QPlainTextEdit" name="plainTextEdit">
+       <widget class="QTextEdit" name="textEdit">
         <property name="contextMenuPolicy">
          <enum>Qt::ActionsContextMenu</enum>
         </property>

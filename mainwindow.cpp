@@ -69,6 +69,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     delete player;
     delete playlist;
     delete engine;
+    delete fontComboBox;
+    delete spinBox;
     removeTempFiles();
     event->accept();
 }
@@ -89,10 +91,10 @@ void MainWindow::initFunctions()
     setCurrentFile("");
     createActions();
     createMenus();
-    createToolBars();
     readSettings();
     setupSplashScreen();
     initVariables();
+    createToolBars();
     setupPlayer();
     setupLayout();
 }
@@ -110,6 +112,11 @@ void MainWindow::initVariables()
     checkInstalledVoiceTimer->start(5000);
     hotKeyThread.start();
     clipboard = QApplication::clipboard();
+    fontComboBox = new QFontComboBox;
+    spinBox = new QSpinBox;
+    spinBox->setMinimum(8);
+    spinBox->setMaximum(72);
+    spinBox->setValue(qApp->font().pointSize());
 }
 
 void MainWindow::setupPlayer()
@@ -177,13 +184,15 @@ void MainWindow::setupLayout()
 
 void MainWindow::connectSignalsToSlots()
 {
-    connect(ui->plainTextEdit->document(), SIGNAL(contentsChanged()), this, SLOT(documentWasModified()));
+    connect(ui->textEdit->document(), SIGNAL(contentsChanged()), this, SLOT(documentWasModified()));
     connect(ui->speakButton, SIGNAL(clicked()), this, SLOT(speakButtonPressed()));
     connect(engine, SIGNAL(fileCreated(QString)), this, SLOT(addToPlaylist(QString)));
     connect(startUpThread, SIGNAL(maryServerIsUp()), this, SLOT(updateMaryStatus()));
     connect(&hotKeyThread, SIGNAL(playPressed()), this, SLOT(hotKeyPlayPressed()));
     connect(&hotKeyThread, SIGNAL(stopPressed()), this, SLOT(hotKeyStopPressed()));
     connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(hotKeyShowWindowPressed()));
+    connect(fontComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(fontChanged(QString)));
+    connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
 }
 
 //GUI Functionality
@@ -240,38 +249,38 @@ void MainWindow::createActions()
     undoAction = new QAction(tr("&Undo"), this);
     undoAction->setIcon(QIcon(":/images/undo.png"));
     undoAction->setShortcut(QKeySequence::Undo);
-    connect (undoAction, SIGNAL(triggered()), ui->plainTextEdit, SLOT(undo()));
+    connect (undoAction, SIGNAL(triggered()), ui->textEdit, SLOT(undo()));
 
     redoAction = new QAction(tr("&Redo"), this);
     redoAction->setIcon(QIcon(":/images/redo.png"));
     redoAction->setShortcut(QKeySequence::Redo);
-    connect (redoAction, SIGNAL(triggered()), ui->plainTextEdit, SLOT(redo()));
+    connect (redoAction, SIGNAL(triggered()), ui->textEdit, SLOT(redo()));
 
     cutAction = new QAction(tr("Cu&t"), this);
     QIcon cutIcon = QIcon::fromTheme("editcut", QIcon(":/images/edit-cut.png"));
     cutAction->setIcon(cutIcon);
     cutAction->setShortcut(QKeySequence::Cut);
-    connect (cutAction, SIGNAL(triggered()), ui->plainTextEdit, SLOT(cut()));
+    connect (cutAction, SIGNAL(triggered()), ui->textEdit, SLOT(cut()));
 
     copyAction = new QAction(tr("&Copy"), this);
     copyAction->setIcon(QIcon(":/images/copy.png"));
     copyAction->setShortcut(QKeySequence::Copy);
-    connect (copyAction, SIGNAL(triggered()), ui->plainTextEdit, SLOT(copy()));
+    connect (copyAction, SIGNAL(triggered()), ui->textEdit, SLOT(copy()));
 
     pasteAction = new QAction(tr("&Paste"), this);
     pasteAction->setIcon(QIcon(":/images/paste.png"));
     pasteAction->setShortcut(QKeySequence::Paste);
-    connect (pasteAction, SIGNAL(triggered()), ui->plainTextEdit, SLOT(paste()));
+    connect (pasteAction, SIGNAL(triggered()), ui->textEdit, SLOT(paste()));
 
     clearAction = new QAction(tr("C&lear"), this);
     clearAction->setIcon(QIcon(":/images/clear.png"));
     clearAction->setShortcut(tr("Alt+C"));
-    connect (clearAction, SIGNAL(triggered()), ui->plainTextEdit, SLOT(clear()));
+    connect (clearAction, SIGNAL(triggered()), ui->textEdit, SLOT(clear()));
 
     selectAllAction = new QAction(tr("Select &All"), this);
     selectAllAction->setIcon(QIcon(":/images/select-all.png"));
     selectAllAction->setShortcut(QKeySequence::SelectAll);
-    connect(selectAllAction, SIGNAL(triggered()), ui->plainTextEdit, SLOT(selectAll()));
+    connect(selectAllAction, SIGNAL(triggered()), ui->textEdit, SLOT(selectAll()));
 
     speakAction = new QAction(tr("&Speak"), this);
     QIcon speakIcon = QIcon(":/images/speak.png");
@@ -349,16 +358,16 @@ void MainWindow::createActions()
 
     cutAction->setEnabled(false);
     copyAction->setEnabled(false);
-    connect(ui->plainTextEdit, SIGNAL(copyAvailable(bool)), cutAction, SLOT(setEnabled(bool)));
-    connect(ui->plainTextEdit, SIGNAL(copyAvailable(bool)), copyAction, SLOT(setEnabled(bool)));
-    connect(ui->plainTextEdit, SIGNAL(copyAvailable(bool)), speakSelectedTextAction, SLOT(setEnabled(bool)));
+    connect(ui->textEdit, SIGNAL(copyAvailable(bool)), cutAction, SLOT(setEnabled(bool)));
+    connect(ui->textEdit, SIGNAL(copyAvailable(bool)), copyAction, SLOT(setEnabled(bool)));
+    connect(ui->textEdit, SIGNAL(copyAvailable(bool)), speakSelectedTextAction, SLOT(setEnabled(bool)));
 
 
     undoAction->setEnabled(false);
     redoAction->setEnabled(false);
-    connect(ui->plainTextEdit, SIGNAL(undoAvailable(bool)), undoAction, SLOT(setEnabled(bool)));
-    connect(ui->plainTextEdit, SIGNAL(redoAvailable(bool)), redoAction, SLOT(setEnabled(bool)));
-    connect(ui->plainTextEdit, SIGNAL(textChanged()), this, SLOT(documentModified()));
+    connect(ui->textEdit, SIGNAL(undoAvailable(bool)), undoAction, SLOT(setEnabled(bool)));
+    connect(ui->textEdit, SIGNAL(redoAvailable(bool)), redoAction, SLOT(setEnabled(bool)));
+    connect(ui->textEdit, SIGNAL(textChanged()), this, SLOT(documentModified()));
 
     clearAction->setEnabled(false);
     selectAllAction->setEnabled(false);
@@ -460,6 +469,8 @@ void MainWindow::createToolBars()
 
     viewToolBar = addToolBar((tr("&View")));
     viewToolBar->addAction(toggleSplashAction);
+    viewToolBar->addWidget(fontComboBox);
+    viewToolBar->addWidget(spinBox);
 
     helpToolBar = addToolBar(tr("&Help"));
     helpToolBar->addAction(aboutAction);
@@ -489,7 +500,7 @@ void MainWindow::setupSplashScreen()
 
 void MainWindow::documentModified()
 {
-    if (ui->plainTextEdit->document()->isEmpty())
+    if (ui->textEdit->document()->isEmpty())
     {
         ui->speakButton->setEnabled(false);
         speakAction->setEnabled(false);
@@ -511,7 +522,7 @@ void MainWindow::newFile()
 {
     if (maybeSave())
     {
-        ui->plainTextEdit->clear();
+        ui->textEdit->clear();
         setCurrentFile("");
     }
 }
@@ -528,7 +539,7 @@ void MainWindow::openFile()
 
 bool MainWindow::maybeSave()
 {
-    if (ui->plainTextEdit->document()->isModified())
+    if (ui->textEdit->document()->isModified())
     {
         QMessageBox::StandardButton ret;
         ret = QMessageBox::warning(this, tr("Omilo"),
@@ -568,7 +579,7 @@ bool MainWindow::saveFile(const QString &filename)
 #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-    out << ui->plainTextEdit->toPlainText();
+    out << ui->textEdit->toPlainText();
 #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
 #endif
@@ -645,7 +656,7 @@ void MainWindow::openRecentFile()
 
 void MainWindow::documentWasModified()
 {
-    setWindowModified(ui->plainTextEdit->document()->isModified());
+    setWindowModified(ui->textEdit->document()->isModified());
 }
 
 void MainWindow::loadFile(const QString &filename)
@@ -665,7 +676,7 @@ void MainWindow::loadFile(const QString &filename)
 #ifndef QT_NO_CURSOR
     QApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-    ui->plainTextEdit->setPlainText(in.readAll());
+    ui->textEdit->setPlainText(in.readAll());
 #ifndef QT_NO_CURSOR
     QApplication::restoreOverrideCursor();
 #endif
@@ -704,7 +715,7 @@ void MainWindow::exportToWav()
     if (!filename.isEmpty())
     {
         filename += ".wav";
-        QString text = ui->plainTextEdit->document()->toPlainText();
+        QString text = ui->textEdit->document()->toPlainText();
         engine->exportWav(filename, text);
         engineStatusLabel->setText(tr("Speech engine is processing..."));
         ui->speakButton->setEnabled(false);
@@ -718,7 +729,7 @@ void MainWindow::exportToWav()
 
 void MainWindow::speakButtonPressed()
 {
-    QString text = ui->plainTextEdit->document()->toPlainText();
+    QString text = ui->textEdit->document()->toPlainText();
     engineStatusLabel->setText(tr("Speech engine is processing..."));
     ui->speakButton->setEnabled(false);
     speakAction->setEnabled(false);
@@ -1130,7 +1141,7 @@ void MainWindow::speakSelectedText()
     ui->cancelButton->setEnabled(true);
     cancelAction->setEnabled(true);
     player->stop();
-    QTextCursor cursor(ui->plainTextEdit->textCursor());
+    QTextCursor cursor(ui->textEdit->textCursor());
     const QString text = cursor.selectedText();
     player->stop();
     engine->speak(text);
@@ -1151,4 +1162,22 @@ void MainWindow::hotKeyShowWindowPressed()
         QMainWindow::raise();
         QMainWindow::activateWindow();
     }
+}
+
+void MainWindow::fontChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1);
+    ui->textEdit->setFont(this->fontComboBox->currentFont());
+}
+
+void MainWindow::spinBoxValueChanged(int arg1)
+{
+    Q_UNUSED(arg1);
+    QTextCursor cursor = ui->textEdit->textCursor();
+    ui->textEdit->selectAll();
+    ui->textEdit->setFontPointSize(this->spinBox->value());
+    ui->textEdit->setTextCursor(cursor);
+
+    //Without this we cannot insert character with the new size
+    ui->textEdit->setFontPointSize(this->spinBox->value());
 }

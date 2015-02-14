@@ -8,6 +8,8 @@
 #include <QListView>
 #include <QSplashScreen>
 #include <QClipboard>
+#include <QFontComboBox>
+#include <QSpinBox>
 #include "speechengine.h"
 #include "editorvoiceoptionsdialog.h"
 #include "installvoicesdialog.h"
@@ -78,6 +80,8 @@ private slots:
     void hotKeyStopPressed();
     void speakSelectedText();
     void hotKeyShowWindowPressed();
+    void fontChanged(const QString &arg1);
+    void spinBoxValueChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;
@@ -187,6 +191,8 @@ private:
     HotKeyThread hotKeyThread;
     QClipboard *clipboard;
     QProcess soxProcess;
+    QFontComboBox *fontComboBox;
+    QSpinBox *spinBox;
 };
 
 #endif // MAINWINDOW_H
