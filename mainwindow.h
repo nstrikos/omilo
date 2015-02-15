@@ -10,6 +10,7 @@
 #include <QClipboard>
 #include <QFontComboBox>
 #include <QSpinBox>
+#include <QCheckBox>
 #include "speechengine.h"
 #include "editorvoiceoptionsdialog.h"
 #include "installvoicesdialog.h"
@@ -82,6 +83,7 @@ private slots:
     void hotKeyShowWindowPressed();
     void fontChanged(const QString &arg1);
     void spinBoxValueChanged(int arg1);
+    void boldCheckBoxClicked();
 
 private:
     Ui::MainWindow *ui;
@@ -194,7 +196,9 @@ private:
     QProcess soxProcess;
     QFontComboBox *fontComboBox;
     QSpinBox *spinBox;
+    QCheckBox *boldCheckBox;
     void showWindowWithoutCloseButton();
+    void updateFont();
 };
 
 #endif // MAINWINDOW_H

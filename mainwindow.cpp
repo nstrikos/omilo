@@ -121,6 +121,8 @@ void MainWindow::initVariables()
     spinBox->setMinimum(8);
     spinBox->setMaximum(72);
     spinBox->setValue(qApp->font().pointSize());
+    boldCheckBox = new QCheckBox;
+    boldCheckBox->setText(tr("Bold"));
 }
 
 void MainWindow::setupPlayer()
@@ -197,6 +199,7 @@ void MainWindow::connectSignalsToSlots()
     connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(hotKeyShowWindowPressed()));
     connect(fontComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(fontChanged(QString)));
     connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
+    connect(boldCheckBox, SIGNAL(clicked()), this, SLOT(boldCheckBoxClicked()));
 }
 
 //GUI Functionality
@@ -475,6 +478,8 @@ void MainWindow::createToolBars()
     viewToolBar->addAction(toggleSplashAction);
     viewToolBar->addWidget(fontComboBox);
     viewToolBar->addWidget(spinBox);
+    viewToolBar->addSeparator();
+    viewToolBar->addWidget(boldCheckBox);
 
     helpToolBar = addToolBar(tr("&Help"));
     helpToolBar->addAction(aboutAction);
@@ -1182,23 +1187,30 @@ void MainWindow::hotKeyShowWindowPressed()
 void MainWindow::fontChanged(const QString &arg1)
 {
     Q_UNUSED(arg1);
-    ui->textEdit->setFont(this->fontComboBox->currentFont());
+    updateFont();
 }
 
 void MainWindow::spinBoxValueChanged(int arg1)
 {
     Q_UNUSED(arg1);
-    QTextCursor cursor = ui->textEdit->textCursor();
-    ui->textEdit->selectAll();
-    ui->textEdit->setFontPointSize(this->spinBox->value());
-    ui->textEdit->setTextCursor(cursor);
-
-    //Without this we cannot insert character with the new size
-    ui->textEdit->setFontPointSize(this->spinBox->value());
+    updateFont();
 }
 
 void MainWindow::showWindowWithoutCloseButton()
 {
     setWindowFlags(Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
     this->show();
+}
+
+void MainWindow::updateFont()
+{
+    QFont font = fontComboBox->currentFont(); //Get the current font
+    font.setPointSize(this->spinBox->value());
+    font.setBold(boldCheckBox->isChecked());
+    ui->textEdit->setFont(font);
+}
+
+void MainWindow::boldCheckBoxClicked()
+{
+    updateFont();
 }
