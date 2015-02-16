@@ -83,7 +83,11 @@ private slots:
     void hotKeyShowWindowPressed();
     void fontChanged(const QString &arg1);
     void spinBoxValueChanged(int arg1);
-    void boldCheckBoxClicked();
+    void invertPalette();
+    void updateFont();
+    void increasePointSize();
+    void decreasePointSize();
+    void showFontList();
 
 private:
     Ui::MainWindow *ui;
@@ -146,6 +150,11 @@ private:
     QAction *showFliteSettingsAction;
     QAction *speakSelectedTextAction;
     QAction *hideWindowAction;
+    QAction *boldAction;
+    QAction *invertColorsAction;
+    QAction *increasePointSizeAction;
+    QAction *decreasePointSizeAction;
+    QAction *showFontListAction;
 
     QMenu *fileMenu;
     QMenu *editMenu;
@@ -196,9 +205,9 @@ private:
     QProcess soxProcess;
     QFontComboBox *fontComboBox;
     QSpinBox *spinBox;
-    QCheckBox *boldCheckBox;
     void showWindowWithoutCloseButton();
-    void updateFont();
+    QPalette defaultPalette;
+    QPalette invertedPalette;
 };
 
 #endif // MAINWINDOW_H

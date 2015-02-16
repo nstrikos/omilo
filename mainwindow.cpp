@@ -121,8 +121,10 @@ void MainWindow::initVariables()
     spinBox->setMinimum(8);
     spinBox->setMaximum(72);
     spinBox->setValue(qApp->font().pointSize());
-    boldCheckBox = new QCheckBox;
-    boldCheckBox->setText(tr("Bold"));
+    defaultPalette = ui->textEdit->palette();
+    invertedPalette = ui->textEdit->palette();
+    invertedPalette.setColor(QPalette::Text, QColor(255, 255, 255));
+    invertedPalette.setColor(QPalette::Base, QColor(0, 0, 0));
 }
 
 void MainWindow::setupPlayer()
@@ -199,7 +201,6 @@ void MainWindow::connectSignalsToSlots()
     connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(hotKeyShowWindowPressed()));
     connect(fontComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(fontChanged(QString)));
     connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
-    connect(boldCheckBox, SIGNAL(clicked()), this, SLOT(boldCheckBoxClicked()));
 }
 
 //GUI Functionality
@@ -296,7 +297,7 @@ void MainWindow::createActions()
     connect(speakAction, SIGNAL(triggered()), this, SLOT(speakButtonPressed()));
     ui->speakButton->setIcon(speakIcon);
 
-    speakSelectedTextAction = new QAction(tr("&Speak"), this);
+    speakSelectedTextAction = new QAction(tr("&Speak (selected text)"), this);
     QIcon speakselectedTextIcon = QIcon(":/images/format-indent-more.png");
     speakSelectedTextAction->setIcon(speakselectedTextIcon);
     speakSelectedTextAction->setShortcut(tr("F7"));
@@ -314,6 +315,33 @@ void MainWindow::createActions()
     aboutAction->setShortcut(tr("F1"));
     aboutAction->setIcon(QIcon(":/images/about.png"));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(displayAboutMessage()));
+
+    boldAction = new QAction(tr("Bold"), this);
+    boldAction->setShortcut(tr("Ctrl+B"));
+    boldAction->setCheckable(true);
+    boldAction->setIcon(QIcon(":/images/format-text-bold.png"));
+    connect(boldAction, SIGNAL(triggered()), this, SLOT(updateFont()));
+
+    invertColorsAction = new QAction(tr("Invert Colors"), this);
+    invertColorsAction->setShortcut(tr("Ctrl+I"));
+    invertColorsAction->setCheckable(true);
+    invertColorsAction->setIcon(QIcon(":/images/preferences-color.png"));
+    connect(invertColorsAction, SIGNAL(triggered()), this, SLOT(invertPalette()));
+
+    increasePointSizeAction = new QAction(tr("Increase font size"), this);
+    increasePointSizeAction->setShortcut(tr("Ctrl+L"));
+    increasePointSizeAction->setIcon(QIcon(":/images/rate-up.png"));
+    connect(increasePointSizeAction, SIGNAL(triggered()), this, SLOT(increasePointSize()));
+
+    decreasePointSizeAction = new QAction(tr("Decrease font size"), this);
+    decreasePointSizeAction->setShortcut(tr("Ctrl+K"));
+    decreasePointSizeAction->setIcon(QIcon(":/images/rate-down.png"));
+    connect(decreasePointSizeAction, SIGNAL(triggered()), this, SLOT(decreasePointSize()));
+
+    showFontListAction = new QAction(tr("Fonts"), this);
+    showFontListAction->setShortcut(tr("Ctrl+F"));
+    showFontListAction->setIcon(QIcon(":/images/font.png"));
+    connect(showFontListAction, SIGNAL(triggered()), this, SLOT(showFontList()));
 
     stopAction = new QAction(tr("Stop"), this);
     stopAction->setShortcut(tr("Ctrl+1"));
@@ -431,6 +459,11 @@ void MainWindow::createMenus()
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(toggleSplashAction);
     viewMenu->addAction(hideWindowAction);
+    viewMenu->addAction(showFontListAction);
+    viewMenu->addAction(increasePointSizeAction);
+    viewMenu->addAction(decreasePointSizeAction);
+    viewMenu->addAction(boldAction);
+    viewMenu->addAction(invertColorsAction);
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutAction);
@@ -454,6 +487,13 @@ void MainWindow::createToolBars()
     editToolBar->addAction(pasteAction);
     editToolBar->addAction(clearAction);
     editToolBar->addAction(selectAllAction);
+    editToolBar->addAction(boldAction);
+    editToolBar->addWidget(fontComboBox);
+    editToolBar->addWidget(spinBox);
+    editToolBar->addAction(showFontListAction);
+    editToolBar->addAction(increasePointSizeAction);
+    editToolBar->addAction(decreasePointSizeAction);
+    editToolBar->addAction(invertColorsAction);
 
     speakToolBar = addToolBar(tr("&Speak"));
     speakToolBar->addAction(speakAction);
@@ -476,10 +516,6 @@ void MainWindow::createToolBars()
 
     viewToolBar = addToolBar((tr("&View")));
     viewToolBar->addAction(toggleSplashAction);
-    viewToolBar->addWidget(fontComboBox);
-    viewToolBar->addWidget(spinBox);
-    viewToolBar->addSeparator();
-    viewToolBar->addWidget(boldCheckBox);
 
     helpToolBar = addToolBar(tr("&Help"));
     helpToolBar->addAction(aboutAction);
@@ -1206,11 +1242,29 @@ void MainWindow::updateFont()
 {
     QFont font = fontComboBox->currentFont(); //Get the current font
     font.setPointSize(this->spinBox->value());
-    font.setBold(boldCheckBox->isChecked());
+    font.setBold(boldAction->isChecked());
     ui->textEdit->setFont(font);
 }
 
-void MainWindow::boldCheckBoxClicked()
+void MainWindow::invertPalette()
 {
-    updateFont();
+    if (invertColorsAction->isChecked())
+        ui->textEdit->setPalette(invertedPalette);
+    else
+        ui->textEdit->setPalette(defaultPalette);
+}
+
+void MainWindow::increasePointSize()
+{
+    spinBox->setValue(spinBox->value() + 1);
+}
+
+void MainWindow::decreasePointSize()
+{
+    spinBox->setValue(spinBox->value() - 1);
+}
+
+void MainWindow::showFontList()
+{
+    fontComboBox->showPopup();
 }

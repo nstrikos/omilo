@@ -33,5 +33,8 @@
         <file>images/volume-active.png</file>
         <file>images/toggle-toolbars.png</file>
         <file>images/format-indent-more.png</file>
+        <file>images/format-text-bold.png</file>
+        <file>images/preferences-color.png</file>
+        <file>images/font.png</file>
     </qresource>
 </RCC>
