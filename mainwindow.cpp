@@ -733,7 +733,7 @@ void MainWindow::loadFile(const QString &filename)
 
 void MainWindow::readSettings()
 {
-    QSettings settings("Omilo", "Omilo");
+    QSettings settings("Omilo-qt5", "Omilo-qt5");
     QPoint pos = settings.value("MainWindowPosition", QPoint(200, 200)).toPoint();
     QSize size = settings.value("MainWindowSize", QSize(800, 600)).toSize();
     resize(size);
@@ -748,7 +748,7 @@ void MainWindow::readSettings()
 
 void MainWindow::writeSettings()
 {
-    QSettings settings("Omilo", "Omilo");
+    QSettings settings("Omilo-qt5", "Omilo-qt5");
     settings.setValue("MainWindowPosition", pos());
     settings.setValue("MainWindowSize", size());
     settings.setValue("recentFiles", recentFiles);
@@ -1025,9 +1025,9 @@ void MainWindow::on_cancelButton_clicked()
 
 void MainWindow::displayAboutMessage()
 {
-    QMessageBox::about(this, tr("About Omilo"),
+    QMessageBox::about(this, tr("About Omilo-Qt5"),
                        tr("Omilo - Text To Speech\n"
-                          "Version 0.10\n"
+                          "Version 0.1\n"
                           "Developer : nstrikos@yahoo.gr\n"
                           "Webpage : http://anoikto.webs.com/omilo"));
 

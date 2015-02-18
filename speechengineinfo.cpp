@@ -15,7 +15,7 @@ void SpeechEngineInfo::update()
     voiceToAdd.mode = festival;
     voiceToAdd.name = KalFestival;
     voiceToAdd.language = QLocale::languageToString(QLocale::English);
-    if(QDir("/usr/share/omilo/festival/lib/voices/english/kal_diphone").exists())
+    if(QDir("/usr/share/omilo-qt5/festival/lib/voices/english/kal_diphone").exists())
        installedVoices.push_back(voiceToAdd);
     else
         availableVoices.push_back(voiceToAdd);
@@ -96,7 +96,7 @@ void SpeechEngineInfo::update()
     }
 
     voiceToAdd.mode = marytts;
-    if (QDir("/usr/share/omilo/marytts-5.0").exists())
+    if (QDir("/usr/share/omilo-qt5/marytts-5.0").exists())
     {
         voiceToAdd.name = ItalianMary;
         voiceToAdd.language = QLocale::languageToString(QLocale::Italian);

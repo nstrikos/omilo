@@ -119,7 +119,7 @@ SpeechVoice* SpeechEngine::getSpeechVoice()
 
 void SpeechEngine::startMaryProcess()
 {
-    maryServerProcess->start("java -showversion -ea -Xms40m -Xmx" + QString::number(maxMaryMemory) + "m -cp \"/usr/share/omilo/marytts-5.0/lib/*\" -Dmary.base=\"/usr/share/omilo/marytts-5.0\" marytts.server.Mary");
+    maryServerProcess->start("java -showversion -ea -Xms40m -Xmx" + QString::number(maxMaryMemory) + "m -cp \"/usr/share/omilo-qt5/marytts-5.0/lib/*\" -Dmary.base=\"/usr/share/omilo-qt5/marytts-5.0\" marytts.server.Mary");
 }
 
 void SpeechEngine::voiceFileCreated(QString filename)

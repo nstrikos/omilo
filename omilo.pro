@@ -6,7 +6,7 @@
 
 QT       += core gui network widgets multimedia multimediawidgets
 
-TARGET = omilo
+TARGET = omilo-qt5
 TEMPLATE = app
 
 SOURCES += main.cpp\

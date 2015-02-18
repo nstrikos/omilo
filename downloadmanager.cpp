@@ -16,7 +16,7 @@ void DownloadManager::performMaryTTSSpeak(QString filename, QString text, QStrin
     if (downloadingFromMary == false)
     {
         downloadingFromMary = true;
-        finalCommand = "http://localhost:59125/process?INPUT_TEXT=";
+        finalCommand = "http://localhost:59127/process?INPUT_TEXT=";
         command1 = "&INPUT_TYPE=TEXT&OUTPUT_TYPE=AUDIO&AUDIO=WAVE_FILE&";
         command2 = voiceCommand;
         finalCommand = finalCommand + text + command1 + command2;
