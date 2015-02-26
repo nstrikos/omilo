@@ -17,42 +17,20 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     initFunctions();
-    connectSignalsToSlots();
+
+    //If splash screen is disabled the window is shown without close buttons
+    //otherwise the window will be shown when splash screen finishes
     if (splashScreenIsDisabled)
         showWindowWithoutCloseButton();
 }
 
 MainWindow::~MainWindow()
 {
-    //hotKeyThread.stop();
-    //hotKeyThread.wait();
-//        hotKeyThread.terminate();
-//        writeSettings();
-//        if (editorVoiceOptionsDialog != NULL)
-//            delete editorVoiceOptionsDialog;
-//        if (fliteSettingsDialog != NULL)
-//            delete fliteSettingsDialog;
-//        if (installVoicesAction != NULL)
-//            delete installVoicesDialog;
-//        if (startUpThread != NULL)
-//            delete startUpThread;
-
-//        delete splashScreenTimer;
-//        delete checkInstalledVoiceTimer;
-//        delete engineInfo;
-//        delete player;
-//        delete playlist;
-//        delete engine;
-//        removeTempFiles();
-//        delete controls;
     delete ui;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-
-    //hotKeyThread.stop();
-    //hotKeyThread.wait();
     hotKeyThread.terminate();
     writeSettings();
     if (editorVoiceOptionsDialog != NULL)
@@ -64,7 +42,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if (startUpThread != NULL)
         delete startUpThread;
 
-    delete maryStartupTimer;
+    if (maryStartupTimer != NULL)
+        delete maryStartupTimer;
     delete checkInstalledVoiceTimer;
     delete engineInfo;
     delete player;
@@ -90,15 +69,32 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 void MainWindow::initFunctions()
 {
     setCurrentFile("");
+
+    //Create actions,menus and toolbars
     createActions();
     createMenus();
+
+    //It's important to read the settings before initializing variables
+    //readsettings should be called after createActions
+    //otherwise recentfiles are not initialized
     readSettings();
     initVariables();
-    setupSplashScreen();
-    setupMaryStartupTimer();
+
+    //In ubuntu shortcuts will not work if actions are not added to toolbar
+    //toolbars should be created after variables initialization
     createToolBars();
+
+    //Set up splash screen
+    setupSplashScreen();
+
+    //If splash screen takes very long a timer will show the window
+    setupMaryStartupTimer();
+
     setupPlayer();
     setupLayout();
+
+    //Finally connect signals to slots
+    connectSignalsToSlots();
 }
 
 void MainWindow::initVariables()
@@ -203,7 +199,6 @@ void MainWindow::connectSignalsToSlots()
     connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
 }
 
-//GUI Functionality
 void MainWindow::createActions()
 {
     newAction = new QAction(tr("&New"), this);
@@ -523,6 +518,8 @@ void MainWindow::createToolBars()
 
 void MainWindow::setupSplashScreen()
 {
+    //Splash screen is shown only if it isn't disabled
+
     if (!splashScreenIsDisabled)
     {
         splashScreen = new QSplashScreen();
@@ -764,19 +761,18 @@ void MainWindow::exportToWav()
         filename += ".wav";
         QString text = ui->textEdit->document()->toPlainText();
         engine->exportWav(filename, text);
-        engineStatusLabel->setText(tr("Speech engine is processing..."));
-        ui->speakButton->setEnabled(false);
-        speakAction->setEnabled(false);
-        exportToWavAction->setEnabled(false);
-        installVoicesAction->setEnabled(false);
-        ui->cancelButton->setEnabled(true);
-        cancelAction->setEnabled(true);
+        updateControlsWhenEngineIsProcessing();
     }
 }
 
 void MainWindow::speakButtonPressed()
 {
     QString text = ui->textEdit->document()->toPlainText();
+    speakText(text);
+}
+
+void MainWindow::updateControlsWhenEngineIsProcessing()
+{
     engineStatusLabel->setText(tr("Speech engine is processing..."));
     ui->speakButton->setEnabled(false);
     speakAction->setEnabled(false);
@@ -784,11 +780,22 @@ void MainWindow::speakButtonPressed()
     installVoicesAction->setEnabled(false);
     ui->cancelButton->setEnabled(true);
     cancelAction->setEnabled(true);
-    speakText(text);
+}
+
+void MainWindow::updateControlsWhenEngineIsIdle()
+{
+    engineStatusLabel->setText(tr("Speech engine is idle"));
+    ui->speakButton->setEnabled(true);
+    speakAction->setEnabled(true);
+    exportToWavAction->setEnabled(true);
+    installVoicesAction->setEnabled(true);
+    ui->cancelButton->setEnabled(false);
+    cancelAction->setEnabled(false);
 }
 
 void MainWindow::speakText(QString text)
 {
+    updateControlsWhenEngineIsProcessing();
     player->stop();
     engine->speak(text);
 }
@@ -817,6 +824,7 @@ void MainWindow::installVoices()
     installVoicesDialog->showWindow(engine->getSpeechVoice()->getName());
 }
 
+//The new code will mainly evolve this functio
 void MainWindow::addToPlaylist(QString filename)
 {
     QFileInfo fileInfo(filename);
@@ -838,13 +846,7 @@ void MainWindow::addToPlaylist(QString filename)
     }
     playlist->setCurrentIndex(playlist->mediaCount() - 1);
     player->play();
-    engineStatusLabel->setText(tr("Speech engine is idle"));
-    ui->speakButton->setEnabled(true);
-    speakAction->setEnabled(true);
-    exportToWavAction->setEnabled(true);
-    installVoicesAction->setEnabled(true);
-    ui->cancelButton->setEnabled(false);
-    cancelAction->setEnabled(false);
+    updateControlsWhenEngineIsIdle();
 }
 
 void MainWindow::durationChanged(qint64 duration)
@@ -967,18 +969,13 @@ void MainWindow::updateVoiceLabel()
 
 void MainWindow::updateMaryStatus()
 {
-    if (splashScreen != NULL)
-    {
-        splashScreen->finish(this);
-        delete splashScreen;
-        splashScreen = NULL;
-    }
+    //startup thread connects here
+    //Reaching here means mary server is up and running
+    //splashTimerExpired may be called first
+    //if mary is not running
 
-    if (maryStartupTimer != NULL)
-        maryStartupTimer->stop();
-
-    if (QMainWindow::isHidden())
-        showWindowWithoutCloseButton();
+    //Just show the window
+    showWindowWithoutCloseButton();
 }
 
 void MainWindow::removeTempFiles()
@@ -1013,14 +1010,9 @@ void MainWindow::removeTempFiles()
 
 void MainWindow::on_cancelButton_clicked()
 {
-    engine->cancel();
-    engineStatusLabel->setText(tr("Speech engine is idle"));
-    ui->speakButton->setEnabled(true);
-    speakAction->setEnabled(true);
-    exportToWavAction->setEnabled(true);
-    installVoicesAction->setEnabled(true);
-    ui->cancelButton->setEnabled(false);
-    cancelAction->setEnabled(false);
+    if (engine->getIsProcessing())
+        engine->cancel();
+    updateControlsWhenEngineIsIdle();
 }
 
 void MainWindow::displayAboutMessage()
@@ -1052,7 +1044,6 @@ void MainWindow::next()
     playlist->setCurrentIndex(playlist->currentIndex() + 1);
 }
 
-
 void MainWindow::volumeMute()
 {
     player->setMuted(!player->isMuted());
@@ -1075,7 +1066,6 @@ void MainWindow::volumeUp()
 {
     player->setVolume(player->volume() + 1);
 }
-
 
 void MainWindow::rateUp()
 {
@@ -1115,22 +1105,15 @@ void MainWindow::showFliteDialog()
 
 void MainWindow::splashTimerExpired()
 {
-    if (splashScreen != NULL)
-    {
-        splashScreen->finish(this);
-        delete splashScreen;
-        splashScreen = NULL;
-    }
-    if (maryStartupTimer != NULL)
-        maryStartupTimer->stop();
+    //Reaching here means mary startup time expired
+    //and mary may not be running
 
-    if (QMainWindow::isHidden())
-        showWindowWithoutCloseButton();
+    //Show the window and inform the user
+    showWindowWithoutCloseButton();
 
     QMessageBox::warning(this, tr("Warning"),
                          tr("Loading takes too long\n"
                             "Mary voices may not be available\n"));
-
 }
 
 void MainWindow::setDefaultVoice()
@@ -1158,20 +1141,14 @@ void MainWindow::checkInstalledVoice()
 
 void MainWindow::hotKeyPlayPressed()
 {
-    engineStatusLabel->setText(tr("Speech engine is processing..."));
-    ui->speakButton->setEnabled(false);
-    speakAction->setEnabled(false);
-    exportToWavAction->setEnabled(false);
-    installVoicesAction->setEnabled(false);
-    ui->cancelButton->setEnabled(true);
-    cancelAction->setEnabled(true);
     QString text = clipboard->text(QClipboard::Selection);
-    player->stop();
-    engine->speak(text);
+    speakText(text);
 }
 
 void MainWindow::hotKeyStopPressed()
 {
+    //player->stop();
+    on_cancelButton_clicked();
     player->stop();
 }
 
@@ -1189,18 +1166,9 @@ void MainWindow::writeVoiceToFile(QString string)
 
 void MainWindow::speakSelectedText()
 {
-    engineStatusLabel->setText(tr("Speech engine is processing..."));
-    ui->speakButton->setEnabled(false);
-    speakAction->setEnabled(false);
-    exportToWavAction->setEnabled(false);
-    installVoicesAction->setEnabled(false);
-    ui->cancelButton->setEnabled(true);
-    cancelAction->setEnabled(true);
-    player->stop();
     QTextCursor cursor(ui->textEdit->textCursor());
     const QString text = cursor.selectedText();
-    player->stop();
-    engine->speak(text);
+    speakText(text);
 }
 
 void MainWindow::hotKeyShowWindowPressed()
@@ -1234,6 +1202,31 @@ void MainWindow::spinBoxValueChanged(int arg1)
 
 void MainWindow::showWindowWithoutCloseButton()
 {
+    //we close splash screen
+    //stop mary startup timer
+    //delete startup thread we dont need it any more
+    //show the window
+
+    if (splashScreen != NULL)
+    {
+        splashScreen->finish(this);
+        delete splashScreen;
+        splashScreen = NULL;
+    }
+
+    if (startUpThread != NULL)
+    {
+        delete startUpThread;
+        startUpThread = NULL;
+    }
+
+    if (maryStartupTimer != NULL)
+    {
+        maryStartupTimer->stop();
+        delete maryStartupTimer;
+        maryStartupTimer = NULL;
+    }
+
     setWindowFlags(Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
     this->show();
 }

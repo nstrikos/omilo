@@ -6,6 +6,7 @@ SpeechEngine::SpeechEngine(QString voice)
     maryServerProcess = new QProcess();
     speechVoice = NULL;
     count = 1;
+    isProcessing = false;
     setSpeechVoice(voice);
     maryTestingDownloadManager = new DownloadManager();
 }
@@ -22,12 +23,20 @@ SpeechEngine::~SpeechEngine()
     delete maryServerProcess;
 }
 
+bool SpeechEngine::getIsProcessing()
+{
+    return isProcessing;
+}
+
 void SpeechEngine::speak(QString text)
 {
+    if (isProcessing == true)
+        cancel();
     filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
-    if ( count > maximumNumberOfFiles)
+    if ( count > maximumNumberOfFiles )
         count = 0;
     this->text = text;
+    isProcessing = true;
     speechVoice->performSpeak(filename, text);
 }
 
@@ -39,8 +48,12 @@ void SpeechEngine::exportWav(QString filename, QString text)
 
 void SpeechEngine::cancel()
 {
-    count--;
-    speechVoice->cancel();
+    if (isProcessing == true)
+    {
+        count--;
+        speechVoice->cancel();
+        isProcessing = false;
+    }
 }
 
 void SpeechEngine::createVoice(SpeechVoice *sVoice)
@@ -124,6 +137,7 @@ void SpeechEngine::startMaryProcess()
 
 void SpeechEngine::voiceFileCreated(QString filename)
 {
+    isProcessing = false;
     if (filename != "/tmp/omilo.wav") // omilo.wav is used for checking mary server
         emit fileCreated(filename);
 }

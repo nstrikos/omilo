@@ -52,6 +52,10 @@ int main(int argc, char *argv[])
     signal(SIGKILL, signalhandler);
     signal(SIGTERM, signalhandler);
     MainWindow w;
+
+    //Window is not shown
+    //Application will determine when the window will be shown
+    //according to splash screen settings
     //w.show();
     return a.exec();
 }

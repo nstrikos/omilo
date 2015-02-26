@@ -112,8 +112,12 @@ private:
     QString strippedName(const QString &fileName);
     void speakText(QString text);
     void updateVoiceLabel();
+    void updateControlsWhenEngineIsProcessing();
+    void updateControlsWhenEngineIsIdle();
     void removeTempFiles();
     void writeVoiceToFile(QString string);
+    void showWindowWithoutCloseButton();
+
     QString curfile;
     enum {MaxRecentFiles = 5};
     QStringList recentFiles;
@@ -205,7 +209,6 @@ private:
     QProcess soxProcess;
     QFontComboBox *fontComboBox;
     QSpinBox *spinBox;
-    void showWindowWithoutCloseButton();
     QPalette defaultPalette;
     QPalette invertedPalette;
 };

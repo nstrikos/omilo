@@ -24,6 +24,7 @@ public:
     void setTargetMean(unsigned int target);
     SpeechVoice *getSpeechVoice();
     void testMaryServer();
+    bool getIsProcessing();
 
 private:
     QString text;
@@ -37,6 +38,7 @@ private:
     DownloadManager *maryTestingDownloadManager;
     unsigned int durationStretch;
     unsigned int targetMean;
+    bool isProcessing;
 
 private slots:
     void voiceFileCreated(QString filename);
