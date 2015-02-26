@@ -180,397 +180,331 @@ Ihr Passwort wird benötigt.</translation>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="mainwindow.ui" line="45"/>
+        <location filename="mainwindow.ui" line="51"/>
         <source>Speak</source>
         <translation>Sprechen</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="58"/>
+        <location filename="mainwindow.ui" line="64"/>
         <source>Cancel</source>
         <translation>Abbruch</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="135"/>
+        <location filename="mainwindow.cpp" line="176"/>
         <source>History</source>
         <translation>Verlauf</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="147"/>
-        <location filename="mainwindow.cpp" line="757"/>
-        <location filename="mainwindow.cpp" line="929"/>
+        <location filename="mainwindow.cpp" line="188"/>
+        <location filename="mainwindow.cpp" line="841"/>
+        <location filename="mainwindow.cpp" line="1017"/>
         <source>Speech engine is idle</source>
         <translation>Sprachausgabe nicht aktiv</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="166"/>
+        <location filename="mainwindow.cpp" line="209"/>
         <source>&amp;New</source>
         <translation>Neu</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="171"/>
+        <location filename="mainwindow.cpp" line="214"/>
         <source>&amp;Open...</source>
         <translation>Öffnen...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="176"/>
+        <location filename="mainwindow.cpp" line="219"/>
         <source>&amp;Save</source>
         <translation>Speichern</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="181"/>
+        <location filename="mainwindow.cpp" line="224"/>
         <source>Save &amp;As...</source>
         <translation>Speichern als...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="193"/>
+        <location filename="mainwindow.cpp" line="236"/>
         <source>Select &amp;voice...</source>
         <translation>Stimme auswählen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="194"/>
+        <location filename="mainwindow.cpp" line="237"/>
         <source>F3</source>
         <translation>F3</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="198"/>
+        <location filename="mainwindow.cpp" line="241"/>
         <source>Instal&amp;l voices...</source>
         <translation>Installiere Stimmen...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="199"/>
+        <location filename="mainwindow.cpp" line="242"/>
         <source>F4</source>
         <translation>F4</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="203"/>
+        <location filename="mainwindow.cpp" line="246"/>
         <source>&amp;Export to wav...</source>
         <translation>Als Wave-Datei exportieren...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="204"/>
+        <location filename="mainwindow.cpp" line="247"/>
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="209"/>
+        <location filename="mainwindow.cpp" line="252"/>
         <source>E&amp;xit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="214"/>
+        <location filename="mainwindow.cpp" line="257"/>
         <source>&amp;Undo</source>
         <translation>Rückgängig</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="219"/>
+        <location filename="mainwindow.cpp" line="262"/>
         <source>&amp;Redo</source>
         <translation>Wiederholen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="224"/>
+        <location filename="mainwindow.cpp" line="267"/>
         <source>Cu&amp;t</source>
         <translation>Ausschneiden</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="230"/>
+        <location filename="mainwindow.cpp" line="273"/>
         <source>&amp;Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="235"/>
+        <location filename="mainwindow.cpp" line="278"/>
         <source>&amp;Paste</source>
         <translation>Einfügen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="240"/>
+        <location filename="mainwindow.cpp" line="283"/>
         <source>C&amp;lear</source>
         <translation>Löschen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="242"/>
+        <location filename="mainwindow.cpp" line="285"/>
         <source>Alt+C</source>
         <translation>Alt+C</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="245"/>
+        <location filename="mainwindow.cpp" line="288"/>
         <source>Select &amp;All</source>
         <translation>Alles auswählen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="250"/>
-        <location filename="mainwindow.cpp" line="257"/>
-        <location filename="mainwindow.cpp" line="369"/>
-        <location filename="mainwindow.cpp" line="416"/>
+        <location filename="mainwindow.cpp" line="293"/>
+        <location filename="mainwindow.cpp" line="439"/>
+        <location filename="mainwindow.cpp" line="498"/>
         <source>&amp;Speak</source>
         <translation>Sprechen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="253"/>
+        <location filename="mainwindow.cpp" line="296"/>
         <source>F2</source>
         <translation>F2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="263"/>
+        <location filename="mainwindow.cpp" line="300"/>
+        <source>&amp;Speak (selected text)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="306"/>
         <source>Cance&amp;l</source>
         <translation>Abbruch</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="264"/>
-        <location filename="mainwindow.cpp" line="322"/>
+        <location filename="mainwindow.cpp" line="307"/>
+        <location filename="mainwindow.cpp" line="392"/>
         <source>F12</source>
         <translation>F12</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="271"/>
+        <location filename="mainwindow.cpp" line="314"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="272"/>
+        <location filename="mainwindow.cpp" line="315"/>
         <source>F1</source>
         <translation>F1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="276"/>
+        <location filename="mainwindow.cpp" line="319"/>
+        <source>Bold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="320"/>
+        <source>Ctrl+B</source>
+        <translation>Ctrl+B</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="325"/>
+        <source>Invert Colors</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="326"/>
+        <source>Ctrl+I</source>
+        <translation>Ctrl+I</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="331"/>
+        <source>Increase font size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="332"/>
+        <source>Ctrl+L</source>
+        <translation>Ctrl+L</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="336"/>
+        <source>Decrease font size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="337"/>
+        <source>Ctrl+K</source>
+        <translation>Ctrl+K</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="341"/>
+        <source>Fonts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="342"/>
+        <source>Ctrl+F</source>
+        <translation>Ctrl+F</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="346"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="277"/>
+        <location filename="mainwindow.cpp" line="347"/>
         <source>Ctrl+1</source>
         <translation>Ctrl+1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="280"/>
+        <location filename="mainwindow.cpp" line="350"/>
         <source>Previous</source>
         <translation>Vorheriges</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="281"/>
+        <location filename="mainwindow.cpp" line="351"/>
         <source>Ctrl+2</source>
         <translation>Ctrl+2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="284"/>
+        <location filename="mainwindow.cpp" line="354"/>
         <source>Play/Pause</source>
         <translation>Wiedergabe/Pause</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="285"/>
+        <location filename="mainwindow.cpp" line="355"/>
         <source>Ctrl+3</source>
         <translation>Ctrl+3</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="288"/>
+        <location filename="mainwindow.cpp" line="358"/>
         <source>Next</source>
         <translation>Nächstes</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="289"/>
+        <location filename="mainwindow.cpp" line="359"/>
         <source>Ctrl+4</source>
         <translation>Ctrl+4</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="292"/>
+        <location filename="mainwindow.cpp" line="362"/>
         <source>Mute</source>
         <translation>Stumm</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="293"/>
+        <location filename="mainwindow.cpp" line="363"/>
         <source>Ctrl+5</source>
         <translation>Ctrl+5</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="296"/>
+        <location filename="mainwindow.cpp" line="366"/>
         <source>Volume down</source>
         <translation>Leiser stellen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="297"/>
+        <location filename="mainwindow.cpp" line="367"/>
         <source>Ctrl+6</source>
         <translation>Ctrl+6</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="300"/>
+        <location filename="mainwindow.cpp" line="370"/>
         <source>Volume up</source>
         <translation>Lauter stellen</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="301"/>
+        <location filename="mainwindow.cpp" line="371"/>
         <source>Ctrl+7</source>
         <translation>Ctrl+7</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="304"/>
+        <location filename="mainwindow.cpp" line="374"/>
         <source>Decrease rate</source>
         <translation>Absenkungsrate</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="305"/>
+        <location filename="mainwindow.cpp" line="375"/>
         <source>Ctrl+8</source>
         <translation>Ctrl+8</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="308"/>
+        <location filename="mainwindow.cpp" line="378"/>
         <source>Increase rate</source>
         <translation>Erhöhungsrate</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="309"/>
+        <location filename="mainwindow.cpp" line="379"/>
         <source>Ctrl+9</source>
         <translation>Ctrl+9</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="312"/>
+        <location filename="mainwindow.cpp" line="382"/>
         <source>Flite settings...</source>
         <translation>Flite-Einstellungen...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="313"/>
+        <location filename="mainwindow.cpp" line="383"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="316"/>
-        <location filename="mainwindow.cpp" line="455"/>
-        <location filename="mainwindow.cpp" line="1007"/>
+        <location filename="mainwindow.cpp" line="386"/>
+        <location filename="mainwindow.cpp" line="533"/>
+        <location filename="mainwindow.cpp" line="1095"/>
         <source>Disable splash screen</source>
         <translation>Splash-Screen unterdrücken</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="318"/>
+        <location filename="mainwindow.cpp" line="388"/>
         <source>F6</source>
         <translation>F6</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="260"/>
-        <source>F7</source>
-        <translation>F7</translation>
+        <location filename="mainwindow.cpp" line="1028"/>
+        <source>About Omilo-Qt5</source>
+        <translation>Über Omilo-Qt5</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="320"/>
-        <source>Hide</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="345"/>
-        <location filename="mainwindow.cpp" line="399"/>
-        <source>&amp;File</source>
-        <translation>Datei</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="358"/>
-        <location filename="mainwindow.cpp" line="407"/>
-        <source>&amp;Edit</source>
-        <translation>Bearbeiten</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="385"/>
-        <location filename="mainwindow.cpp" line="431"/>
-        <source>&amp;Options</source>
-        <translation>Optionen</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="389"/>
-        <location filename="mainwindow.cpp" line="435"/>
-        <source>&amp;View</source>
-        <translation>Ansicht</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="393"/>
-        <location filename="mainwindow.cpp" line="438"/>
-        <source>&amp;Help</source>
-        <translation>Hilfe</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="454"/>
-        <source>Loading Mary voices...</source>
-        <translation>Mary-Stimmen werden geladen...</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="460"/>
-        <location filename="mainwindow.cpp" line="1012"/>
-        <source>Enable splash screen</source>
-        <translation>Splash-Screen ermöglichen</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="508"/>
-        <location filename="mainwindow.cpp" line="533"/>
-        <location filename="mainwindow.cpp" line="630"/>
-        <source>Omilo</source>
-        <translation>Omilo</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="509"/>
-        <source>The document has been modified.
-Do you want to save your changes?</source>
-        <translation>Das Dokument wurde verändert
-Sollen ihre Veränderungen gespeichert werden?</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="534"/>
-        <source>Cannot write file %1:
-%2.</source>
-        <translation>Datei kann nicht geschrieben werden %1:
-%2.</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="566"/>
-        <source>Untitled</source>
-        <translation>Unbenannt</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="575"/>
-        <source>%1[*]</source>
-        <translation>%1[*]</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="592"/>
-        <source>&amp;%1 %2</source>
-        <translation>&amp;%1 %2</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="631"/>
-        <source>Cannot read file %1:
-%2.</source>
-        <translation>Datei kann nicht geöffnet werden %1
-%2.</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="683"/>
-        <location filename="mainwindow.cpp" line="696"/>
-        <source>Speech engine is processing...</source>
-        <translation>Sprachprozessor arbeitet...</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="817"/>
-        <source>Loading...</source>
-        <translation>Laden...</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="820"/>
-        <source>Media Stalled</source>
-        <translation>Medium unlesbar</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="845"/>
-        <source>Buffering %4%</source>
-        <translation>Zwischenspeicherung %4%</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="881"/>
-        <source>Voice: </source>
-        <translation>Stimme:</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="940"/>
-        <source>About Omilo</source>
-        <translation>Über Omilo</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="941"/>
+        <location filename="mainwindow.cpp" line="1029"/>
         <source>Omilo - Text To Speech
-Version 0.10
+Version 0.1
 Developer : nstrikos@yahoo.gr
 Webpage : http://anoikto.webs.com/omilo</source>
         <translation>Omilo - Text To Speech
@@ -579,12 +513,148 @@ Developer : nstrikos@yahoo.gr
 Webpage : http://anoikto.webs.com/omilo</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1038"/>
+        <location filename="mainwindow.cpp" line="303"/>
+        <source>F7</source>
+        <translation>F7</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="390"/>
+        <source>Hide</source>
+        <translation>Verbergen</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="415"/>
+        <location filename="mainwindow.cpp" line="474"/>
+        <source>&amp;File</source>
+        <translation>Datei</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="428"/>
+        <location filename="mainwindow.cpp" line="482"/>
+        <source>&amp;Edit</source>
+        <translation>Bearbeiten</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="455"/>
+        <location filename="mainwindow.cpp" line="513"/>
+        <source>&amp;Options</source>
+        <translation>Optionen</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="459"/>
+        <location filename="mainwindow.cpp" line="517"/>
+        <source>&amp;View</source>
+        <translation>Ansicht</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="468"/>
+        <location filename="mainwindow.cpp" line="520"/>
+        <source>&amp;Help</source>
+        <translation>Hilfe</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="532"/>
+        <source>Loading Mary voices...</source>
+        <translation>Mary-Stimmen werden geladen...</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="537"/>
+        <location filename="mainwindow.cpp" line="1100"/>
+        <source>Enable splash screen</source>
+        <translation>Splash-Screen ermöglichen</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="592"/>
+        <location filename="mainwindow.cpp" line="617"/>
+        <location filename="mainwindow.cpp" line="714"/>
+        <source>Omilo</source>
+        <translation>Omilo</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="593"/>
+        <source>The document has been modified.
+Do you want to save your changes?</source>
+        <translation>Das Dokument wurde verändert
+Sollen ihre Veränderungen gespeichert werden?</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="618"/>
+        <source>Cannot write file %1:
+%2.</source>
+        <translation>Datei kann nicht geschrieben werden %1:
+%2.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="650"/>
+        <source>Untitled</source>
+        <translation>Unbenannt</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="659"/>
+        <source>%1[*]</source>
+        <translation>%1[*]</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="676"/>
+        <source>&amp;%1 %2</source>
+        <translation>&amp;%1 %2</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="715"/>
+        <source>Cannot read file %1:
+%2.</source>
+        <translation>Datei kann nicht geöffnet werden %1
+%2.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="767"/>
+        <location filename="mainwindow.cpp" line="780"/>
+        <location filename="mainwindow.cpp" line="1161"/>
+        <location filename="mainwindow.cpp" line="1192"/>
+        <source>Speech engine is processing...</source>
+        <translation>Sprachprozessor arbeitet...</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="901"/>
+        <source>Loading...</source>
+        <translation>Laden...</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="904"/>
+        <source>Media Stalled</source>
+        <translation>Medium unlesbar</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="929"/>
+        <source>Buffering %4%</source>
+        <translation>Zwischenspeicherung %4%</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="965"/>
+        <source>Voice: </source>
+        <translation>Stimme:</translation>
+    </message>
+    <message>
+        <source>About Omilo</source>
+        <translation type="vanished">Über Omilo</translation>
+    </message>
+    <message>
+        <source>Omilo - Text To Speech
+Version 0.10
+Developer : nstrikos@yahoo.gr
+Webpage : http://anoikto.webs.com/omilo</source>
+        <translation type="vanished">Omilo - Text To Speech
+Version 0.10
+Developer : nstrikos@yahoo.gr
+Webpage : http://anoikto.webs.com/omilo</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1130"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1039"/>
+        <location filename="mainwindow.cpp" line="1131"/>
         <source>Loading takes too long
 Mary voices may not be available
 </source>
@@ -596,7 +666,7 @@ Die Mary-Stimmen stehen ggf. nicht zur Verfügung
 <context>
     <name>QObject</name>
     <message>
-        <location filename="main.cpp" line="41"/>
+        <location filename="main.cpp" line="44"/>
         <source>Application is already running</source>
         <translation>Anwendung läuft bereits</translation>
     </message>
