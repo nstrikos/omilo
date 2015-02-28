@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     playercontrols.cpp \
     playlistmodel.cpp \
     flitesettingsdialog.cpp \
-    hotkeythread.cpp
+    hotkeythread.cpp \
+    textprocess.cpp
 
 HEADERS  += mainwindow.h \
     installvoicesdialog.h \
@@ -45,7 +46,8 @@ HEADERS  += mainwindow.h \
     playercontrols.h \
     playlistmodel.h \
     flitesettingsdialog.h \
-    hotkeythread.h
+    hotkeythread.h \
+    textprocess.h
 
 FORMS    += mainwindow.ui \
     installvoicesdialog.ui \

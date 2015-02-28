@@ -9,6 +9,7 @@ SpeechEngine::SpeechEngine(QString voice)
     isProcessing = false;
     setSpeechVoice(voice);
     maryTestingDownloadManager = new DownloadManager();
+    textProcess = new TextProcess();
 }
 
 SpeechEngine::~SpeechEngine()
@@ -21,6 +22,11 @@ SpeechEngine::~SpeechEngine()
     delete maryTestingDownloadManager;
     maryServerProcess->close();
     delete maryServerProcess;
+    if (textProcess != NULL)
+    {
+        delete textProcess;
+        textProcess = NULL;
+    }
 }
 
 bool SpeechEngine::getIsProcessing()
@@ -30,14 +36,41 @@ bool SpeechEngine::getIsProcessing()
 
 void SpeechEngine::speak(QString text)
 {
-    if (isProcessing == true)
-        cancel();
-    filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
-    if ( count > maximumNumberOfFiles )
-        count = 0;
-    this->text = text;
-    isProcessing = true;
-    speechVoice->performSpeak(filename, text);
+    //if (isProcessing == true)
+    //    cancel();
+    //textList.clear();
+    textContainer.clear();
+    textProcess->setText(text);
+    textProcess->processText();
+    //textList = textProcess->getTextList();
+    textContainer = textProcess->getTextContainer();
+    count = 1;
+    processList();
+    //filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
+    //if ( count > maximumNumberOfFiles )
+
+    //this->text = text;
+    //isProcessing = true;
+    //speechVoice->performSpeak(filename, text);
+    //textProcess->setText(text);
+    //textProcess->processText();
+}
+
+void SpeechEngine::processList()
+{
+    //if (!textList.isEmpty())
+    if (!textContainer.text.isEmpty())
+    {
+        filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
+        if ( count > maximumNumberOfFiles )
+            count = 0;
+        //this->text = textList.takeFirst();
+        this->text = textContainer.text.takeFirst();
+        this->begin = textContainer.begin.takeFirst();
+        this->end = textContainer.end.takeFirst();
+        isProcessing = true;
+        speechVoice->performSpeak(filename, this->text);
+    }
 }
 
 void SpeechEngine::exportWav(QString filename, QString text)
@@ -139,7 +172,11 @@ void SpeechEngine::voiceFileCreated(QString filename)
 {
     isProcessing = false;
     if (filename != "/tmp/omilo.wav") // omilo.wav is used for checking mary server
-        emit fileCreated(filename);
+        emit fileCreated(filename, this->begin, this->end);
+    if (!textContainer.text.isEmpty())
+        processList();
+    else
+        emit processingFinished();
 }
 
 void SpeechEngine::testMaryServer()

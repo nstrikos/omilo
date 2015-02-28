@@ -8,6 +8,7 @@
 #include "flitevoice.h"
 #include "maryvoice.h"
 #include "downloadmanager.h"
+#include "textprocess.h"
 #include "QTimer"
 
 class SpeechEngine : public QObject
@@ -39,12 +40,19 @@ private:
     unsigned int durationStretch;
     unsigned int targetMean;
     bool isProcessing;
+    TextProcess *textProcess;
+    //QStringList textList;
+    TextContainer textContainer;
+    unsigned int begin;
+    unsigned int end;
 
 private slots:
     void voiceFileCreated(QString filename);
+    void processList();
 
 signals:
-    void fileCreated(QString filename);
+    void fileCreated(QString filename, unsigned int begin, unsigned int end);
+    void processingFinished();
 };
 
 #endif // SPEECHENGINE_H

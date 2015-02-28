@@ -60,7 +60,7 @@ private slots:
     void playlistPositionChanged(int);
     void statusChanged(QMediaPlayer::MediaStatus status);
     void bufferingProgress(int progress);
-    void addToPlaylist(QString filename);
+    void addToPlaylist(QString filename, unsigned int begin, unsigned int end);
     void displayErrorMessage();
     void updateMaryStatus();
     void on_cancelButton_clicked();
@@ -88,6 +88,8 @@ private slots:
     void increasePointSize();
     void decreasePointSize();
     void showFontList();
+    void updateControlsWhenEngineIsIdle();
+    void test();
 
 private:
     Ui::MainWindow *ui;
@@ -113,7 +115,6 @@ private:
     void speakText(QString text);
     void updateVoiceLabel();
     void updateControlsWhenEngineIsProcessing();
-    void updateControlsWhenEngineIsIdle();
     void removeTempFiles();
     void writeVoiceToFile(QString string);
     void showWindowWithoutCloseButton();
@@ -211,6 +212,10 @@ private:
     QSpinBox *spinBox;
     QPalette defaultPalette;
     QPalette invertedPalette;
+    QQueue<unsigned int> beginQueue;
+    QQueue<unsigned int> endQueue;
+    unsigned int beginBlock;
+    unsigned int endBlock;
 };
 
 #endif // MAINWINDOW_H

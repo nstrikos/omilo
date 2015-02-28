@@ -118,16 +118,18 @@ void MainWindow::initVariables()
     spinBox->setMaximum(72);
     spinBox->setValue(qApp->font().pointSize());
     defaultPalette = ui->textEdit->palette();
+    defaultPalette.setColor(QPalette::HighlightedText, Qt::yellow);
     invertedPalette = ui->textEdit->palette();
     invertedPalette.setColor(QPalette::Text, QColor(255, 255, 255));
     invertedPalette.setColor(QPalette::Base, QColor(0, 0, 0));
+    invertedPalette.setColor(QPalette::HighlightedText, Qt::yellow);
 }
 
 void MainWindow::setupPlayer()
 {
     player = new QMediaPlayer(this);
     playlist = new QMediaPlaylist();
-    playlist->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
+    playlist->setPlaybackMode(QMediaPlaylist::Sequential);
     player->setPlaylist(playlist);
     playlistModel = new PlaylistModel(this);
     playlistModel->setPlaylist(playlist);
@@ -190,13 +192,15 @@ void MainWindow::connectSignalsToSlots()
 {
     connect(ui->textEdit->document(), SIGNAL(contentsChanged()), this, SLOT(documentWasModified()));
     connect(ui->speakButton, SIGNAL(clicked()), this, SLOT(speakButtonPressed()));
-    connect(engine, SIGNAL(fileCreated(QString)), this, SLOT(addToPlaylist(QString)));
+    connect(engine, SIGNAL(fileCreated(QString, unsigned int, unsigned int)), this, SLOT(addToPlaylist(QString, unsigned int, unsigned int)));
+    connect(engine, SIGNAL(processingFinished()), this, SLOT(updateControlsWhenEngineIsIdle()));
     connect(startUpThread, SIGNAL(maryServerIsUp()), this, SLOT(updateMaryStatus()));
     connect(&hotKeyThread, SIGNAL(playPressed()), this, SLOT(hotKeyPlayPressed()));
     connect(&hotKeyThread, SIGNAL(stopPressed()), this, SLOT(hotKeyStopPressed()));
     connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(hotKeyShowWindowPressed()));
     connect(fontComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(fontChanged(QString)));
     connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
+    connect(playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(test()));
 }
 
 void MainWindow::createActions()
@@ -797,6 +801,9 @@ void MainWindow::speakText(QString text)
 {
     updateControlsWhenEngineIsProcessing();
     player->stop();
+    playlist->clear();
+    beginQueue.clear();
+    endQueue.clear();
     engine->speak(text);
 }
 
@@ -825,7 +832,7 @@ void MainWindow::installVoices()
 }
 
 //The new code will mainly evolve this functio
-void MainWindow::addToPlaylist(QString filename)
+void MainWindow::addToPlaylist(QString filename, unsigned int begin, unsigned int end)
 {
     QFileInfo fileInfo(filename);
 
@@ -844,9 +851,18 @@ void MainWindow::addToPlaylist(QString filename)
         QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
         playlist->addMedia(url);
     }
-    playlist->setCurrentIndex(playlist->mediaCount() - 1);
+    //playlist->setCurrentIndex(playlist->mediaCount() - 1);
+
+
+    //SOS append before play
+    beginQueue.append(begin);
+    endQueue.append(end);
     player->play();
-    updateControlsWhenEngineIsIdle();
+    //updateControlsWhenEngineIsIdle();
+
+    //int begin = 100;
+    //int end = 200;
+
 }
 
 void MainWindow::durationChanged(qint64 duration)
@@ -1012,6 +1028,7 @@ void MainWindow::on_cancelButton_clicked()
 {
     if (engine->getIsProcessing())
         engine->cancel();
+    player->stop();
     updateControlsWhenEngineIsIdle();
 }
 
@@ -1036,6 +1053,8 @@ void MainWindow::play()
 
 void MainWindow::stop()
 {
+    if (engine->getIsProcessing())
+        engine->cancel();
     player->stop();
 }
 
@@ -1260,4 +1279,37 @@ void MainWindow::decreasePointSize()
 void MainWindow::showFontList()
 {
     fontComboBox->showPopup();
+}
+
+void MainWindow::test()
+{
+    qDebug() << playlist->currentIndex();
+    int currentIndex = playlist->currentIndex();
+    if (currentIndex >= 0)
+    {
+//        ui->textEdit->setPalette(defaultPalette);
+//        QTextCharFormat fmt2;
+//        fmt2.setBackground(Qt::white);
+//        QTextCursor cursor2(ui->textEdit->document());
+//        cursor2.setPosition(beginBlock, QTextCursor::MoveAnchor);
+//        cursor2.setPosition(endBlock, QTextCursor::KeepAnchor);
+//        cursor2.setCharFormat(fmt2);
+//        QTextCharFormat fmt;
+//        fmt.setBackground(Qt::yellow);
+//        fmt.setForeground(Qt::blue);
+        beginBlock = this->beginQueue.dequeue();
+        endBlock = this->endQueue.dequeue();
+        //QTextCursor cursor(ui->textEdit->document());
+        QTextCursor cursor = ui->textEdit->textCursor();
+//        cursor.setCharFormat(fmt);
+        cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+//        cursor.setCharFormat(fmt);
+        cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+//        cursor.setCharFormat(fmt);
+        //ui->textEdit->setCursor(cursor);
+        //QTextCursor c =  ui->textEdit->textCursor();
+        //c.movePosition(QTextCursor::End);
+        ui->textEdit->setTextCursor(cursor);
+
+    }
 }
