@@ -15,6 +15,9 @@ public:
     QQueue<QString> text;
     QQueue<unsigned int> begin;
     QQueue<unsigned int> end;
+    QQueue<unsigned int> googleBegin;
+    QQueue<unsigned int> googleEnd;
+    QQueue<QString> googleText;
 };
 
 
@@ -25,12 +28,12 @@ public:
     ~TextProcess();
     void setText(QString text);
     void processText();
-    QStringList getTextList();
+    //QStringList getTextList();
     TextContainer getTextContainer();
 
 private:
     QString text;
-    QStringList textList;
+//    QStringList textList;
     TextContainer textContainer;
 };
 

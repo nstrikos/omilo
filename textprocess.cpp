@@ -10,6 +10,9 @@ TextContainer::~TextContainer()
     text.clear();
     begin.clear();
     end.clear();
+    googleText.clear();
+    googleBegin.clear();
+    googleEnd.clear();
 }
 
 void TextContainer::clear()
@@ -17,6 +20,9 @@ void TextContainer::clear()
     text.clear();
     begin.clear();
     end.clear();
+    googleText.clear();
+    googleBegin.clear();
+    googleEnd.clear();
 }
 
 TextProcess::TextProcess()
@@ -31,95 +37,13 @@ TextProcess::~TextProcess()
 
 void TextProcess::setText(QString text)
 {
-    this->text = text; //+ ". .";
-}
-
-QStringList TextProcess::getTextList()
-{
-    return textList;
+    this->text = text + ".";
 }
 
 TextContainer TextProcess::getTextContainer()
 {
     return textContainer;
 }
-
-//void TextProcess::processText()
-//{
-//   bool done = false;
-
-//   if (textList.size() > 0)
-//       textList.clear();
-
-//   while (!done)
-//   {
-//       int m = text.indexOf(".");
-//       if (m > 0)
-//       {
-//           QString line = text.left(m + 1);
-//           line = line.trimmed();
-//           textList << line;
-//           qDebug() << line;
-//           text = text.right(text.size() - m - 1);
-//       }
-//       else
-//           done = true;
-//   }
-
-//}
-
-//void TextProcess::processText()
-//{
-//    qDebug() << text;
-//    if (textList.size() > 0)
-//        textList.clear();
-
-//    int size = text.size();
-//    int m = 0;
-//    //for (int i = 0; i < size ; i++)
-//    int i = 0;
-//    while (i < size)
-//    {
-//        QString ch = text.at(i);
-//        if (ch == ".")
-//        {
-//            if ( i < size - 2)
-//            {
-//                QString nextChar = text.at(i + 1);
-//                if (nextChar == " ")
-//                {
-//                    QString line = text.mid(m, i - m + 1);
-//                    m = i + 1;
-//                    line = line.trimmed();
-//                    textList << line;
-//                    qDebug() << "Line:" << line;
-//                    i++;
-//                }
-//                else
-//                {
-//                    int n = text.indexOf(" ", i);
-//                    QString line = text.mid(m, n - m + 1);
-//                    textList << line;
-//                    qDebug() << "Line:" << line;
-//                    m = n + 1;
-//                    i = n + 1;
-//                }
-//            }
-//            else
-//                i++;
-//        }
-//        else if (  i == size - 1)
-//        {
-//            QString line = text.mid(m, i - m + 1);
-//            m = i + 1;
-//            textList << line;
-//            qDebug() << "Line:" << line;
-//            i++;
-//        }
-//        else
-//            i++;
-//    }
-//}
 
 void TextProcess::processText()
 {
@@ -184,36 +108,126 @@ void TextProcess::processText()
             i++;
     }
 
-//    textContainer.begin.append(0);
-    for (int n = 0; n < textContainer.end.size() - 1; n++)
-    {
-//        qDebug() << textContainer.end.at(n);
-        int begin = textContainer.end.at(n) + 1;
-//        textContainer.begin.append(begin);
-    }
-
-//    for (int n = 0; n < textContainer.begin.size(); n++)
-//    {
-//        qDebug() << textContainer.begin.at(n);
-//        qDebug() << textContainer.end.at(n);
-//    }
-//    qDebug() << textContainer.begin.size();
-//    qDebug() << textContainer.end.size();
-
     int m = 0;
-    if (textList.size() > 0)
-        textList.clear();
+//    if (textList.size() > 0)
+//        textList.clear();
     while(queue.size() > 0)
     {
         int n = queue.dequeue();
         QString line = text.mid(m, n - m + 1);
         textContainer.begin.append(m);
         textContainer.end.append(n);
-        line = line.trimmed();
-        textList << line;
+        //line = line.trimmed();
         textContainer.text.append(line);
-        //qDebug() << line;
         m = n + 1;
     }
+
+//    for ( int i = 0; i < textContainer.text.size(); i++)
+//    {
+//        QString string = textContainer.text.at(i);
+//        QString segment;
+//        if (string.size() <= 100)
+//            textContainer.googleText.append( textContainer.text.at(i) );
+//        else
+//        {
+//            bool done = false;
+//            while (!done)
+//            {
+//                int n = string.indexOf(" ");
+//                if ( n >= 0 )
+//                {
+//                    segment = segment + string.left(n + 1);
+//                    string = string.right(string.size() - n - 1);
+//                }
+//                else
+//                {
+//                    segment  = string.left(100);
+//                    if (string.size() >= 100)
+//                        string = string.right(string.size() - 100);
+//                    else
+//                        string = "";
+//                    //continue;
+//                }
+//                int m = string.indexOf(" ");
+//                QString testString = string.left(m);
+//                if (segment.size() + testString.size() > 100)
+//                {
+//                    textContainer.googleText.append(segment);
+//                    segment = "";
+//                }
+//                if (string.size() == 0)
+//                {
+//                    textContainer.googleText.append(segment);
+//                    done = true;
+//                }
+//            }
+//        }
+//    }
+    textContainer.googleText.clear();
+    textContainer.googleEnd.clear();
+    int position = 0;
+    //while (!tempList.isEmpty())
+    for (int i = 0; i < textContainer.text.size(); i++)
+    {
+        //QString text2 = tempList.takeFirst();
+        QString text2 = textContainer.text.at(i);
+        if (text2.size() > 100)
+        {
+            bool done = false;
+            while (!done)
+            {
+                QString segment = text2.left(100);
+                text2 = text2.right(text2.size() - 100);
+                int space = segment.lastIndexOf(" ");
+                QString remain = segment.right(segment.size() - space);
+                segment = segment.left(space);
+                text2 = remain + text2;
+                //stringList << segment;
+                textContainer.googleText.append(segment);
+                textContainer.googleBegin.append(position);
+                position = position + segment.size();
+                textContainer.googleEnd.append(position);
+                //position++;
+                if (text2.size() < 100)
+                {
+                    //stringList << text2;
+                    textContainer.googleText.append(text2);
+                    //textContainer.begin.insert(position, 0);
+                    textContainer.googleBegin.append(position);
+                    position = position + text2.size();
+                    textContainer.googleEnd.append(position);
+                    done = true;
+                }
+            }
+        }
+        else
+        {
+            //stringList << text2;
+            textContainer.googleBegin.append(position);
+            textContainer.googleText.append(text2);
+            position = position + text2.size();
+            textContainer.googleEnd.append(position);
+//            textContainer.begin.insert(i + 1, 0);
+//            textContainer.end.insert(i + 1, 0);
+        }
+    }
+
+    for (int i = 0; i < textContainer.text.size(); i++)
+    {
+        qDebug() << "Text:" << textContainer.text.at(i);
+    }
+    for (int i = 0; i < textContainer.begin.size(); i++)
+    {
+        qDebug() << "Begin:" << textContainer.begin.at(i);
+    }
+    for (int i = 0; i < textContainer.googleEnd.size(); i++)
+    {
+        qDebug() << "End:" << textContainer.googleEnd.at(i);
+    }
+    for (int i = 0; i < textContainer.googleText.size(); i++)
+    {
+        qDebug() << "GoogleText:" << textContainer.googleText.at(i);
+    }
+
 }
 

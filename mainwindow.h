@@ -60,7 +60,7 @@ private slots:
     void playlistPositionChanged(int);
     void statusChanged(QMediaPlayer::MediaStatus status);
     void bufferingProgress(int progress);
-    void addToPlaylist(QString filename, unsigned int begin, unsigned int end);
+    void addToPlaylist(QString filename, bool split, unsigned int begin, unsigned int end);
     void displayErrorMessage();
     void updateMaryStatus();
     void on_cancelButton_clicked();
@@ -89,7 +89,9 @@ private slots:
     void decreasePointSize();
     void showFontList();
     void updateControlsWhenEngineIsIdle();
-    void test();
+    void enableSplitMode();
+    void highlightSelection();
+    void speakFromCurrentPosition();
 
 private:
     Ui::MainWindow *ui;
@@ -160,6 +162,8 @@ private:
     QAction *increasePointSizeAction;
     QAction *decreasePointSizeAction;
     QAction *showFontListAction;
+    QAction *enableSplitModeAction;
+    QAction *speakFromCurrentPositionAction;
 
     QMenu *fileMenu;
     QMenu *editMenu;
@@ -216,6 +220,8 @@ private:
     QQueue<unsigned int> endQueue;
     unsigned int beginBlock;
     unsigned int endBlock;
+    bool splitMode;
+    unsigned int cursorPosition;
 };
 
 #endif // MAINWINDOW_H

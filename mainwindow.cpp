@@ -105,6 +105,7 @@ void MainWindow::initVariables()
     splashScreen = NULL;
     maryStartupTimer = NULL;
     engine = new SpeechEngine(engineVoice);
+    engine->setSplitMode(splitMode);
     startUpThread = new StartupThread(engine);
     engineInfo = new SpeechEngineInfo();
     checkInstalledVoiceTimer = new QTimer();
@@ -123,6 +124,8 @@ void MainWindow::initVariables()
     invertedPalette.setColor(QPalette::Text, QColor(255, 255, 255));
     invertedPalette.setColor(QPalette::Base, QColor(0, 0, 0));
     invertedPalette.setColor(QPalette::HighlightedText, Qt::yellow);
+    beginBlock = 0;
+    endBlock = 0;
 }
 
 void MainWindow::setupPlayer()
@@ -170,15 +173,21 @@ void MainWindow::setupPlayer()
 void MainWindow::setupLayout()
 {
     labelDuration = new QLabel(this);
-    historyLabel = new QLabel(this);
-    historyLabel->setText(tr("History"));
-    ui->verticalLayout->addWidget(historyLabel);
-    ui->verticalLayout->addWidget(playlistView);
-    QHBoxLayout *hLayout = new QHBoxLayout;
-    hLayout->addWidget(slider);
-    hLayout->addWidget(labelDuration);
-    ui->verticalLayout->addLayout(hLayout);
+    //    historyLabel = new QLabel(this);
+    //    historyLabel->setText(tr("History"));
+    //    QHBoxLayout *hLayout = new QHBoxLayout;
     ui->verticalLayout->addWidget(controls);
+    //    ui->verticalLayout->addWidget(historyLabel);
+    ui->verticalLayout->addWidget(playlistView);
+    //playlistView->setVisible(false);
+    //historyLabel->setVisible(false);
+    //    ui->verticalLayout->addLayout(hLayout);
+    ui->verticalLayout->addWidget(labelDuration);
+    ui->verticalLayout->addWidget(slider);
+    //    spacer = new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    ui->verticalLayout->addItem( new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding) );
+    //    slider->setVisible(false);
+    //    labelDuration->setVisible(false);
     selectedVoiceLabel = new QLabel(this);
     ui->statusBar->addWidget(selectedVoiceLabel);
     updateVoiceLabel();
@@ -192,7 +201,7 @@ void MainWindow::connectSignalsToSlots()
 {
     connect(ui->textEdit->document(), SIGNAL(contentsChanged()), this, SLOT(documentWasModified()));
     connect(ui->speakButton, SIGNAL(clicked()), this, SLOT(speakButtonPressed()));
-    connect(engine, SIGNAL(fileCreated(QString, unsigned int, unsigned int)), this, SLOT(addToPlaylist(QString, unsigned int, unsigned int)));
+    connect(engine, SIGNAL(fileCreated(QString, bool, unsigned int, unsigned int)), this, SLOT(addToPlaylist(QString, bool, unsigned int, unsigned int)));
     connect(engine, SIGNAL(processingFinished()), this, SLOT(updateControlsWhenEngineIsIdle()));
     connect(startUpThread, SIGNAL(maryServerIsUp()), this, SLOT(updateMaryStatus()));
     connect(&hotKeyThread, SIGNAL(playPressed()), this, SLOT(hotKeyPlayPressed()));
@@ -200,7 +209,7 @@ void MainWindow::connectSignalsToSlots()
     connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(hotKeyShowWindowPressed()));
     connect(fontComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(fontChanged(QString)));
     connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
-    connect(playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(test()));
+    connect(playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(highlightSelection()));
 }
 
 void MainWindow::createActions()
@@ -342,6 +351,17 @@ void MainWindow::createActions()
     showFontListAction->setIcon(QIcon(":/images/font.png"));
     connect(showFontListAction, SIGNAL(triggered()), this, SLOT(showFontList()));
 
+    enableSplitModeAction = new QAction(tr("Enable split mode"), this);
+    enableSplitModeAction->setShortcut(tr("Ctrl+T"));
+    enableSplitModeAction->setCheckable(true);
+    //invertColorsAction->setIcon(QIcon(":/images/preferences-color.png"));
+    connect(enableSplitModeAction, SIGNAL(triggered()), this, SLOT(enableSplitMode()));
+
+    speakFromCurrentPositionAction = new QAction(tr("Speak from current position"), this);
+    speakFromCurrentPositionAction->setShortcut(tr("Ctrl+F2"));
+    //invertColorsAction->setIcon(QIcon(":/images/preferences-color.png"));
+    connect(speakFromCurrentPositionAction, SIGNAL(triggered()), this, SLOT(speakFromCurrentPosition()));
+
     stopAction = new QAction(tr("Stop"), this);
     stopAction->setShortcut(tr("Ctrl+1"));
     stopAction->setIcon(QIcon(":/images/stop.png"));
@@ -450,6 +470,9 @@ void MainWindow::createMenus()
     speakMenu->addAction(volumeUpAction);
     speakMenu->addAction(rateDownAction);
     speakMenu->addAction(rateUpAction);
+    speakMenu->addSeparator();
+    speakMenu->addAction(speakFromCurrentPositionAction);
+    speakMenu->addAction(enableSplitModeAction);
 
     optionsMenu = menuBar()->addMenu(tr("&Options"));
     optionsMenu->addAction(installVoicesAction);
@@ -508,6 +531,8 @@ void MainWindow::createToolBars()
     speakToolBar->addAction(volumeUpAction);
     speakToolBar->addAction(rateDownAction);
     speakToolBar->addAction(rateUpAction);
+    speakToolBar->addAction(enableSplitModeAction);
+    speakToolBar->addAction(speakFromCurrentPositionAction);
 
     optionsToolBar = addToolBar(tr("&Options"));
     optionsToolBar->addAction(installVoicesAction);
@@ -745,6 +770,8 @@ void MainWindow::readSettings()
     voice = engineVoice;
     writeVoiceToFile(voice);
     splashScreenIsDisabled = settings.value("SplashScreen").toBool();
+    splitMode = settings.value("SplitMode").toBool();
+    enableSplitModeAction->setChecked(splitMode);
 }
 
 void MainWindow::writeSettings()
@@ -755,6 +782,7 @@ void MainWindow::writeSettings()
     settings.setValue("recentFiles", recentFiles);
     settings.setValue("MainWindowVoice", engine->getSpeechVoice()->getName());
     settings.setValue("SplashScreen", splashScreenIsDisabled);
+    settings.setValue("SplitMode", splitMode);
 }
 
 void MainWindow::exportToWav()
@@ -804,6 +832,7 @@ void MainWindow::speakText(QString text)
     playlist->clear();
     beginQueue.clear();
     endQueue.clear();
+    cursorPosition = 0;
     engine->speak(text);
 }
 
@@ -832,7 +861,7 @@ void MainWindow::installVoices()
 }
 
 //The new code will mainly evolve this functio
-void MainWindow::addToPlaylist(QString filename, unsigned int begin, unsigned int end)
+void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin, unsigned int end)
 {
     QFileInfo fileInfo(filename);
 
@@ -855,14 +884,19 @@ void MainWindow::addToPlaylist(QString filename, unsigned int begin, unsigned in
 
 
     //SOS append before play
-    beginQueue.append(begin);
-    endQueue.append(end);
+    if (split)
+    {
+        beginQueue.append(begin);
+        endQueue.append(end);
+    }
+
+    //SOSSSSSSSSSSSSSs
+    //SOSSSSSSSSSSSSSSSss
     player->play();
     //updateControlsWhenEngineIsIdle();
 
     //int begin = 100;
     //int end = 200;
-
 }
 
 void MainWindow::durationChanged(qint64 duration)
@@ -1187,7 +1221,13 @@ void MainWindow::speakSelectedText()
 {
     QTextCursor cursor(ui->textEdit->textCursor());
     const QString text = cursor.selectedText();
-    speakText(text);
+    updateControlsWhenEngineIsProcessing();
+    player->stop();
+    playlist->clear();
+    beginQueue.clear();
+    endQueue.clear();
+    engine->speak(text, false);
+    //    speakText(text);
 }
 
 void MainWindow::hotKeyShowWindowPressed()
@@ -1281,35 +1321,54 @@ void MainWindow::showFontList()
     fontComboBox->showPopup();
 }
 
-void MainWindow::test()
+void MainWindow::highlightSelection()
 {
-    qDebug() << playlist->currentIndex();
     int currentIndex = playlist->currentIndex();
-    if (currentIndex >= 0)
+    if ( currentIndex >= 0 )
     {
-//        ui->textEdit->setPalette(defaultPalette);
-//        QTextCharFormat fmt2;
-//        fmt2.setBackground(Qt::white);
-//        QTextCursor cursor2(ui->textEdit->document());
-//        cursor2.setPosition(beginBlock, QTextCursor::MoveAnchor);
-//        cursor2.setPosition(endBlock, QTextCursor::KeepAnchor);
-//        cursor2.setCharFormat(fmt2);
-//        QTextCharFormat fmt;
-//        fmt.setBackground(Qt::yellow);
-//        fmt.setForeground(Qt::blue);
-        beginBlock = this->beginQueue.dequeue();
-        endBlock = this->endQueue.dequeue();
-        //QTextCursor cursor(ui->textEdit->document());
-        QTextCursor cursor = ui->textEdit->textCursor();
-//        cursor.setCharFormat(fmt);
-        cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
-//        cursor.setCharFormat(fmt);
-        cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
-//        cursor.setCharFormat(fmt);
-        //ui->textEdit->setCursor(cursor);
-        //QTextCursor c =  ui->textEdit->textCursor();
-        //c.movePosition(QTextCursor::End);
-        ui->textEdit->setTextCursor(cursor);
-
+        //        ui->textEdit->setPalette(defaultPalette);
+        //        QTextCharFormat fmt2;
+        //        fmt2.setBackground(Qt::white);
+        //        QTextCursor cursor2(ui->textEdit->document());
+        //        cursor2.setPosition(beginBlock, QTextCursor::MoveAnchor);
+        //        cursor2.setPosition(endBlock, QTextCursor::KeepAnchor);
+        //        cursor2.setCharFormat(fmt2);
+        //        QTextCharFormat fmt;
+        //        fmt.setBackground(Qt::yellow);
+        //        fmt.setForeground(Qt::blue);
+        if (beginQueue.size() > 0 && endQueue.size() > 0)
+        {
+            beginBlock = this->beginQueue.dequeue();// + cursorPosition;
+            endBlock = this->endQueue.dequeue(); //+ cursorPosition;
+            if (endBlock > 0)
+            {
+                beginBlock += cursorPosition;
+                endBlock += cursorPosition;
+                QTextCursor cursor = ui->textEdit->textCursor();
+                cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+                cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+                ui->textEdit->setTextCursor(cursor);
+            }
+        }
     }
+}
+
+void MainWindow::enableSplitMode()
+{
+    splitMode = enableSplitModeAction->isChecked();
+    engine->setSplitMode(splitMode);
+}
+
+void MainWindow::speakFromCurrentPosition()
+{
+    updateControlsWhenEngineIsProcessing();
+    player->stop();
+    playlist->clear();
+    beginQueue.clear();
+    endQueue.clear();
+    QString text = ui->textEdit->document()->toPlainText();
+    QTextCursor cursor = ui->textEdit->textCursor();
+    cursorPosition = cursor.position();
+    text = text.right(text.size() - cursorPosition);
+    engine->speak(text, true);
 }

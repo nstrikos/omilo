@@ -10,6 +10,7 @@ SpeechEngine::SpeechEngine(QString voice)
     setSpeechVoice(voice);
     maryTestingDownloadManager = new DownloadManager();
     textProcess = new TextProcess();
+    splitMode = true;
 }
 
 SpeechEngine::~SpeechEngine()
@@ -36,24 +37,52 @@ bool SpeechEngine::getIsProcessing()
 
 void SpeechEngine::speak(QString text)
 {
-    //if (isProcessing == true)
-    //    cancel();
-    //textList.clear();
+    currentSplitMode = splitMode;
+    if (isProcessing == true)
+        cancel();
     textContainer.clear();
-    textProcess->setText(text);
-    textProcess->processText();
-    //textList = textProcess->getTextList();
-    textContainer = textProcess->getTextContainer();
-    count = 1;
-    processList();
-    //filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
-    //if ( count > maximumNumberOfFiles )
+    if (splitMode)
+    {
+        textProcess->setText(text);
+        textProcess->processText();
+        textContainer = textProcess->getTextContainer();
+        count = 1;
+        processList();
+    }
+    else
+    {
+        filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
+        if ( count > maximumNumberOfFiles )
+            count = 1;
+        this->text = text;
+        isProcessing = true;
+        speechVoice->performSpeak(filename, text);
+    }
+}
 
-    //this->text = text;
-    //isProcessing = true;
-    //speechVoice->performSpeak(filename, text);
-    //textProcess->setText(text);
-    //textProcess->processText();
+void SpeechEngine::speak(QString text, bool splitMode)
+{
+    currentSplitMode = splitMode;
+    if (isProcessing == true)
+        cancel();
+    textContainer.clear();
+    if (splitMode)
+    {
+        textProcess->setText(text);
+        textProcess->processText();
+        textContainer = textProcess->getTextContainer();
+        count = 1;
+        processList();
+    }
+    else
+    {
+        filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
+        if ( count > maximumNumberOfFiles )
+            count = 1;
+        this->text = text;
+        isProcessing = true;
+        speechVoice->performSpeak(filename, text);
+    }
 }
 
 void SpeechEngine::processList()
@@ -65,9 +94,12 @@ void SpeechEngine::processList()
         if ( count > maximumNumberOfFiles )
             count = 0;
         //this->text = textList.takeFirst();
-        this->text = textContainer.text.takeFirst();
-        this->begin = textContainer.begin.takeFirst();
-        this->end = textContainer.end.takeFirst();
+        if (!textContainer.googleText.isEmpty())
+            this->text = textContainer.googleText.takeFirst();
+        if (!textContainer.googleBegin.isEmpty())
+            this->begin = textContainer.googleBegin.takeFirst();
+        if (!textContainer.googleEnd.isEmpty())
+            this->end = textContainer.googleEnd.takeFirst();
         isProcessing = true;
         speechVoice->performSpeak(filename, this->text);
     }
@@ -172,8 +204,8 @@ void SpeechEngine::voiceFileCreated(QString filename)
 {
     isProcessing = false;
     if (filename != "/tmp/omilo.wav") // omilo.wav is used for checking mary server
-        emit fileCreated(filename, this->begin, this->end);
-    if (!textContainer.text.isEmpty())
+        emit fileCreated(filename, currentSplitMode, this->begin, this->end);
+    if (!textContainer.googleText.isEmpty())
         processList();
     else
         emit processingFinished();
@@ -195,3 +227,9 @@ void SpeechEngine::setTargetMean(unsigned int target)
     targetMean = target;
     speechVoice->setTargetMean(targetMean);
 }
+
+void SpeechEngine::setSplitMode(bool mode)
+{
+    this->splitMode = mode;
+}
+
