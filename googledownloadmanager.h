@@ -1,11 +1,11 @@
-#ifndef DOWNLOADMANAGER_H
-#define DOWNLOADMANAGER_H
+#ifndef GOOGLEDOWNLOADMANAGER_H
+#define GOOGLEDOWNLOADMANAGER_H
 
 #include <QtNetwork>
 #include "definitions.h"
 #include "genericdownloadmanager.h"
 
-class DownloadManager : public GenericDownloadManager
+class GoogleDownloadManager : public GenericDownloadManager
 {
 
 public:
@@ -13,6 +13,9 @@ public:
 
 protected:
     void finishRequest();
+
+signals:
+    void test(QString file);
 };
 
-#endif // DOWNLOADMANAGER_H
+#endif // GOOGLEDOWNLOADMANAGER_H

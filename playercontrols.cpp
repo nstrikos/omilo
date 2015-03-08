@@ -12,8 +12,8 @@ PlayerControls::PlayerControls(QWidget *parent)
     , playerMuted(false)
     , playButton(0)
     , stopButton(0)
-    , nextButton(0)
-    , previousButton(0)
+//    , nextButton(0)
+//    , previousButton(0)
     , muteButton(0)
     , volumeSlider(0)
     , rateBox(0)
@@ -29,15 +29,15 @@ PlayerControls::PlayerControls(QWidget *parent)
 
     connect(stopButton, SIGNAL(clicked()), this, SIGNAL(stop()));
 
-    nextButton = new QToolButton(this);
-    nextButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
+//    nextButton = new QToolButton(this);
+//    nextButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
 
-    connect(nextButton, SIGNAL(clicked()), this, SIGNAL(next()));
+//    connect(nextButton, SIGNAL(clicked()), this, SIGNAL(next()));
 
-    previousButton = new QToolButton(this);
-    previousButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
+//    previousButton = new QToolButton(this);
+//    previousButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
 
-    connect(previousButton, SIGNAL(clicked()), this, SIGNAL(previous()));
+//    connect(previousButton, SIGNAL(clicked()), this, SIGNAL(previous()));
 
     muteButton = new QToolButton(this);
     muteButton->setIcon(style()->standardIcon(QStyle::SP_MediaVolume));
@@ -78,9 +78,9 @@ PlayerControls::PlayerControls(QWidget *parent)
     QBoxLayout *layout = new QHBoxLayout;
     layout->setMargin(0);
     layout->addWidget(stopButton);
-    layout->addWidget(previousButton);
+//    layout->addWidget(previousButton);
     layout->addWidget(playButton);
-    layout->addWidget(nextButton);
+//    layout->addWidget(nextButton);
     layout->addWidget(muteButton);
     layout->addWidget(volumeSlider);
     layout->addWidget(rateBox);

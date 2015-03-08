@@ -29,6 +29,9 @@
 #define PoppyMary "Mary Poppy"
 #define PrudenceMary "Mary Prudence"
 #define SpikeMary "Mary Spike"
+#define GoogleEnglish "Google English"
+#define GoogleGerman "Google German"
+#define GoogleGreek "Google Greek"
 
 #define defDurationStretch 100
 #define defTargetMean 100

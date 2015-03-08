@@ -161,4 +161,13 @@ void SpeechEngineInfo::update()
         voiceToAdd.name = SpikeMary;
         availableVoices.push_back(voiceToAdd);
     }
+    voiceToAdd.name = GoogleEnglish;
+    voiceToAdd.language = QLocale::languageToString(QLocale::English);
+    installedVoices.push_back(voiceToAdd);
+    voiceToAdd.name = GoogleGerman;
+    voiceToAdd.language = QLocale::languageToString(QLocale::German);
+    installedVoices.push_back(voiceToAdd);
+    voiceToAdd.name = GoogleGreek;
+    voiceToAdd.language = QLocale::languageToString(QLocale::Greek);
+    installedVoices.push_back(voiceToAdd);
 }

@@ -19,6 +19,7 @@
 #include "playlistmodel.h"
 #include "startupthread.h"
 #include "hotkeythread.h"
+//#include "genericplayer.h"
 
 class QAction;
 class QMenu;
@@ -91,7 +92,11 @@ private slots:
     void updateControlsWhenEngineIsIdle();
     void enableSplitMode();
     void highlightSelection();
+    void highlightGoogleSelection();
+    void enableCancelButton();
+    void disableCancelButton();
     void speakFromCurrentPosition();
+    void updateControlsWhenVoiceIsGoogle();
 
 private:
     Ui::MainWindow *ui;
@@ -187,7 +192,7 @@ private:
     QMediaPlayer *player;
     QMediaPlaylist *playlist;
     PlaylistModel *playlistModel;
-    QAbstractItemView *playlistView;
+//    QAbstractItemView *playlistView;
     QSlider *slider;
     qint64 duration;
     void updateDurationInfo(qint64 currentInfo);
@@ -222,6 +227,7 @@ private:
     unsigned int endBlock;
     bool splitMode;
     unsigned int cursorPosition;
+    //GenericPlayer *genericPlayer;
 };
 
 #endif // MAINWINDOW_H

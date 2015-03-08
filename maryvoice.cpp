@@ -15,7 +15,7 @@ void MaryVoice::performSpeak(QString filename, QString text)
 {
     cancelled = false;
     this->filename = filename;
-    maryDownloadManager->performMaryTTSSpeak(filename, text, voiceCommand());
+    maryDownloadManager->performSpeak(filename, text, voiceCommand());
 }
 
 void MaryVoice::cancel()

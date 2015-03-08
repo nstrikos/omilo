@@ -31,6 +31,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    //delete genericPlayer;
     hotKeyThread.terminate();
     writeSettings();
     if (editorVoiceOptionsDialog != NULL)
@@ -104,6 +105,7 @@ void MainWindow::initVariables()
     fliteSettingsDialog = NULL;
     splashScreen = NULL;
     maryStartupTimer = NULL;
+    //genericPlayer = new GenericPlayer();
     engine = new SpeechEngine(engineVoice);
     engine->setSplitMode(splitMode);
     startUpThread = new StartupThread(engine);
@@ -134,14 +136,15 @@ void MainWindow::setupPlayer()
     playlist = new QMediaPlaylist();
     playlist->setPlaybackMode(QMediaPlaylist::Sequential);
     player->setPlaylist(playlist);
+    engine->setPlaylist(playlist);
     playlistModel = new PlaylistModel(this);
     playlistModel->setPlaylist(playlist);
     slider = new QSlider(Qt::Horizontal, this);
     slider->setRange(0, player->duration() / 1000);
     connect(slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
 
-    playlistView = new QListView(this);
-    playlistView->setModel(playlistModel);
+    //    playlistView = new QListView(this);
+    //    playlistView->setModel(playlistModel);
 
     controls = new PlayerControls(this);
     controls->setState(player->state());
@@ -155,10 +158,11 @@ void MainWindow::setupPlayer()
             this, SLOT(statusChanged(QMediaPlayer::MediaStatus)));
     connect(player, SIGNAL(bufferStatusChanged(int)), this, SLOT(bufferingProgress(int)));
     connect(player, SIGNAL(error(QMediaPlayer::Error)), this, SLOT(displayErrorMessage()));
-    connect(playlistView, SIGNAL(activated(QModelIndex)), this, SLOT(jump(QModelIndex)));
+    //    connect(playlistView, SIGNAL(activated(QModelIndex)), this, SLOT(jump(QModelIndex)));
     connect(controls, SIGNAL(play()), player, SLOT(play()));
     connect(controls, SIGNAL(pause()), player, SLOT(pause()));
     connect(controls, SIGNAL(stop()), player, SLOT(stop()));
+    connect(controls, SIGNAL(stop()), this, SLOT(on_cancelButton_clicked()));
     connect(controls, SIGNAL(next()), this, SLOT(next()));
     connect(controls, SIGNAL(previous()), this, SLOT(previous()));
     connect(controls, SIGNAL(changeVolume(int)), player, SLOT(setVolume(int)));
@@ -178,7 +182,7 @@ void MainWindow::setupLayout()
     //    QHBoxLayout *hLayout = new QHBoxLayout;
     ui->verticalLayout->addWidget(controls);
     //    ui->verticalLayout->addWidget(historyLabel);
-    ui->verticalLayout->addWidget(playlistView);
+    //ui->verticalLayout->addWidget(playlistView);
     //playlistView->setVisible(false);
     //historyLabel->setVisible(false);
     //    ui->verticalLayout->addLayout(hLayout);
@@ -195,6 +199,7 @@ void MainWindow::setupLayout()
     engineStatusLabel->setText(tr("Speech engine is idle"));
     ui->statusBar->addWidget(engineStatusLabel);
     ui->cancelButton->setEnabled(false);
+    updateControlsWhenVoiceIsGoogle();
 }
 
 void MainWindow::connectSignalsToSlots()
@@ -210,6 +215,9 @@ void MainWindow::connectSignalsToSlots()
     connect(fontComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(fontChanged(QString)));
     connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
     connect(playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(highlightSelection()));
+//    connect(genericPlayer, SIGNAL(currentIndexChanged()), this, SLOT(highlightGoogleSelection()));
+//    connect(genericPlayer, SIGNAL(playing()), this, SLOT(enableCancelButton()));
+//    connect(genericPlayer, SIGNAL(playingFinished()), this, SLOT(disableCancelButton()));
 }
 
 void MainWindow::createActions()
@@ -821,31 +829,38 @@ void MainWindow::updateControlsWhenEngineIsIdle()
     speakAction->setEnabled(true);
     exportToWavAction->setEnabled(true);
     installVoicesAction->setEnabled(true);
-    ui->cancelButton->setEnabled(false);
-    cancelAction->setEnabled(false);
+    //ui->cancelButton->setEnabled(false);
+    //cancelAction->setEnabled(false);
 }
 
 void MainWindow::speakText(QString text)
 {
     updateControlsWhenEngineIsProcessing();
+    removeTempFiles();
     player->stop();
     playlist->clear();
+//    genericPlayer->stop();
     beginQueue.clear();
     endQueue.clear();
     cursorPosition = 0;
+    engine->setSpeechVoice(engineVoice);
     engine->speak(text);
 }
 
 void MainWindow::selectVoice()
 {
     if (!editorVoiceOptionsDialog)
-        editorVoiceOptionsDialog = new EditorVoiceOptionsDialog(&voice,this);
+        editorVoiceOptionsDialog = new EditorVoiceOptionsDialog(&engineVoice,this);
     editorVoiceOptionsDialog->selectVoice();
     if (editorVoiceOptionsDialog->exec())
     {
-        engine->setSpeechVoice(voice);
+        //We dont set voice here because engine maybe processing
+        //It's better to set voice voice when we speak
+        //This way we dont mess up with voices and players
+        //engine->setSpeechVoice(voice);
         updateVoiceLabel();
         writeVoiceToFile(voice);
+        updateControlsWhenVoiceIsGoogle();
     }
 }
 
@@ -863,9 +878,27 @@ void MainWindow::installVoices()
 //The new code will mainly evolve this functio
 void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin, unsigned int end)
 {
-    QFileInfo fileInfo(filename);
+    QString currentVoice = engine->getSpeechVoice()->getName();
+    //    QFileInfo fileInfo(filename);
 
     float rate = controls->getPlaybackRate();
+
+
+    //if (rate == 1)
+    //{
+    //QFile::copy(filename, "/tmp/temp.wav");
+    if (currentVoice == GoogleGreek || currentVoice == GoogleEnglish || currentVoice == GoogleGerman)
+    {
+        QString command = "sox " + filename + " /tmp/temp.wav";
+        qDebug() << command;
+        qDebug() << command;
+        soxProcess.start(command);
+        soxProcess.waitForFinished();
+        filename += ".wav";
+        QFile::copy("/tmp/temp.wav", filename);
+        QFile::remove("/tmp/temp.wav");
+
+    }
 
     if (rate != 1)
     {
@@ -875,28 +908,29 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
         soxProcess.waitForFinished();
         QFile::remove("/tmp/temp.wav");
     }
+    //}
+    QFileInfo fileInfo(filename);
     if (fileInfo.exists())
     {
-        QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
-        playlist->addMedia(url);
+        if (split)
+        {
+            //SOS append before play
+            //otherwise highlight selection will point to the previous text part
+            beginQueue.append(begin);
+            endQueue.append(end);
+        }
+        //        if (currentVoice == GoogleGreek || currentVoice == GoogleEnglish || currentVoice == GoogleGerman)
+        //        {
+        //            genericPlayer->addToPlayList(filename);
+        //            genericPlayer->play();
+        //        }
+        //        else
+        {
+            QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
+            playlist->addMedia(url);
+            player->play();
+        }
     }
-    //playlist->setCurrentIndex(playlist->mediaCount() - 1);
-
-
-    //SOS append before play
-    if (split)
-    {
-        beginQueue.append(begin);
-        endQueue.append(end);
-    }
-
-    //SOSSSSSSSSSSSSSs
-    //SOSSSSSSSSSSSSSSSss
-    player->play();
-    //updateControlsWhenEngineIsIdle();
-
-    //int begin = 100;
-    //int end = 200;
 }
 
 void MainWindow::durationChanged(qint64 duration)
@@ -928,7 +962,7 @@ void MainWindow::jump(const QModelIndex &index)
 
 void MainWindow::playlistPositionChanged(int currentItem)
 {
-    playlistView->setCurrentIndex(playlistModel->index(currentItem, 0));
+    //    playlistView->setCurrentIndex(playlistModel->index(currentItem, 0));
 }
 
 void MainWindow::seek(int seconds)
@@ -1014,7 +1048,7 @@ void MainWindow::updateDurationInfo(qint64 currentInfo)
 
 void MainWindow::updateVoiceLabel()
 {
-    selectedVoiceLabel->setText(tr("Voice: ") + engine->getSpeechVoice()->getName());
+    selectedVoiceLabel->setText(tr("Voice: ") + engineVoice);
 }
 
 void MainWindow::updateMaryStatus()
@@ -1060,10 +1094,13 @@ void MainWindow::removeTempFiles()
 
 void MainWindow::on_cancelButton_clicked()
 {
-    if (engine->getIsProcessing())
-        engine->cancel();
+    //if (engine->getIsProcessing())
+    engine->cancel();
     player->stop();
+//    genericPlayer->stop();
     updateControlsWhenEngineIsIdle();
+    ui->cancelButton->setEnabled(false);
+    cancelAction->setEnabled(false);
 }
 
 void MainWindow::displayAboutMessage()
@@ -1194,7 +1231,9 @@ void MainWindow::checkInstalledVoice()
 
 void MainWindow::hotKeyPlayPressed()
 {
+    ui->textEdit->clear();
     QString text = clipboard->text(QClipboard::Selection);
+    ui->textEdit->append(text);
     speakText(text);
 }
 
@@ -1326,32 +1365,45 @@ void MainWindow::highlightSelection()
     int currentIndex = playlist->currentIndex();
     if ( currentIndex >= 0 )
     {
-        //        ui->textEdit->setPalette(defaultPalette);
-        //        QTextCharFormat fmt2;
-        //        fmt2.setBackground(Qt::white);
-        //        QTextCursor cursor2(ui->textEdit->document());
-        //        cursor2.setPosition(beginBlock, QTextCursor::MoveAnchor);
-        //        cursor2.setPosition(endBlock, QTextCursor::KeepAnchor);
-        //        cursor2.setCharFormat(fmt2);
-        //        QTextCharFormat fmt;
-        //        fmt.setBackground(Qt::yellow);
-        //        fmt.setForeground(Qt::blue);
-        if (beginQueue.size() > 0 && endQueue.size() > 0)
+        if (!beginQueue.isEmpty() && (!endQueue.isEmpty()))
         {
             beginBlock = this->beginQueue.dequeue();// + cursorPosition;
-            endBlock = this->endQueue.dequeue(); //+ cursorPosition;
-            if (endBlock > 0)
-            {
-                beginBlock += cursorPosition;
-                endBlock += cursorPosition;
-                QTextCursor cursor = ui->textEdit->textCursor();
-                cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
-                cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
-                ui->textEdit->setTextCursor(cursor);
-            }
+            endBlock = this->endQueue.dequeue();// + cursorPosition;
+        }
+        if (endBlock > 0)
+        {
+            beginBlock += cursorPosition;
+            endBlock += cursorPosition;
+            QTextCursor cursor = ui->textEdit->textCursor();
+            cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+            cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+            ui->textEdit->setTextCursor(cursor);
+        }
+        ui->cancelButton->setEnabled(true);
+        cancelAction->setEnabled(true);
+    }
+}
+
+void MainWindow::highlightGoogleSelection()
+{
+    if (!beginQueue.isEmpty() && (!endQueue.isEmpty()))
+    {
+        beginBlock = this->beginQueue.dequeue();// + cursorPosition;
+        endBlock = this->endQueue.dequeue();// + cursorPosition;
+        if (endBlock > 0)
+        {
+            beginBlock += cursorPosition;
+            endBlock += cursorPosition;
+            if (endBlock > ui->textEdit->document()->toPlainText().size())
+                endBlock = ui->textEdit->document()->toPlainText().size();
+            QTextCursor cursor = ui->textEdit->textCursor();
+            cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+            cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+            ui->textEdit->setTextCursor(cursor);
         }
     }
 }
+
 
 void MainWindow::enableSplitMode()
 {
@@ -1362,6 +1414,7 @@ void MainWindow::enableSplitMode()
 void MainWindow::speakFromCurrentPosition()
 {
     updateControlsWhenEngineIsProcessing();
+    removeTempFiles();
     player->stop();
     playlist->clear();
     beginQueue.clear();
@@ -1371,4 +1424,30 @@ void MainWindow::speakFromCurrentPosition()
     cursorPosition = cursor.position();
     text = text.right(text.size() - cursorPosition);
     engine->speak(text, true);
+}
+
+void MainWindow::enableCancelButton()
+{
+    ui->cancelButton->setEnabled(true);
+}
+
+void MainWindow::disableCancelButton()
+{
+    ui->cancelButton->setEnabled(false);
+    QTextCursor cursor = ui->textEdit->textCursor();
+    cursor.setPosition(0, QTextCursor::MoveAnchor);
+    cursor.setPosition(0, QTextCursor::KeepAnchor);
+    ui->textEdit->setTextCursor(cursor);
+}
+
+void MainWindow::updateControlsWhenVoiceIsGoogle()
+{
+//    if (this->voice == GoogleEnglish || this->voice == GoogleGerman || this->voice == GoogleGreek)
+//    {
+//        controls->setEnabled(false);
+//    }
+//    else
+//    {
+//        controls->setEnabled(true);
+//    }
 }

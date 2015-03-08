@@ -6,11 +6,15 @@ SpeechEngine::SpeechEngine(QString voice)
     maryServerProcess = new QProcess();
     speechVoice = NULL;
     count = 1;
+    producedFiles = 0;
+    spokenFiles = 0;
+    googleAttempts = 0;
     isProcessing = false;
     setSpeechVoice(voice);
     maryTestingDownloadManager = new DownloadManager();
     textProcess = new TextProcess();
     splitMode = true;
+    googleTimer = new QTimer();
 }
 
 SpeechEngine::~SpeechEngine()
@@ -28,6 +32,7 @@ SpeechEngine::~SpeechEngine()
         delete textProcess;
         textProcess = NULL;
     }
+    delete googleTimer;
 }
 
 bool SpeechEngine::getIsProcessing()
@@ -37,26 +42,35 @@ bool SpeechEngine::getIsProcessing()
 
 void SpeechEngine::speak(QString text)
 {
-    currentSplitMode = splitMode;
-    if (isProcessing == true)
-        cancel();
-    textContainer.clear();
-    if (splitMode)
-    {
-        textProcess->setText(text);
-        textProcess->processText();
-        textContainer = textProcess->getTextContainer();
-        count = 1;
-        processList();
-    }
+    if (this->voice == GoogleEnglish || this->voice == GoogleGerman || this->voice == GoogleGreek)
+        speak(text, true);
     else
     {
-        filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
-        if ( count > maximumNumberOfFiles )
+
+        currentSplitMode = splitMode;
+        if (isProcessing == true)
+            cancel();
+        textContainer.clear();
+        if (splitMode)
+        {
+            textProcess->setText(text);
+            if (this->voice == GoogleEnglish || this->voice == GoogleGerman || this->voice == GoogleGreek)
+                textProcess->processGoogleText();
+            else
+                textProcess->processText();
+            textContainer = textProcess->getTextContainer();
             count = 1;
-        this->text = text;
-        isProcessing = true;
-        speechVoice->performSpeak(filename, text);
+            processList();
+        }
+        else
+        {
+            filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
+            if ( count > maximumNumberOfFiles )
+                count = 1;
+            this->text = text;
+            isProcessing = true;
+            speechVoice->performSpeak(filename, text);
+        }
     }
 }
 
@@ -69,7 +83,10 @@ void SpeechEngine::speak(QString text, bool splitMode)
     if (splitMode)
     {
         textProcess->setText(text);
-        textProcess->processText();
+        if (this->voice == GoogleEnglish || this->voice == GoogleGerman || this->voice == GoogleGreek)
+            textProcess->processGoogleText();
+        else
+            textProcess->processText();
         textContainer = textProcess->getTextContainer();
         count = 1;
         processList();
@@ -87,22 +104,65 @@ void SpeechEngine::speak(QString text, bool splitMode)
 
 void SpeechEngine::processList()
 {
-    //if (!textList.isEmpty())
-    if (!textContainer.text.isEmpty())
+    //    if (!textContainer.text.isEmpty() && !textContainer.googleText.isEmpty())
+    //    {
+    //        filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
+    //        if ( count > maximumNumberOfFiles )
+    //            count = 0;
+    //        if (voice == GoogleEnglish || voice == GoogleGerman || voice == GoogleGreek)
+    //        {
+    //            if (!textContainer.googleText.isEmpty())
+    //                this->text = textContainer.googleText.takeFirst();
+    //            if (!textContainer.googleBegin.isEmpty())
+    //                this->begin = textContainer.googleBegin.takeFirst();
+    //            if (!textContainer.googleEnd.isEmpty())
+    //                this->end = textContainer.googleEnd.takeFirst();
+    //        }
+    //        else
+    //        {
+    //            if (!textContainer.text.isEmpty())
+    //                this->text = textContainer.text.takeFirst();
+    //            if (!textContainer.begin.isEmpty())
+    //                this->begin = textContainer.begin.takeFirst();
+    //            if (!textContainer.end.isEmpty())
+    //                this->end = textContainer.end.takeFirst();
+    //        }
+    //        isProcessing = true;
+    //        speechVoice->performSpeak(filename, this->text);
+    //    }
+
+    if (voice == GoogleEnglish || voice == GoogleGerman || voice == GoogleGreek)
+    {
+        if (!textContainer.googleText.isEmpty())
+        {
+            filename = "/tmp/omilo-" + QString::number(count++) + ".mp3";
+            if ( count > maximumNumberOfFiles )
+                count = 0;
+            if (!textContainer.googleText.isEmpty())
+                this->text = textContainer.googleText.takeFirst();
+            if (!textContainer.googleBegin.isEmpty())
+                this->begin = textContainer.googleBegin.takeFirst();
+            if (!textContainer.googleEnd.isEmpty())
+                this->end = textContainer.googleEnd.takeFirst();
+            isProcessing = true;
+            speechVoice->performSpeak(filename, this->text);
+        }
+    }
+    else
     {
         filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
         if ( count > maximumNumberOfFiles )
             count = 0;
-        //this->text = textList.takeFirst();
-        if (!textContainer.googleText.isEmpty())
-            this->text = textContainer.googleText.takeFirst();
-        if (!textContainer.googleBegin.isEmpty())
-            this->begin = textContainer.googleBegin.takeFirst();
-        if (!textContainer.googleEnd.isEmpty())
-            this->end = textContainer.googleEnd.takeFirst();
+        if (!textContainer.text.isEmpty())
+            this->text = textContainer.text.takeFirst();
+        if (!textContainer.begin.isEmpty())
+            this->begin = textContainer.begin.takeFirst();
+        if (!textContainer.end.isEmpty())
+            this->end = textContainer.end.takeFirst();
         isProcessing = true;
         speechVoice->performSpeak(filename, this->text);
     }
+
 }
 
 void SpeechEngine::exportWav(QString filename, QString text)
@@ -119,6 +179,8 @@ void SpeechEngine::cancel()
         speechVoice->cancel();
         isProcessing = false;
     }
+    textContainer.clear();
+    disconnect(googleTimer, SIGNAL(timeout()), this, SLOT(processList()));
 }
 
 void SpeechEngine::createVoice(SpeechVoice *sVoice)
@@ -186,8 +248,15 @@ void SpeechEngine::setSpeechVoice(QString sVoice)
         createVoice(new PrudenceMaryVoice());
     else if (sVoice == SpikeMary)
         createVoice(new SpikeMaryVoice());
+    else if (sVoice == GoogleEnglish)
+        createVoice(new EnglishGoogleVoice());
+    else if (sVoice == GoogleGerman)
+        createVoice(new GermanGoogleVoice());
+    else if (sVoice == GoogleGreek)
+        createVoice(new GreekGoogleVoice());
     else
         createVoice(new KalDiphoneFestivalVoice());
+    this->voice = sVoice;
 }
 
 SpeechVoice* SpeechEngine::getSpeechVoice()
@@ -202,18 +271,70 @@ void SpeechEngine::startMaryProcess()
 
 void SpeechEngine::voiceFileCreated(QString filename)
 {
+    googleTimer->disconnect();
     isProcessing = false;
+    producedFiles++;
     if (filename != "/tmp/omilo.wav") // omilo.wav is used for checking mary server
+    {
         emit fileCreated(filename, currentSplitMode, this->begin, this->end);
-    if (!textContainer.googleText.isEmpty())
-        processList();
+        int size = 0;
+        QFile myFile(filename);
+        if (myFile.open(QIODevice::ReadOnly)){
+            size = myFile.size();
+            myFile.close();
+        }
+        if (size < 2300)
+        {
+            if (voice == GoogleEnglish || voice == GoogleGerman || voice == GoogleGreek)
+            {
+                googleAttempts++;
+                qDebug() << "Maybe empty  file: " << filename;
+                if (googleAttempts < 5)
+                {
+                    speechVoice->performSpeak(this->filename, this->text);
+                    return;
+                }
+                else
+                {
+                    googleAttempts = 0;
+                    processList();
+                }
+            }
+        }
+        else
+            googleAttempts = 0;
+    }
+    if (voice == GoogleEnglish || voice == GoogleGerman || voice == GoogleGreek)
+    {
+        if (!textContainer.googleText.isEmpty())
+            //processList();
+            //googleTimer->start(5000);
+            if (producedFiles - spokenFiles < 5)
+                //processList();
+            {
+                connect(googleTimer, SIGNAL(timeout()), this, SLOT(processList()));
+                googleTimer->start(2000);
+            }
+            else
+            {
+                disconnect(googleTimer, SIGNAL(timeout()), this, SLOT(processList()));
+            }
+
+        else
+            emit processingFinished();
+    }
     else
-        emit processingFinished();
+    {
+        if (!textContainer.text.isEmpty())
+            processList();
+        else
+            emit processingFinished();
+    }
 }
 
 void SpeechEngine::testMaryServer()
 {
-    maryTestingDownloadManager->performMaryTTSSpeak("/tmp/omilo-test.wav", "Welcome to omilo", "LOCALE=el&VOICE=emily-v2.0.1-hmm");
+    maryTestingDownloadManager->performSpeak("/tmp/omilo-test.wav", "Welcome to omilo", "LOCALE=el&VOICE=emily-v2.0.1-hmm");
 }
 
 void SpeechEngine::setDurationStretch(unsigned int duration)
@@ -233,3 +354,14 @@ void SpeechEngine::setSplitMode(bool mode)
     this->splitMode = mode;
 }
 
+void SpeechEngine::setPlaylist(QMediaPlaylist* playlist)
+{
+    this->playlist = playlist;
+    connect(this->playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(filePlayed()));
+}
+
+void SpeechEngine::filePlayed()
+{
+    spokenFiles++;
+    processList();
+}

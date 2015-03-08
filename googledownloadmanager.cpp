@@ -1,6 +1,6 @@
-#include "downloadmanager.h"
+#include "googledownloadmanager.h"
 
-void DownloadManager::performSpeak(QString filename, QString text, QString voiceCommand)
+void GoogleDownloadManager::performSpeak(QString filename, QString text, QString voiceCommand)
 {
     QString finalCommand, command1, command2;
     this->filename = filename;
@@ -10,11 +10,7 @@ void DownloadManager::performSpeak(QString filename, QString text, QString voice
     if (downloading == false)
     {
         downloading = true;
-        finalCommand = "http://localhost:59127/process?INPUT_TEXT=";
-        command1 = "&INPUT_TYPE=TEXT&OUTPUT_TYPE=AUDIO&AUDIO=WAVE_FILE&";
-        command2 = voiceCommand;
-        finalCommand = finalCommand + text + command1 + command2;
-
+        finalCommand = "http://translate.google.com/translate_tts?ie=UTF-8&tl=" + voiceCommand + "&q=" + text;
         file = new QFile(filename);
         if (!this->file->open(QIODevice::WriteOnly))
         {
@@ -28,9 +24,10 @@ void DownloadManager::performSpeak(QString filename, QString text, QString voice
     }
 }
 
-void DownloadManager::finishRequest()
+void GoogleDownloadManager::finishRequest()
 {
     //we are now able to handle new user requests
     downloading = false;
     emit downloadingFinished();
 }
+

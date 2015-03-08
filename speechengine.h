@@ -7,8 +7,12 @@
 #include "festivalvoice.h"
 #include "flitevoice.h"
 #include "maryvoice.h"
+#include "googlevoice.h"
 #include "downloadmanager.h"
 #include "textprocess.h"
+//#include "genericplayer.h"
+//#include "QMediaPlayer"
+#include <QMediaPlaylist>
 #include "QTimer"
 
 class SpeechEngine : public QObject
@@ -28,6 +32,7 @@ public:
     void testMaryServer();
     bool getIsProcessing();
     void setSplitMode(bool mode);
+    void setPlaylist(QMediaPlaylist* playerList);
 
 private:
     QString text;
@@ -36,6 +41,7 @@ private:
     void createVoice(SpeechVoice *sVoice); //We need a factory here
     void startMaryProcess();
     QString voice;
+    QString currentVoice;
     unsigned int count;
     QString filename;
     DownloadManager *maryTestingDownloadManager;
@@ -48,10 +54,16 @@ private:
     TextContainer textContainer;
     unsigned int begin;
     unsigned int end;
+    QTimer *googleTimer;
+    QMediaPlaylist *playlist;
+    int producedFiles;
+    int spokenFiles;
+    int googleAttempts;
 
 private slots:
     void voiceFileCreated(QString filename);
     void processList();
+    void filePlayed();
 
 signals:
     void fileCreated(QString filename, bool split, unsigned int begin, unsigned int end);

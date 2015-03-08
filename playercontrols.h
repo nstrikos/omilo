@@ -51,8 +51,8 @@ private:
     bool playerMuted;
     QAbstractButton *playButton;
     QAbstractButton *stopButton;
-    QAbstractButton *nextButton;
-    QAbstractButton *previousButton;
+//    QAbstractButton *nextButton;
+//    QAbstractButton *previousButton;
     QAbstractButton *muteButton;
     QAbstractSlider *volumeSlider;
     QComboBox *rateBox;

@@ -28,7 +28,7 @@ public:
     ~TextProcess();
     void setText(QString text);
     void processText();
-    //QStringList getTextList();
+    void processGoogleText();
     TextContainer getTextContainer();
 
 private:
