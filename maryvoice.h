@@ -67,7 +67,7 @@ class GreekMaryVoice : public MaryVoice
     }
     QString voiceCommand()
     {
-        return "LOCALE=el&VOICE=emily-v2.0.1-hmm";
+        return "LOCALE=el&VOICE=alchemist-1992-hsmm-hsmm";
     }
 };
 

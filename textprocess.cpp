@@ -133,7 +133,7 @@ void TextProcess::processGoogleText()
     while ( i < size)
     {
         QString ch = text.at(i);
-        if ( ch == "." )//|| ch == ",")
+        if ( (ch == "." ) || ch == ",")
         {
             if ( i < size - 1)
             {

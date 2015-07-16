@@ -121,11 +121,9 @@ void MainWindow::initVariables()
     spinBox->setMaximum(72);
     spinBox->setValue(qApp->font().pointSize());
     defaultPalette = ui->textEdit->palette();
-    defaultPalette.setColor(QPalette::HighlightedText, Qt::yellow);
     invertedPalette = ui->textEdit->palette();
     invertedPalette.setColor(QPalette::Text, QColor(255, 255, 255));
     invertedPalette.setColor(QPalette::Base, QColor(0, 0, 0));
-    invertedPalette.setColor(QPalette::HighlightedText, Qt::yellow);
     beginBlock = 0;
     endBlock = 0;
 }
@@ -606,6 +604,7 @@ void MainWindow::newFile()
         ui->textEdit->clear();
         setCurrentFile("");
     }
+    on_cancelButton_clicked();
 }
 
 void MainWindow::openFile()
@@ -763,6 +762,7 @@ void MainWindow::loadFile(const QString &filename)
 #endif
 
     setCurrentFile(filename);
+    on_cancelButton_clicked();
 }
 
 void MainWindow::readSettings()
@@ -788,7 +788,8 @@ void MainWindow::writeSettings()
     settings.setValue("MainWindowPosition", pos());
     settings.setValue("MainWindowSize", size());
     settings.setValue("recentFiles", recentFiles);
-    settings.setValue("MainWindowVoice", engine->getSpeechVoice()->getName());
+//    settings.setValue("MainWindowVoice", engine->getSpeechVoice()->getName());
+    settings.setValue("MainWindowVoice", this->engineVoice);
     settings.setValue("SplashScreen", splashScreenIsDisabled);
     settings.setValue("SplitMode", splitMode);
 }
@@ -891,7 +892,6 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
     {
         QString command = "sox " + filename + " /tmp/temp.wav";
         qDebug() << command;
-        qDebug() << command;
         soxProcess.start(command);
         soxProcess.waitForFinished();
         filename += ".wav";
@@ -928,7 +928,8 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
         {
             QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
             playlist->addMedia(url);
-            player->play();
+            if (player->state() == QMediaPlayer::StoppedState)
+                player->play();
         }
     }
 }
@@ -1374,6 +1375,8 @@ void MainWindow::highlightSelection()
         {
             beginBlock += cursorPosition;
             endBlock += cursorPosition;
+            if (endBlock > ui->textEdit->document()->toPlainText().size())
+                endBlock = ui->textEdit->document()->toPlainText().size();
             QTextCursor cursor = ui->textEdit->textCursor();
             cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
             cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
@@ -1423,6 +1426,7 @@ void MainWindow::speakFromCurrentPosition()
     QTextCursor cursor = ui->textEdit->textCursor();
     cursorPosition = cursor.position();
     text = text.right(text.size() - cursorPosition);
+    engine->setSpeechVoice(engineVoice);
     engine->speak(text, true);
 }
 

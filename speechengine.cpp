@@ -42,6 +42,9 @@ bool SpeechEngine::getIsProcessing()
 
 void SpeechEngine::speak(QString text)
 {
+    spokenFiles = 0;
+    producedFiles = 0;
+    googleAttempts = 0;
     if (this->voice == GoogleEnglish || this->voice == GoogleGerman || this->voice == GoogleGreek)
         speak(text, true);
     else
@@ -76,6 +79,9 @@ void SpeechEngine::speak(QString text)
 
 void SpeechEngine::speak(QString text, bool splitMode)
 {
+    spokenFiles = 0;
+    producedFiles = 0;
+    googleAttempts = 0;
     currentSplitMode = splitMode;
     if (isProcessing == true)
         cancel();
@@ -139,28 +145,33 @@ void SpeechEngine::processList()
             if ( count > maximumNumberOfFiles )
                 count = 0;
             if (!textContainer.googleText.isEmpty())
-                this->text = textContainer.googleText.takeFirst();
+                this->text = textContainer.googleText.at(0);
             if (!textContainer.googleBegin.isEmpty())
-                this->begin = textContainer.googleBegin.takeFirst();
+                this->begin = textContainer.googleBegin.at(0);
             if (!textContainer.googleEnd.isEmpty())
-                this->end = textContainer.googleEnd.takeFirst();
+                this->end = textContainer.googleEnd.at(0);
             isProcessing = true;
             speechVoice->performSpeak(filename, this->text);
         }
     }
     else
     {
+        if (!textContainer.text.isEmpty())
+        {
+
         filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
         if ( count > maximumNumberOfFiles )
             count = 0;
         if (!textContainer.text.isEmpty())
-            this->text = textContainer.text.takeFirst();
+//            this->text = textContainer.text.takeFirst();
+            this->text = textContainer.text.at(0);
         if (!textContainer.begin.isEmpty())
-            this->begin = textContainer.begin.takeFirst();
+            this->begin = textContainer.begin.at(0);
         if (!textContainer.end.isEmpty())
-            this->end = textContainer.end.takeFirst();
+            this->end = textContainer.end.at(0);
         isProcessing = true;
         speechVoice->performSpeak(filename, this->text);
+        }
     }
 
 }
@@ -276,7 +287,6 @@ void SpeechEngine::voiceFileCreated(QString filename)
     producedFiles++;
     if (filename != "/tmp/omilo.wav") // omilo.wav is used for checking mary server
     {
-        emit fileCreated(filename, currentSplitMode, this->begin, this->end);
         int size = 0;
         QFile myFile(filename);
         if (myFile.open(QIODevice::ReadOnly)){
@@ -289,27 +299,51 @@ void SpeechEngine::voiceFileCreated(QString filename)
             {
                 googleAttempts++;
                 qDebug() << "Maybe empty  file: " << filename;
+                qDebug() << "Google attempt:" << googleAttempts;
                 if (googleAttempts < 5)
                 {
-                    speechVoice->performSpeak(this->filename, this->text);
+                    //                    speechVoice->performSpeak(this->filename, this->text);
+                    //                    textContainer.googleText.prepend(this->text);
+                    //                    textContainer.googleBegin.prepend(this->begin);
+                    //                    textContainer.googleEnd.prepend(this->end);
+                    processList();
                     return;
                 }
                 else
                 {
                     googleAttempts = 0;
-                    processList();
+                    textContainer.googleText.dequeue();
+                    textContainer.googleBegin.dequeue();
+                    textContainer.googleEnd.dequeue();
+                    emit fileCreated(filename, currentSplitMode, this->begin, this->end);
                 }
             }
         }
         else
-            googleAttempts = 0;
+        {
+            if (voice == GoogleEnglish || voice == GoogleGerman || voice == GoogleGreek)
+            {
+                textContainer.googleText.dequeue();
+                textContainer.googleBegin.dequeue();
+                textContainer.googleEnd.dequeue();
+                emit fileCreated(filename, currentSplitMode, this->begin, this->end);
+                googleAttempts = 0;
+            }
+            else
+            {
+                textContainer.text.dequeue();
+                textContainer.begin.dequeue();
+                textContainer.end.dequeue();
+                emit fileCreated(filename, currentSplitMode, this->begin, this->end);
+            }
+        }
     }
     if (voice == GoogleEnglish || voice == GoogleGerman || voice == GoogleGreek)
     {
         if (!textContainer.googleText.isEmpty())
             //processList();
             //googleTimer->start(5000);
-            if (producedFiles - spokenFiles < 5)
+            if (producedFiles - spokenFiles < 12)
                 //processList();
             {
                 connect(googleTimer, SIGNAL(timeout()), this, SLOT(processList()));
