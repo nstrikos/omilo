@@ -110,6 +110,9 @@ void SpeechEngineInfo::update()
         voiceToAdd.name = GreekMary;
         voiceToAdd.language = QLocale::languageToString(QLocale::Greek);
         installedVoices.push_back(voiceToAdd);
+        voiceToAdd.name = GreekHercules;
+        voiceToAdd.language = QLocale::languageToString(QLocale::Greek);
+        installedVoices.push_back(voiceToAdd);
         voiceToAdd.name = GreekGoogleMary;
         voiceToAdd.language = QLocale::languageToString(QLocale::Greek);
         installedVoices.push_back(voiceToAdd);
@@ -141,6 +144,9 @@ void SpeechEngineInfo::update()
         voiceToAdd.name = TurkishMary;
         voiceToAdd.language = QLocale::languageToString(QLocale::Turkish);
         availableVoices.push_back(voiceToAdd);
+        voiceToAdd.name = GreekHercules;
+        voiceToAdd.language = QLocale::languageToString(QLocale::Greek);
+        availableVoices.push_back(voiceToAdd);
         voiceToAdd.name = GreekMary;
         voiceToAdd.language = QLocale::languageToString(QLocale::Greek);
         availableVoices.push_back(voiceToAdd);
@@ -160,14 +166,5 @@ void SpeechEngineInfo::update()
         availableVoices.push_back(voiceToAdd);
         voiceToAdd.name = SpikeMary;
         availableVoices.push_back(voiceToAdd);
-    }
-    voiceToAdd.name = GoogleEnglish;
-    voiceToAdd.language = QLocale::languageToString(QLocale::English);
-    installedVoices.push_back(voiceToAdd);
-    voiceToAdd.name = GoogleGerman;
-    voiceToAdd.language = QLocale::languageToString(QLocale::German);
-    installedVoices.push_back(voiceToAdd);
-    voiceToAdd.name = GoogleGreek;
-    voiceToAdd.language = QLocale::languageToString(QLocale::Greek);
-    installedVoices.push_back(voiceToAdd);
+    }    
 }

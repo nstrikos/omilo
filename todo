@@ -1,3 +1,38 @@
+speak with highlighted text does not scroll up
+
+speak from current position selects spoken text
+speak selected text scrolls up
+
+void SpeechEngine::voiceFileCreated(QString filename)
+
+omilo starts unconfigured
+
+50. -> 50os
+
+omilo creates many wav files
+
+implement shortcuts for pause-increase/decrease rate
+check if voice is installed before speaking (maybe the user has removed it externally)
+speech.conf at home folder
+omilo-screen-reader -> QThread: Destroyed while thread is still running
+remove / and all special characters like o for celsius
+see heinrich suggestions
+upload marytts language
+check new flite voices????
+write about alt-down
+update webpage
+install more mary voices
+SOS opensuse numlock on causes F10-F11-F12 not working
+omilo-screen-reader -ctrl-shift-f12 with numlock off
+add fonts shortcuts (font, pointsize, bold)
+translate (Bold)
+german translation for omilo
+player rate for omilo-cli, omilo-text-editor-cli
+german translation for omilo-screen-reader
+omilo-screen-reader mary port
+/media/data/nick/apps/marytts/marytts-runtime/src/main/resources/marytts/config
+omilo -> seek forward???seek backward???
+
 When we change memory for mary server we restart server.
 This should be announced - Pri Low
 

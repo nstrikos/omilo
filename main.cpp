@@ -1,8 +1,9 @@
-#include <QtGui>
-#include "mainwindow.h"
+//#include <QtGui>
+//#include <QApplication>
 #include "definitions.h"
 #include <signal.h>
 #include <QMessageBox>
+#include <mainwindow.h>
 
 
 static QSharedMemory sharedMemory;
@@ -47,6 +48,14 @@ int main(int argc, char *argv[])
         qWarning() << "Can't start more than one instance of the application.";
         exit(0);
     }
+
+    if (!QSystemTrayIcon::isSystemTrayAvailable()) {
+        QMessageBox::critical(0, QObject::tr("Systray"),
+                              QObject::tr("I couldn't detect any system tray "
+                                          "on this system."));
+        return 1;
+    }
+    QApplication::setQuitOnLastWindowClosed(false);
 
     signal(SIGSEGV, signalhandler);
     signal(SIGKILL, signalhandler);

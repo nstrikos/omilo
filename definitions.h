@@ -21,6 +21,7 @@
 #define GermanMary "Mary German"
 #define TurkishMary "Mary Turkish"
 #define GreekMary "Mary Greek"
+#define GreekHercules "Mary Hercules Greek"
 #define GreekGoogleMary "Google Mary Greek"
 #define FrenchMary "Mary French"
 #define CmuRmsMary "Mary Cmu Rms"
@@ -29,9 +30,6 @@
 #define PoppyMary "Mary Poppy"
 #define PrudenceMary "Mary Prudence"
 #define SpikeMary "Mary Spike"
-#define GoogleEnglish "Google English"
-#define GoogleGerman "Google German"
-#define GoogleGreek "Google Greek"
 
 #define defDurationStretch 100
 #define defTargetMean 100

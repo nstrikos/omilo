@@ -11,6 +11,7 @@
 #include <QFontComboBox>
 #include <QSpinBox>
 #include <QCheckBox>
+#include <QSystemTrayIcon>
 #include "speechengine.h"
 #include "editorvoiceoptionsdialog.h"
 #include "installvoicesdialog.h"
@@ -38,7 +39,7 @@ public:
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
-    void closeEvent(QCloseEvent *event);
+    //void closeEvent(QCloseEvent *event);
 
 private slots:
     void newFile();
@@ -55,7 +56,6 @@ private slots:
     void splashTimerExpired();
     void durationChanged(qint64 duration);
     void positionChanged(qint64 progress);
-    void previous();
     void seek(int seconds);
     void jump(const QModelIndex &index);
     void playlistPositionChanged(int);
@@ -68,20 +68,15 @@ private slots:
     void displayAboutMessage();
     void play();
     void stop();
-    void next();
-    void volumeMute();
-    void volumeUp();
-    void volumeDown();
     void rateUp();
     void rateDown();
-    void toggleSplash();
     void showFliteDialog();
     void setDefaultVoice();
     void checkInstalledVoice();
     void hotKeyPlayPressed();
     void hotKeyStopPressed();
     void speakSelectedText();
-    void hotKeyShowWindowPressed();
+    //void hotKeyShowWindowPressed();
     void fontChanged(const QString &arg1);
     void spinBoxValueChanged(int arg1);
     void invertPalette();
@@ -106,6 +101,7 @@ private:
     void createActions();
     void createMenus();
     void createToolBars();
+    void createTrayIcon();
     void readSettings();
     void setupSplashScreen();
     void setupMaryStartupTimer();
@@ -151,17 +147,17 @@ private:
     QAction *aboutAction;
     QAction *playAction;
     QAction *stopAction;
-    QAction *previousAction;
-    QAction *nextAction;
-    QAction *volumeMuteAction;
-    QAction *volumeUpAction;
-    QAction *volumeDownAction;
+    //QAction *previousAction;
+    //QAction *nextAction;
+    //QAction *volumeMuteAction;
+    //QAction *volumeUpAction;
+    //QAction *volumeDownAction;
     QAction *rateUpAction;
     QAction *rateDownAction;
-    QAction *toggleSplashAction;
+//    QAction *toggleSplashAction;
     QAction *showFliteSettingsAction;
     QAction *speakSelectedTextAction;
-    QAction *hideWindowAction;
+    //QAction *hideWindowAction;
     QAction *boldAction;
     QAction *invertColorsAction;
     QAction *increasePointSizeAction;
@@ -169,6 +165,10 @@ private:
     QAction *showFontListAction;
     QAction *enableSplitModeAction;
     QAction *speakFromCurrentPositionAction;
+    QAction *minimizeAction;
+    QAction *maximizeAction;
+    QAction *restoreAction;
+    QAction *quitAction;
 
     QMenu *fileMenu;
     QMenu *editMenu;
@@ -177,12 +177,12 @@ private:
     QMenu *viewMenu;
     QMenu *helpMenu;
 
-    QToolBar *fileToolBar;
-    QToolBar *editToolBar;
+    //QToolBar *fileToolBar;
+    //QToolBar *editToolBar;
     QToolBar *speakToolBar;
-    QToolBar *optionsToolBar;
-    QToolBar *viewToolBar;
-    QToolBar *helpToolBar;    
+    //QToolBar *optionsToolBar;
+    //QToolBar *viewToolBar;
+    //QToolBar *helpToolBar;
 
     SpeechEngine *engine;
     QString engineVoice; //variable to hold engine voice after reading from settings
@@ -228,6 +228,12 @@ private:
     bool splitMode;
     unsigned int cursorPosition;
     //GenericPlayer *genericPlayer;
+
+    QSystemTrayIcon *trayIcon;
+    QMenu *trayIconMenu;
+    bool engineIsProcessing;
+    QIcon speakIcon;
+    QIcon cancelIcon;
 };
 
 #endif // MAINWINDOW_H

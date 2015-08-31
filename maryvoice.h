@@ -55,6 +55,22 @@ class GermanMaryVoice : public MaryVoice
     }
 };
 
+class GreekHerculesVoice : public MaryVoice
+{
+    QString getName()
+    {
+        return GreekHercules;
+    }
+    QString getLanguage()
+    {
+        return QLocale::languageToString(QLocale::Greek);
+    }
+    QString voiceCommand()
+    {
+        return "LOCALE=el&VOICE=alchemist-1992-hsmm-hsmm";
+    }
+};
+
 class GreekMaryVoice : public MaryVoice
 {
     QString getName()

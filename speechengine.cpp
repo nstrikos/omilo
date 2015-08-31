@@ -45,35 +45,27 @@ void SpeechEngine::speak(QString text)
     spokenFiles = 0;
     producedFiles = 0;
     googleAttempts = 0;
-    if (this->voice == GoogleEnglish || this->voice == GoogleGerman || this->voice == GoogleGreek)
-        speak(text, true);
+
+    currentSplitMode = splitMode;
+    if (isProcessing == true)
+        cancel();
+    textContainer.clear();
+    if (splitMode)
+    {
+        textProcess->setText(text);
+        textProcess->processText();
+        textContainer = textProcess->getTextContainer();
+        count = 1;
+        processList();
+    }
     else
     {
-
-        currentSplitMode = splitMode;
-        if (isProcessing == true)
-            cancel();
-        textContainer.clear();
-        if (splitMode)
-        {
-            textProcess->setText(text);
-            if (this->voice == GoogleEnglish || this->voice == GoogleGerman || this->voice == GoogleGreek)
-                textProcess->processGoogleText();
-            else
-                textProcess->processText();
-            textContainer = textProcess->getTextContainer();
+        filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
+        if ( count > maximumNumberOfFiles )
             count = 1;
-            processList();
-        }
-        else
-        {
-            filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
-            if ( count > maximumNumberOfFiles )
-                count = 1;
-            this->text = text;
-            isProcessing = true;
-            speechVoice->performSpeak(filename, text);
-        }
+        this->text = text;
+        isProcessing = true;
+        speechVoice->performSpeak(filename, text);
     }
 }
 
@@ -89,10 +81,7 @@ void SpeechEngine::speak(QString text, bool splitMode)
     if (splitMode)
     {
         textProcess->setText(text);
-        if (this->voice == GoogleEnglish || this->voice == GoogleGerman || this->voice == GoogleGreek)
-            textProcess->processGoogleText();
-        else
-            textProcess->processText();
+        textProcess->processText();
         textContainer = textProcess->getTextContainer();
         count = 1;
         processList();
@@ -137,42 +126,25 @@ void SpeechEngine::processList()
     //        speechVoice->performSpeak(filename, this->text);
     //    }
 
-    if (voice == GoogleEnglish || voice == GoogleGerman || voice == GoogleGreek)
-    {
-        if (!textContainer.googleText.isEmpty())
-        {
-            filename = "/tmp/omilo-" + QString::number(count++) + ".mp3";
-            if ( count > maximumNumberOfFiles )
-                count = 0;
-            if (!textContainer.googleText.isEmpty())
-                this->text = textContainer.googleText.at(0);
-            if (!textContainer.googleBegin.isEmpty())
-                this->begin = textContainer.googleBegin.at(0);
-            if (!textContainer.googleEnd.isEmpty())
-                this->end = textContainer.googleEnd.at(0);
-            isProcessing = true;
-            speechVoice->performSpeak(filename, this->text);
-        }
-    }
-    else
-    {
+
+
         if (!textContainer.text.isEmpty())
         {
 
-        filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
-        if ( count > maximumNumberOfFiles )
-            count = 0;
-        if (!textContainer.text.isEmpty())
-//            this->text = textContainer.text.takeFirst();
-            this->text = textContainer.text.at(0);
-        if (!textContainer.begin.isEmpty())
-            this->begin = textContainer.begin.at(0);
-        if (!textContainer.end.isEmpty())
-            this->end = textContainer.end.at(0);
-        isProcessing = true;
-        speechVoice->performSpeak(filename, this->text);
+            filename = "/tmp/omilo-" + QString::number(count++) + ".wav";
+            if ( count > maximumNumberOfFiles )
+                count = 0;
+            if (!textContainer.text.isEmpty())
+                //            this->text = textContainer.text.takeFirst();
+                this->text = textContainer.text.at(0);
+            if (!textContainer.begin.isEmpty())
+                this->begin = textContainer.begin.at(0);
+            if (!textContainer.end.isEmpty())
+                this->end = textContainer.end.at(0);
+            isProcessing = true;
+            speechVoice->performSpeak(filename, this->text);
         }
-    }
+
 
 }
 
@@ -239,6 +211,8 @@ void SpeechEngine::setSpeechVoice(QString sVoice)
         createVoice(new ItalianMaryVoice());
     else if (sVoice == GermanMary)
         createVoice(new GermanMaryVoice());
+    else if (sVoice == GreekHercules)
+        createVoice(new GreekHerculesVoice());
     else if (sVoice == GreekMary)
         createVoice(new GreekMaryVoice());
     else if (sVoice == GreekGoogleMary)
@@ -259,12 +233,6 @@ void SpeechEngine::setSpeechVoice(QString sVoice)
         createVoice(new PrudenceMaryVoice());
     else if (sVoice == SpikeMary)
         createVoice(new SpikeMaryVoice());
-    else if (sVoice == GoogleEnglish)
-        createVoice(new EnglishGoogleVoice());
-    else if (sVoice == GoogleGerman)
-        createVoice(new GermanGoogleVoice());
-    else if (sVoice == GoogleGreek)
-        createVoice(new GreekGoogleVoice());
     else
         createVoice(new KalDiphoneFestivalVoice());
     this->voice = sVoice;
@@ -295,69 +263,23 @@ void SpeechEngine::voiceFileCreated(QString filename)
         }
         if (size < 2300)
         {
-            if (voice == GoogleEnglish || voice == GoogleGerman || voice == GoogleGreek)
-            {
-                googleAttempts++;
-                qDebug() << "Maybe empty  file: " << filename;
-                qDebug() << "Google attempt:" << googleAttempts;
-                if (googleAttempts < 5)
-                {
-                    //                    speechVoice->performSpeak(this->filename, this->text);
-                    //                    textContainer.googleText.prepend(this->text);
-                    //                    textContainer.googleBegin.prepend(this->begin);
-                    //                    textContainer.googleEnd.prepend(this->end);
-                    processList();
-                    return;
-                }
-                else
-                {
-                    googleAttempts = 0;
-                    textContainer.googleText.dequeue();
-                    textContainer.googleBegin.dequeue();
-                    textContainer.googleEnd.dequeue();
-                    emit fileCreated(filename, currentSplitMode, this->begin, this->end);
-                }
-            }
+
         }
         else
         {
-            if (voice == GoogleEnglish || voice == GoogleGerman || voice == GoogleGreek)
+
             {
-                textContainer.googleText.dequeue();
-                textContainer.googleBegin.dequeue();
-                textContainer.googleEnd.dequeue();
-                emit fileCreated(filename, currentSplitMode, this->begin, this->end);
-                googleAttempts = 0;
-            }
-            else
-            {
-                textContainer.text.dequeue();
-                textContainer.begin.dequeue();
-                textContainer.end.dequeue();
+                if (!textContainer.text.isEmpty())
+                    textContainer.text.dequeue();
+                if (!textContainer.begin.isEmpty())
+                    textContainer.begin.dequeue();
+                if (!textContainer.end.isEmpty())
+                    textContainer.end.dequeue();
                 emit fileCreated(filename, currentSplitMode, this->begin, this->end);
             }
         }
     }
-    if (voice == GoogleEnglish || voice == GoogleGerman || voice == GoogleGreek)
-    {
-        if (!textContainer.googleText.isEmpty())
-            //processList();
-            //googleTimer->start(5000);
-            if (producedFiles - spokenFiles < 12)
-                //processList();
-            {
-                connect(googleTimer, SIGNAL(timeout()), this, SLOT(processList()));
-                googleTimer->start(2000);
-            }
-            else
-            {
-                disconnect(googleTimer, SIGNAL(timeout()), this, SLOT(processList()));
-            }
 
-        else
-            emit processingFinished();
-    }
-    else
     {
         if (!textContainer.text.isEmpty())
             processList();

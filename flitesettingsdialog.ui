@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Flite settings</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="omilo.qrc">
+    <normaloff>:/images/audio-input.png</normaloff>:/images/audio-input.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -97,6 +101,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="omilo.qrc"/>
+ </resources>
  <connections/>
 </ui>

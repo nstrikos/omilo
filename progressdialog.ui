@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>Omilo</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="omilo.qrc">
+    <normaloff>:/images/audio-input.png</normaloff>:/images/audio-input.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="0">
     <widget class="QPushButton" name="cancelButton">
@@ -56,6 +60,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>textBrowser</tabstop>
   <tabstop>cancelButton</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="omilo.qrc"/>
+ </resources>
  <connections/>
 </ui>

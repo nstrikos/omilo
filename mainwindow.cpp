@@ -9,7 +9,7 @@
 #include <QtGui>
 #include <QMenu>
 #include <QMenuBar>
-#include <QToolBar>
+#include <QScrollBar>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,11 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 MainWindow::~MainWindow()
-{
-    delete ui;
-}
-
-void MainWindow::closeEvent(QCloseEvent *event)
 {
     //delete genericPlayer;
     hotKeyThread.terminate();
@@ -53,8 +48,14 @@ void MainWindow::closeEvent(QCloseEvent *event)
     delete fontComboBox;
     delete spinBox;
     removeTempFiles();
-    event->accept();
+    delete ui;
 }
+
+//void MainWindow::closeEvent(QCloseEvent *event)
+//{
+
+//    event->accept();
+//}
 
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
@@ -74,6 +75,7 @@ void MainWindow::initFunctions()
     //Create actions,menus and toolbars
     createActions();
     createMenus();
+    createTrayIcon();
 
     //It's important to read the settings before initializing variables
     //readsettings should be called after createActions
@@ -83,7 +85,7 @@ void MainWindow::initFunctions()
 
     //In ubuntu shortcuts will not work if actions are not added to toolbar
     //toolbars should be created after variables initialization
-    createToolBars();
+    //createToolBars();
 
     //Set up splash screen
     setupSplashScreen();
@@ -126,6 +128,10 @@ void MainWindow::initVariables()
     invertedPalette.setColor(QPalette::Base, QColor(0, 0, 0));
     beginBlock = 0;
     endBlock = 0;
+    engineIsProcessing = false;
+    splashScreenIsDisabled = false;
+    speakIcon = QIcon(":/images/speak.png");
+    cancelIcon = QIcon(":images/cancel.png");
 }
 
 void MainWindow::setupPlayer()
@@ -139,15 +145,11 @@ void MainWindow::setupPlayer()
     playlistModel->setPlaylist(playlist);
     slider = new QSlider(Qt::Horizontal, this);
     slider->setRange(0, player->duration() / 1000);
+    slider->setMaximumWidth(2000);
     connect(slider, SIGNAL(sliderMoved(int)), this, SLOT(seek(int)));
-
-    //    playlistView = new QListView(this);
-    //    playlistView->setModel(playlistModel);
 
     controls = new PlayerControls(this);
     controls->setState(player->state());
-    controls->setVolume(player->volume());
-    controls->setMuted(controls->isMuted());
 
     connect(player, SIGNAL(durationChanged(qint64)), SLOT(durationChanged(qint64)));
     connect(player, SIGNAL(positionChanged(qint64)), SLOT(positionChanged(qint64)));
@@ -156,7 +158,6 @@ void MainWindow::setupPlayer()
             this, SLOT(statusChanged(QMediaPlayer::MediaStatus)));
     connect(player, SIGNAL(bufferStatusChanged(int)), this, SLOT(bufferingProgress(int)));
     connect(player, SIGNAL(error(QMediaPlayer::Error)), this, SLOT(displayErrorMessage()));
-    //    connect(playlistView, SIGNAL(activated(QModelIndex)), this, SLOT(jump(QModelIndex)));
     connect(controls, SIGNAL(play()), player, SLOT(play()));
     connect(controls, SIGNAL(pause()), player, SLOT(pause()));
     connect(controls, SIGNAL(stop()), player, SLOT(stop()));
@@ -165,7 +166,6 @@ void MainWindow::setupPlayer()
     connect(controls, SIGNAL(previous()), this, SLOT(previous()));
     connect(controls, SIGNAL(changeVolume(int)), player, SLOT(setVolume(int)));
     connect(controls, SIGNAL(changeMuting(bool)), player, SLOT(setMuted(bool)));
-    //connect(controls, SIGNAL(changeRate(qreal)), player, SLOT(setPlaybackRate(qreal)));
     connect(player, SIGNAL(stateChanged(QMediaPlayer::State)),
             controls, SLOT(setState(QMediaPlayer::State)));
     connect(player, SIGNAL(volumeChanged(int)), controls, SLOT(setVolume(int)));
@@ -175,28 +175,24 @@ void MainWindow::setupPlayer()
 void MainWindow::setupLayout()
 {
     labelDuration = new QLabel(this);
-    //    historyLabel = new QLabel(this);
-    //    historyLabel->setText(tr("History"));
-    //    QHBoxLayout *hLayout = new QHBoxLayout;
-    ui->verticalLayout->addWidget(controls);
-    //    ui->verticalLayout->addWidget(historyLabel);
-    //ui->verticalLayout->addWidget(playlistView);
-    //playlistView->setVisible(false);
-    //historyLabel->setVisible(false);
-    //    ui->verticalLayout->addLayout(hLayout);
-    ui->verticalLayout->addWidget(labelDuration);
-    ui->verticalLayout->addWidget(slider);
-    //    spacer = new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    ui->verticalLayout->addItem( new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding) );
-    //    slider->setVisible(false);
-    //    labelDuration->setVisible(false);
+    labelDuration->setText("00:00 / 00:00");
+    ui->horizontalLayout->setSpacing(0);
+    ui->horizontalLayout->addWidget(controls);
+    ui->horizontalLayout->addItem( new QSpacerItem(10, 10, QSizePolicy::Fixed, QSizePolicy::Fixed) );
+    ui->horizontalLayout->addWidget(labelDuration);
+    ui->horizontalLayout->addItem( new QSpacerItem(10, 10, QSizePolicy::Fixed, QSizePolicy::Fixed) );
+    ui->horizontalLayout->addWidget(slider);
+    //ui->horizontalLayout->addItem( new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum) );
+    //ui->horizontalLayout->setAlignment(Qt::AlignLeft);
+    ui->horizontalLayout->setStretch(6,1);
+
     selectedVoiceLabel = new QLabel(this);
     ui->statusBar->addWidget(selectedVoiceLabel);
     updateVoiceLabel();
     engineStatusLabel = new QLabel(this);
     engineStatusLabel->setText(tr("Speech engine is idle"));
     ui->statusBar->addWidget(engineStatusLabel);
-    ui->cancelButton->setEnabled(false);
+    //ui->cancelButton->setEnabled(false);
     updateControlsWhenVoiceIsGoogle();
 }
 
@@ -221,22 +217,18 @@ void MainWindow::connectSignalsToSlots()
 void MainWindow::createActions()
 {
     newAction = new QAction(tr("&New"), this);
-    newAction->setIcon(QIcon(":/images/new.png"));
     newAction->setShortcut(QKeySequence::New);
     connect(newAction, SIGNAL(triggered()), this, SLOT(newFile()));
 
     openAction = new QAction(tr("&Open..."), this);
-    openAction->setIcon(QIcon(":/images/open.png"));
     openAction->setShortcut(QKeySequence::Open);
     connect(openAction, SIGNAL(triggered()), this, SLOT(openFile()));
 
     saveAction = new QAction(tr("&Save"), this);
-    saveAction->setIcon(QIcon(":/images/save.png"));
     saveAction->setShortcut(QKeySequence::Save);
     connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
 
     saveAsAction = new QAction(tr("Save &As..."), this);
-    saveAsAction->setIcon(QIcon(":/images/save-as.png"));
     saveAsAction->setShortcut(QKeySequence::SaveAs);
     connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
 
@@ -249,58 +241,46 @@ void MainWindow::createActions()
 
     voiceOptionAction = new QAction(tr("Select &voice..."), this);
     voiceOptionAction->setShortcut(tr("F3"));
-    voiceOptionAction->setIcon(QIcon(":/images/voice-options.png"));
     connect(voiceOptionAction, SIGNAL(triggered()), this, SLOT(selectVoice()));
 
     installVoicesAction = new QAction(tr("Instal&l voices..."), this);
     installVoicesAction->setShortcut(tr("F4"));
-    installVoicesAction->setIcon(QIcon(":/images/install-voices.png"));
     connect(installVoicesAction, SIGNAL(triggered()), this, SLOT(installVoices()));
 
     exportToWavAction = new QAction(tr("&Export to wav..."), this);
     exportToWavAction->setShortcut(tr("Ctrl+E"));
-    exportToWavAction->setIcon(QIcon(":/images/export.png"));
     connect(exportToWavAction, SIGNAL(triggered()), this, SLOT(exportToWav()));
     exportToWavAction->setEnabled(false);
 
     exitAction = new QAction(tr("E&xit"), this);
     exitAction->setShortcut(QKeySequence::Quit);
-    exitAction->setIcon(QIcon(":/images/exit.png"));
     connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 
     undoAction = new QAction(tr("&Undo"), this);
-    undoAction->setIcon(QIcon(":/images/undo.png"));
     undoAction->setShortcut(QKeySequence::Undo);
     connect (undoAction, SIGNAL(triggered()), ui->textEdit, SLOT(undo()));
 
     redoAction = new QAction(tr("&Redo"), this);
-    redoAction->setIcon(QIcon(":/images/redo.png"));
     redoAction->setShortcut(QKeySequence::Redo);
     connect (redoAction, SIGNAL(triggered()), ui->textEdit, SLOT(redo()));
 
     cutAction = new QAction(tr("Cu&t"), this);
-    QIcon cutIcon = QIcon::fromTheme("editcut", QIcon(":/images/edit-cut.png"));
-    cutAction->setIcon(cutIcon);
     cutAction->setShortcut(QKeySequence::Cut);
     connect (cutAction, SIGNAL(triggered()), ui->textEdit, SLOT(cut()));
 
     copyAction = new QAction(tr("&Copy"), this);
-    copyAction->setIcon(QIcon(":/images/copy.png"));
     copyAction->setShortcut(QKeySequence::Copy);
     connect (copyAction, SIGNAL(triggered()), ui->textEdit, SLOT(copy()));
 
     pasteAction = new QAction(tr("&Paste"), this);
-    pasteAction->setIcon(QIcon(":/images/paste.png"));
     pasteAction->setShortcut(QKeySequence::Paste);
     connect (pasteAction, SIGNAL(triggered()), ui->textEdit, SLOT(paste()));
 
     clearAction = new QAction(tr("C&lear"), this);
-    clearAction->setIcon(QIcon(":/images/clear.png"));
     clearAction->setShortcut(tr("Alt+C"));
     connect (clearAction, SIGNAL(triggered()), ui->textEdit, SLOT(clear()));
 
     selectAllAction = new QAction(tr("Select &All"), this);
-    selectAllAction->setIcon(QIcon(":/images/select-all.png"));
     selectAllAction->setShortcut(QKeySequence::SelectAll);
     connect(selectAllAction, SIGNAL(triggered()), ui->textEdit, SLOT(selectAll()));
 
@@ -312,117 +292,78 @@ void MainWindow::createActions()
     ui->speakButton->setIcon(speakIcon);
 
     speakSelectedTextAction = new QAction(tr("&Speak (selected text)"), this);
-    QIcon speakselectedTextIcon = QIcon(":/images/format-indent-more.png");
-    speakSelectedTextAction->setIcon(speakselectedTextIcon);
     speakSelectedTextAction->setShortcut(tr("F7"));
     connect(speakSelectedTextAction, SIGNAL(triggered()), this, SLOT(speakSelectedText()));
 
     cancelAction = new QAction(tr("Cance&l"), this);
     cancelAction->setShortcut(tr("F12"));
-    QIcon cancelIcon = QIcon(":/images/cancel.png");
+    QIcon cancelIcon = QIcon(":/images/stop.png");
     cancelAction->setIcon(cancelIcon);
     connect(cancelAction, SIGNAL(triggered()), this, SLOT(on_cancelButton_clicked()));
     cancelAction->setEnabled(false);
-    ui->cancelButton->setIcon(cancelIcon);
+    //ui->cancelButton->setIcon(cancelIcon);
 
     aboutAction = new QAction(tr("About"), this);
     aboutAction->setShortcut(tr("F1"));
-    aboutAction->setIcon(QIcon(":/images/about.png"));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(displayAboutMessage()));
 
     boldAction = new QAction(tr("Bold"), this);
     boldAction->setShortcut(tr("Ctrl+B"));
     boldAction->setCheckable(true);
-    boldAction->setIcon(QIcon(":/images/format-text-bold.png"));
     connect(boldAction, SIGNAL(triggered()), this, SLOT(updateFont()));
 
     invertColorsAction = new QAction(tr("Invert Colors"), this);
     invertColorsAction->setShortcut(tr("Ctrl+I"));
     invertColorsAction->setCheckable(true);
-    invertColorsAction->setIcon(QIcon(":/images/preferences-color.png"));
     connect(invertColorsAction, SIGNAL(triggered()), this, SLOT(invertPalette()));
 
     increasePointSizeAction = new QAction(tr("Increase font size"), this);
     increasePointSizeAction->setShortcut(tr("Ctrl+L"));
-    increasePointSizeAction->setIcon(QIcon(":/images/rate-up.png"));
     connect(increasePointSizeAction, SIGNAL(triggered()), this, SLOT(increasePointSize()));
 
     decreasePointSizeAction = new QAction(tr("Decrease font size"), this);
     decreasePointSizeAction->setShortcut(tr("Ctrl+K"));
-    decreasePointSizeAction->setIcon(QIcon(":/images/rate-down.png"));
     connect(decreasePointSizeAction, SIGNAL(triggered()), this, SLOT(decreasePointSize()));
 
     showFontListAction = new QAction(tr("Fonts"), this);
     showFontListAction->setShortcut(tr("Ctrl+F"));
-    showFontListAction->setIcon(QIcon(":/images/font.png"));
     connect(showFontListAction, SIGNAL(triggered()), this, SLOT(showFontList()));
 
     enableSplitModeAction = new QAction(tr("Enable split mode"), this);
     enableSplitModeAction->setShortcut(tr("Ctrl+T"));
     enableSplitModeAction->setCheckable(true);
-    //invertColorsAction->setIcon(QIcon(":/images/preferences-color.png"));
     connect(enableSplitModeAction, SIGNAL(triggered()), this, SLOT(enableSplitMode()));
 
     speakFromCurrentPositionAction = new QAction(tr("Speak from current position"), this);
     speakFromCurrentPositionAction->setShortcut(tr("Ctrl+F2"));
-    //invertColorsAction->setIcon(QIcon(":/images/preferences-color.png"));
     connect(speakFromCurrentPositionAction, SIGNAL(triggered()), this, SLOT(speakFromCurrentPosition()));
 
     stopAction = new QAction(tr("Stop"), this);
     stopAction->setShortcut(tr("Ctrl+1"));
     stopAction->setIcon(QIcon(":/images/stop.png"));
     connect(stopAction, SIGNAL(triggered()), this, SLOT(stop()));
-    previousAction = new QAction(tr("Previous"), this);
-    previousAction->setShortcut(tr("Ctrl+2"));
-    previousAction->setIcon(QIcon(":/images/previous.png"));
-    connect(previousAction, SIGNAL(triggered()), this, SLOT(previous()));
     playAction = new QAction(tr("Play/Pause"), this);
     playAction->setShortcut(tr("Ctrl+3"));
     playAction->setIcon(QIcon(":/images/play.png"));
     connect(playAction, SIGNAL(triggered()), this, SLOT(play()));
-    nextAction = new QAction(tr("Next"), this);
-    nextAction->setShortcut(tr("Ctrl+4"));
-    nextAction->setIcon(QIcon(":/images/next.png"));
-    connect(nextAction, SIGNAL(triggered()), this, SLOT(next()));
-    volumeMuteAction = new QAction(tr("Mute"), this);
-    volumeMuteAction->setShortcut(tr("Ctrl+5"));
-    volumeMuteAction->setIcon(QIcon(":/images/volume-mute.png"));
-    connect(volumeMuteAction, SIGNAL(triggered()), this, SLOT(volumeMute()));
-    volumeDownAction = new QAction(tr("Volume down"), this);
-    volumeDownAction->setShortcut(tr("Ctrl+6"));
-    volumeDownAction->setIcon(QIcon(":/images/volume-down.png"));
-    connect(volumeDownAction, SIGNAL(triggered()), this, SLOT(volumeDown()));
-    volumeUpAction = new QAction(tr("Volume up"), this);
-    volumeUpAction->setShortcut(tr("Ctrl+7"));
-    volumeUpAction->setIcon(QIcon(":/images/volume-up.png"));
-    connect(volumeUpAction, SIGNAL(triggered()), this, SLOT(volumeUp()));
     rateDownAction = new QAction(tr("Decrease rate"), this);
     rateDownAction->setShortcut(tr("Ctrl+8"));
-    rateDownAction->setIcon(QIcon(":/images/rate-down.png"));
     connect(rateDownAction, SIGNAL(triggered()), this, SLOT(rateDown()));
     rateUpAction = new QAction(tr("Increase rate"), this);
     rateUpAction->setShortcut(tr("Ctrl+9"));
-    rateUpAction->setIcon(QIcon(":/images/rate-up.png"));
     connect(rateUpAction, SIGNAL(triggered()), this, SLOT(rateUp()));
     showFliteSettingsAction = new QAction(tr("Flite settings..."), this);
     showFliteSettingsAction->setShortcut(tr("F5"));
-    showFliteSettingsAction->setIcon(QIcon(":/images/voice-options.png"));
     connect(showFliteSettingsAction, SIGNAL(triggered()), this, SLOT(showFliteDialog()));
-    toggleSplashAction = new QAction(tr("Disable splash screen"), this);
-    connect(toggleSplashAction, SIGNAL(triggered()), this, SLOT(toggleSplash()));
-    toggleSplashAction->setShortcut(tr("F6"));
-    toggleSplashAction->setIcon(QIcon(":/images/toggle-splash.png"));
-    hideWindowAction = new QAction(tr("Hide"), this);
-    connect(hideWindowAction, SIGNAL(triggered()), this, SLOT(hotKeyShowWindowPressed()));
-    hideWindowAction->setShortcut(tr("F12"));
-
+    restoreAction = new QAction(tr("&Restore"), this);
+    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+    quitAction = new QAction(tr("&Quit"), this);
+    connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     cutAction->setEnabled(false);
     copyAction->setEnabled(false);
     connect(ui->textEdit, SIGNAL(copyAvailable(bool)), cutAction, SLOT(setEnabled(bool)));
     connect(ui->textEdit, SIGNAL(copyAvailable(bool)), copyAction, SLOT(setEnabled(bool)));
     connect(ui->textEdit, SIGNAL(copyAvailable(bool)), speakSelectedTextAction, SLOT(setEnabled(bool)));
-
-
     undoAction->setEnabled(false);
     redoAction->setEnabled(false);
     connect(ui->textEdit, SIGNAL(undoAvailable(bool)), undoAction, SLOT(setEnabled(bool)));
@@ -467,13 +408,8 @@ void MainWindow::createMenus()
     speakMenu->addAction(voiceOptionAction);
     speakMenu->addSeparator();
     speakMenu->addAction(stopAction);
-    speakMenu->addAction(previousAction);
     speakMenu->addAction(playAction);
-    speakMenu->addAction(nextAction);
-    speakMenu->addSeparator();
-    speakMenu->addAction(volumeMuteAction);
-    speakMenu->addAction(volumeDownAction);
-    speakMenu->addAction(volumeUpAction);
+    speakMenu->addSeparator();   
     speakMenu->addAction(rateDownAction);
     speakMenu->addAction(rateUpAction);
     speakMenu->addSeparator();
@@ -485,8 +421,6 @@ void MainWindow::createMenus()
     optionsMenu->addAction(showFliteSettingsAction);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
-    viewMenu->addAction(toggleSplashAction);
-    viewMenu->addAction(hideWindowAction);
     viewMenu->addAction(showFontListAction);
     viewMenu->addAction(increasePointSizeAction);
     viewMenu->addAction(decreasePointSizeAction);
@@ -499,56 +433,72 @@ void MainWindow::createMenus()
 
 void MainWindow::createToolBars()
 {
-    fileToolBar = addToolBar(tr("&File"));
-    fileToolBar->addAction(newAction);
-    fileToolBar->addAction(openAction);
-    fileToolBar->addAction(saveAction);
-    fileToolBar->addAction(saveAsAction);
-    fileToolBar->addAction(exportToWavAction);
-    fileToolBar->addAction(exitAction);
+    //fileToolBar = addToolBar(tr("&File"));
+    //fileToolBar->addAction(newAction);
+    //fileToolBar->addAction(openAction);
+    //fileToolBar->addAction(saveAction);
+    //fileToolBar->addAction(saveAsAction);
+    //fileToolBar->addAction(exportToWavAction);
+    //fileToolBar->addAction(exitAction);
 
-    editToolBar = addToolBar(tr("&Edit"));
-    editToolBar->addAction(undoAction);
-    editToolBar->addAction(redoAction);
-    editToolBar->addAction(cutAction);
-    editToolBar->addAction(copyAction);
-    editToolBar->addAction(pasteAction);
-    editToolBar->addAction(clearAction);
-    editToolBar->addAction(selectAllAction);
-    editToolBar->addAction(boldAction);
-    editToolBar->addWidget(fontComboBox);
-    editToolBar->addWidget(spinBox);
-    editToolBar->addAction(showFontListAction);
-    editToolBar->addAction(increasePointSizeAction);
-    editToolBar->addAction(decreasePointSizeAction);
-    editToolBar->addAction(invertColorsAction);
+//    editToolBar = addToolBar(tr("&Edit"));
+//    editToolBar->addAction(undoAction);
+//    editToolBar->addAction(redoAction);
+//    editToolBar->addAction(cutAction);
+//    editToolBar->addAction(copyAction);
+//    editToolBar->addAction(pasteAction);
+//    editToolBar->addAction(clearAction);
+//    editToolBar->addAction(selectAllAction);
+//    editToolBar->addAction(boldAction);
+//    editToolBar->addWidget(fontComboBox);
+//    editToolBar->addWidget(spinBox);
+//    editToolBar->addAction(showFontListAction);
+//    editToolBar->addAction(increasePointSizeAction);
+//    editToolBar->addAction(decreasePointSizeAction);
+//    editToolBar->addAction(invertColorsAction);
 
-    speakToolBar = addToolBar(tr("&Speak"));
-    speakToolBar->addAction(speakAction);
-    speakToolBar->addAction(speakSelectedTextAction);
-    speakToolBar->addAction(cancelAction);
-    speakToolBar->addAction(voiceOptionAction);
-    speakToolBar->addAction(stopAction);
-    speakToolBar->addAction(previousAction);
-    speakToolBar->addAction(playAction);
-    speakToolBar->addAction(nextAction);
-    speakToolBar->addAction(volumeMuteAction);
-    speakToolBar->addAction(volumeDownAction);
-    speakToolBar->addAction(volumeUpAction);
-    speakToolBar->addAction(rateDownAction);
-    speakToolBar->addAction(rateUpAction);
-    speakToolBar->addAction(enableSplitModeAction);
-    speakToolBar->addAction(speakFromCurrentPositionAction);
+    //speakToolBar = addToolBar(tr("&Speak"));
+    //speakToolBar->addAction(speakAction);
+    //speakToolBar->addAction(speakSelectedTextAction);
+    //speakToolBar->addAction(cancelAction);
+    //speakToolBar->addAction(voiceOptionAction);
+    //speakToolBar->addAction(stopAction);
+    //speakToolBar->addAction(previousAction);
+    //speakToolBar->addAction(playAction);
+    //speakToolBar->addAction(nextAction);
+    //speakToolBar->addAction(volumeMuteAction);
+    //speakToolBar->addAction(volumeDownAction);
+    //speakToolBar->addAction(volumeUpAction);
+    //speakToolBar->addAction(rateDownAction);
+    //speakToolBar->addAction(rateUpAction);
+    //speakToolBar->addAction(enableSplitModeAction);
+    //speakToolBar->addAction(speakFromCurrentPositionAction);
 
-    optionsToolBar = addToolBar(tr("&Options"));
-    optionsToolBar->addAction(installVoicesAction);
-    optionsToolBar->addAction(showFliteSettingsAction);
+//    optionsToolBar = addToolBar(tr("&Options"));
+//    optionsToolBar->addAction(installVoicesAction);
+//    optionsToolBar->addAction(showFliteSettingsAction);
 
-    viewToolBar = addToolBar((tr("&View")));
-    viewToolBar->addAction(toggleSplashAction);
+//    viewToolBar = addToolBar((tr("&View")));
+//    viewToolBar->addAction(toggleSplashAction);
 
-    helpToolBar = addToolBar(tr("&Help"));
-    helpToolBar->addAction(aboutAction);
+//    helpToolBar = addToolBar(tr("&Help"));
+//    helpToolBar->addAction(aboutAction);
+}
+
+void MainWindow::createTrayIcon()
+{
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(restoreAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitAction);
+
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setContextMenu(trayIconMenu);
+
+    QIcon icon = QIcon(":/images/audio-input.png");
+    trayIcon->setIcon(icon);
+    setWindowIcon(icon);
+    trayIcon->show();
 }
 
 void MainWindow::setupSplashScreen()
@@ -558,15 +508,15 @@ void MainWindow::setupSplashScreen()
     if (!splashScreenIsDisabled)
     {
         splashScreen = new QSplashScreen();
-        splashScreen->setPixmap(QPixmap(":images/omilo-splash.png"));
+        splashScreen->setPixmap(QPixmap(":images/audio-input-splash.jpg"));
         splashScreen->show();
         Qt::Alignment topRight = Qt::AlignRight | Qt::AlignTop;
         splashScreen->showMessage(tr("Loading Mary voices..."), topRight, Qt::black);
-        toggleSplashAction->setText(tr("Disable splash screen"));
+//        toggleSplashAction->setText(tr("Disable splash screen"));
     }
     else
     {
-        toggleSplashAction->setText(tr("Enable splash screen"));
+//        toggleSplashAction->setText(tr("Enable splash screen"));
     }
 }
 
@@ -777,7 +727,7 @@ void MainWindow::readSettings()
     engineVoice = settings.value("MainWindowVoice").toString();
     voice = engineVoice;
     writeVoiceToFile(voice);
-    splashScreenIsDisabled = settings.value("SplashScreen").toBool();
+    //splashScreenIsDisabled = settings.value("SplashScreen").toBool();
     splitMode = settings.value("SplitMode").toBool();
     enableSplitModeAction->setChecked(splitMode);
 }
@@ -809,29 +759,36 @@ void MainWindow::exportToWav()
 void MainWindow::speakButtonPressed()
 {
     QString text = ui->textEdit->document()->toPlainText();
-    speakText(text);
+    if (engineIsProcessing)
+        on_cancelButton_clicked();
+    else
+        speakText(text);
 }
 
 void MainWindow::updateControlsWhenEngineIsProcessing()
 {
     engineStatusLabel->setText(tr("Speech engine is processing..."));
-    ui->speakButton->setEnabled(false);
+    engineIsProcessing = true;
+    //ui->speakButton->setEnabled(false);
+    ui->speakButton->setIcon(cancelIcon);
     speakAction->setEnabled(false);
     exportToWavAction->setEnabled(false);
     installVoicesAction->setEnabled(false);
-    ui->cancelButton->setEnabled(true);
+    //ui->cancelButton->setEnabled(true);
     cancelAction->setEnabled(true);
 }
 
 void MainWindow::updateControlsWhenEngineIsIdle()
 {
+    engineIsProcessing = false;
     engineStatusLabel->setText(tr("Speech engine is idle"));
-    ui->speakButton->setEnabled(true);
+    //ui->speakButton->setEnabled(true);
+    ui->speakButton->setIcon(speakIcon);
     speakAction->setEnabled(true);
     exportToWavAction->setEnabled(true);
     installVoicesAction->setEnabled(true);
     //ui->cancelButton->setEnabled(false);
-    //cancelAction->setEnabled(false);
+    cancelAction->setEnabled(false);
 }
 
 void MainWindow::speakText(QString text)
@@ -839,6 +796,7 @@ void MainWindow::speakText(QString text)
     updateControlsWhenEngineIsProcessing();
     removeTempFiles();
     player->stop();
+    controls->disablePlayButton();
     playlist->clear();
 //    genericPlayer->stop();
     beginQueue.clear();
@@ -846,6 +804,7 @@ void MainWindow::speakText(QString text)
     cursorPosition = 0;
     engine->setSpeechVoice(engineVoice);
     engine->speak(text);
+    ui->textEdit->verticalScrollBar()->setSliderPosition(0);
 }
 
 void MainWindow::selectVoice()
@@ -888,17 +847,7 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
     //if (rate == 1)
     //{
     //QFile::copy(filename, "/tmp/temp.wav");
-    if (currentVoice == GoogleGreek || currentVoice == GoogleEnglish || currentVoice == GoogleGerman)
-    {
-        QString command = "sox " + filename + " /tmp/temp.wav";
-        qDebug() << command;
-        soxProcess.start(command);
-        soxProcess.waitForFinished();
-        filename += ".wav";
-        QFile::copy("/tmp/temp.wav", filename);
-        QFile::remove("/tmp/temp.wav");
 
-    }
 
     if (rate != 1)
     {
@@ -909,6 +858,13 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
         QFile::remove("/tmp/temp.wav");
     }
     //}
+
+//    QFile::copy(filename, "/tmp/temp.wav");
+//    QString command = "sox /tmp/temp.wav " + filename + " equalizer 30 .71q +7.2 equalizer 85 1.10q +5.6 equalizer 155 1.80q 0 equalizer 300 .71q -7.2 equalizer 500 2.90q -4.8 equalizer 1500 2.9q +1.6 equalizer 3000 .51q +8 equalizer 6000 0.51q +11.2 equalizer 7000 0.51q +12 equalizer 8000 0.51q +12";
+//    soxProcess.start(command);
+//    soxProcess.waitForFinished();
+//    QFile::remove("/tmp/temp.wav");
+
     QFileInfo fileInfo(filename);
     if (fileInfo.exists())
     {
@@ -918,6 +874,11 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
             //otherwise highlight selection will point to the previous text part
             beginQueue.append(begin);
             endQueue.append(end);
+        }
+        else
+        {
+            beginQueue.append(0);
+            endQueue.append(0);
         }
         //        if (currentVoice == GoogleGreek || currentVoice == GoogleEnglish || currentVoice == GoogleGerman)
         //        {
@@ -946,11 +907,6 @@ void MainWindow::positionChanged(qint64 progress)
         slider->setValue(progress / 1000);
     }
     updateDurationInfo(progress / 1000);
-}
-
-void MainWindow::previous()
-{
-    playlist->setCurrentIndex(playlist->currentIndex() - 1);
 }
 
 void MainWindow::jump(const QModelIndex &index)
@@ -1100,7 +1056,7 @@ void MainWindow::on_cancelButton_clicked()
     player->stop();
 //    genericPlayer->stop();
     updateControlsWhenEngineIsIdle();
-    ui->cancelButton->setEnabled(false);
+    //ui->cancelButton->setEnabled(false);
     cancelAction->setEnabled(false);
 }
 
@@ -1108,9 +1064,10 @@ void MainWindow::displayAboutMessage()
 {
     QMessageBox::about(this, tr("About Omilo-Qt5"),
                        tr("Omilo - Text To Speech\n"
-                          "Version 0.1\n"
+                          "Version 0.2\n"
                           "Developer : nstrikos@yahoo.gr\n"
-                          "Webpage : http://anoikto.webs.com/omilo"));
+                          "Webpage : http://anoikto.webs.com/omilo\n"
+                          "Icons: Gartoon Redux 1.11 "));
 
 }
 
@@ -1130,34 +1087,6 @@ void MainWindow::stop()
     player->stop();
 }
 
-void MainWindow::next()
-{
-    playlist->setCurrentIndex(playlist->currentIndex() + 1);
-}
-
-void MainWindow::volumeMute()
-{
-    player->setMuted(!player->isMuted());
-    if (player->isMuted())
-    {
-        volumeMuteAction->setIcon(QIcon(":/images/volume-active.png"));
-    }
-    else
-    {
-        volumeMuteAction->setIcon(QIcon(":/images/volume-mute.png"));
-    }
-}
-
-void MainWindow::volumeDown()
-{
-    player->setVolume(player->volume() - 1);
-}
-
-void MainWindow::volumeUp()
-{
-    player->setVolume(player->volume() + 1);
-}
-
 void MainWindow::rateUp()
 {
     controls->increaseRate();
@@ -1168,19 +1097,19 @@ void MainWindow::rateDown()
     controls->decreaseRate();
 }
 
-void MainWindow::toggleSplash()
-{
-    if (splashScreenIsDisabled)
-    {
-        splashScreenIsDisabled = false;
-        toggleSplashAction->setText(tr("Disable splash screen"));
-    }
-    else
-    {
-        splashScreenIsDisabled = true;
-        toggleSplashAction->setText(tr("Enable splash screen"));
-    }
-}
+//void MainWindow::toggleSplash()
+//{
+//    if (splashScreenIsDisabled)
+//    {
+//        splashScreenIsDisabled = false;
+//        toggleSplashAction->setText(tr("Disable splash screen"));
+//    }
+//    else
+//    {
+//        splashScreenIsDisabled = true;
+//        toggleSplashAction->setText(tr("Enable splash screen"));
+//    }
+//}
 
 void MainWindow::showFliteDialog()
 {
@@ -1270,23 +1199,6 @@ void MainWindow::speakSelectedText()
     //    speakText(text);
 }
 
-void MainWindow::hotKeyShowWindowPressed()
-{
-    if (QMainWindow::isVisible() == true)
-    {
-        if (QMainWindow::isActiveWindow() == true)
-            QMainWindow::setVisible(false);
-        else
-            QMainWindow::activateWindow();
-    }
-    else
-    {
-        QMainWindow::setVisible(true);
-        QMainWindow::raise();
-        QMainWindow::activateWindow();
-    }
-}
-
 void MainWindow::fontChanged(const QString &arg1)
 {
     Q_UNUSED(arg1);
@@ -1326,7 +1238,7 @@ void MainWindow::showWindowWithoutCloseButton()
         maryStartupTimer = NULL;
     }
 
-    setWindowFlags(Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
+    //setWindowFlags(Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
     this->show();
 }
 
@@ -1382,7 +1294,16 @@ void MainWindow::highlightSelection()
             cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
             ui->textEdit->setTextCursor(cursor);
         }
-        ui->cancelButton->setEnabled(true);
+        if (endBlock == 0)
+        {
+            beginBlock = 0;
+            endBlock = 0;
+            QTextCursor cursor = ui->textEdit->textCursor();
+            cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+            cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+            ui->textEdit->setTextCursor(cursor);
+        }
+        //ui->cancelButton->setEnabled(true);
         cancelAction->setEnabled(true);
     }
 }
@@ -1432,12 +1353,12 @@ void MainWindow::speakFromCurrentPosition()
 
 void MainWindow::enableCancelButton()
 {
-    ui->cancelButton->setEnabled(true);
+    //ui->cancelButton->setEnabled(true);
 }
 
 void MainWindow::disableCancelButton()
 {
-    ui->cancelButton->setEnabled(false);
+    //ui->cancelButton->setEnabled(false);
     QTextCursor cursor = ui->textEdit->textCursor();
     cursor.setPosition(0, QTextCursor::MoveAnchor);
     cursor.setPosition(0, QTextCursor::KeepAnchor);
