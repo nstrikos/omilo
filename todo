@@ -1,27 +1,19 @@
-speak with highlighted text does not scroll up
-
-speak from current position selects spoken text
-speak selected text scrolls up
+fliteresetdialog
+implement shortcuts for pause
+valgrind
 
 void SpeechEngine::voiceFileCreated(QString filename)
-
-omilo starts unconfigured
 
 50. -> 50os
 
 omilo creates many wav files
 
-implement shortcuts for pause-increase/decrease rate
-check if voice is installed before speaking (maybe the user has removed it externally)
 speech.conf at home folder
 omilo-screen-reader -> QThread: Destroyed while thread is still running
 remove / and all special characters like o for celsius
 see heinrich suggestions
 upload marytts language
-check new flite voices????
-write about alt-down
 update webpage
-install more mary voices
 SOS opensuse numlock on causes F10-F11-F12 not working
 omilo-screen-reader -ctrl-shift-f12 with numlock off
 add fonts shortcuts (font, pointsize, bold)

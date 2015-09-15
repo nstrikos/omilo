@@ -6,6 +6,7 @@ using namespace std;
 
 #include <QDir>
 #include "speechvoice.h"
+#include "definitions.h"
 
 class SpeechEngineInfo
 {

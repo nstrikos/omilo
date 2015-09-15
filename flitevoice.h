@@ -2,6 +2,7 @@
 #define FLITEVOICE_H
 
 #include "festivalflitevoice.h"
+#include "definitions.h"
 
 class FliteVoice : public FestivalFliteVoice
 {
@@ -34,8 +35,8 @@ class SltFliteVoice : public FliteVoice
 public:
     SltFliteVoice()
     {
-        durationStretch = defDurationStretch;
-        targetMean = defSltTargetMean;
+        this->durationStretch = defDurationStretch;
+        this->targetMean = defSltTargetMean;
     }
     QString getName()
     {

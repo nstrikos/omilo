@@ -4,7 +4,6 @@
 #include <QString>
 #include <QStringList>
 #include <QQueue>
-#include <QDebug>
 
 class TextContainer
 {
@@ -15,9 +14,6 @@ public:
     QQueue<QString> text;
     QQueue<unsigned int> begin;
     QQueue<unsigned int> end;
-    QQueue<unsigned int> googleBegin;
-    QQueue<unsigned int> googleEnd;
-    QQueue<QString> googleText;
 };
 
 
@@ -28,12 +24,10 @@ public:
     ~TextProcess();
     void setText(QString text);
     void processText();
-    void processGoogleText();
     TextContainer getTextContainer();
 
 private:
     QString text;
-//    QStringList textList;
     TextContainer textContainer;
 };
 

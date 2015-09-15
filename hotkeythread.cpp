@@ -19,8 +19,7 @@ void HotKeyThread::setStopped(bool stopped)
 
 void HotKeyThread::run()
 {
-    Display*    dpy     = XOpenDisplay(0);
-    //dpy     = XOpenDisplay(0);
+    Display    *dpy     =  XOpenDisplay(0);
     Window      root    = DefaultRootWindow(dpy);
     XEvent      ev;
     KeySym key;
@@ -63,7 +62,6 @@ void HotKeyThread::run()
                 emit stopPressed();
             else if (key == 65481)
                 emit showWindowPressed();
-
         }
     }
 
@@ -73,5 +71,6 @@ void HotKeyThread::run()
         XUngrabKey(dpy,keycode2,modifiers,grab_window);
     }
     //stopped = true;
-}
 
+    XCloseDisplay(dpy);
+}

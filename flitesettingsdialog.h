@@ -16,6 +16,7 @@ public:
     ~FliteSettingsDialog();
     unsigned int getDuration();
     unsigned int getTarget();
+    void resetDialog();
 
 private slots:
     void checkBoxChanged();

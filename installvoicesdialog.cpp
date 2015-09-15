@@ -153,7 +153,7 @@ void InstallVoicesDialog::removeFinished()
 {
     engineInfo->update();
     updateAvailableVoices();
-    isSelectedVoiceInstalled();
+    isSelectedVoiceInstalled(currentVoice);
 }
 
 void InstallVoicesDialog::showWindow(QString currentVoice)
@@ -186,110 +186,110 @@ void InstallVoicesDialog::startDownload()
 
 void InstallVoicesDialog::on_awbInstallButton_clicked()
 {
-    installationCommandPart2 = " /usr/share/omilo/scripts/install_cmu_us_awb_arctic.sh";
-    downloadFilename = "/tmp/cmu-us-awb-arctic-voice_0.95-1_all.deb";
-    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu-us-awb-arctic-voice_0.95-1_all.deb";
+    installationCommandPart2 = " /usr/share/omilo-qt5/scripts/install_cmu_us_awb_arctic.sh";
+    downloadFilename = "/tmp/cmu_us_awb_arctic-0.95-release.tar.bz2";
+    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu_us_awb_arctic-0.95-release.tar.bz2";
     startDownload();
 }
 
 void InstallVoicesDialog::on_bdlInstallButton_clicked()
 {
-    installationCommandPart2 = " /usr/share/omilo/scripts/install_cmu_us_bdl_arctic.sh";
-    downloadFilename = "/tmp/cmu-us-bdl-arctic-voice_0.95-1_all.deb";
-    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu-us-bdl-arctic-voice_0.95-1_all.deb";
+    installationCommandPart2 = " /usr/share/omilo-qt5/scripts/install_cmu_us_bdl_arctic.sh";
+    downloadFilename = "/tmp/cmu_us_bdl_arctic-0.95-release.tar.bz2";
+    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu_us_bdl_arctic-0.95-release.tar.bz2";
     startDownload();
 }
 
 void InstallVoicesDialog::on_clbInstallButton_clicked()
 {
-    installationCommandPart2 = " /usr/share/omilo/scripts/install_cmu_us_clb_arctic.sh";
-    downloadFilename = "/tmp/cmu-us-clb-arctic-voice_0.95-1_all.deb";
-    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu-us-clb-arctic-voice_0.95-1_all.deb";
+    installationCommandPart2 = " /usr/share/omilo-qt5/scripts/install_cmu_us_clb_arctic.sh";
+    downloadFilename = "/tmp/cmu_us_clb_arctic-0.95-release.tar.bz2";
+    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu_us_clb_arctic-0.95-release.tar.bz2";
     startDownload();
 }
 
 void InstallVoicesDialog::on_jmkInstallButton_clicked()
 {
-    installationCommandPart2 = " /usr/share/omilo/scripts/install_cmu_us_jmk_arctic.sh";
-    downloadFilename = "/tmp/cmu-us-jmk-arctic-voice_0.95-1_all.deb";
-    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu-us-jmk-arctic-voice_0.95-1_all.deb";
+    installationCommandPart2 = " /usr/share/omilo-qt5/scripts/install_cmu_us_jmk_arctic.sh";
+    downloadFilename = "/tmp/cmu_us_jmk_arctic-0.95-release.tar.bz2";
+    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu_us_jmk_arctic-0.95-release.tar.bz2";
     startDownload();
 }
 
 void InstallVoicesDialog::on_kspInstallButton_clicked()
 {
-    installationCommandPart2 = " /usr/share/omilo/scripts/install_cmu_us_ksp_arctic.sh";
-    downloadFilename = "/tmp/cmu-us-ksp-arctic-voice_0.95-1_all.deb";
-    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu-us-ksp-arctic-voice_0.95-1_all.deb";
+    installationCommandPart2 = " /usr/share/omilo-qt5/scripts/install_cmu_us_ksp_arctic.sh";
+    downloadFilename = "/tmp/cmu_us_ksp_arctic-0.95-release.tar.bz2";
+    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu_us_ksp_arctic-0.95-release.tar.bz2";
     startDownload();
 }
 
 void InstallVoicesDialog::on_rmsInstallButton_clicked()
 {
-    installationCommandPart2 = " /usr/share/omilo/scripts/install_cmu_us_rms_arctic.sh";
-    downloadFilename = "/tmp/cmu-us-rms-arctic-voice_0.95-1_all.deb";
-    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu-us-rms-arctic-voice_0.95-1_all.deb";
+    installationCommandPart2 = " /usr/share/omilo-qt5/scripts/install_cmu_us_rms_arctic.sh";
+    downloadFilename = "/tmp/cmu_us_rms_arctic-0.95-release.tar.bz2";
+    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu_us_rms_arctic-0.95-release.tar.bz2";
     startDownload();
 }
 
 void InstallVoicesDialog::on_sltInstallButton_clicked()
 {
-    installationCommandPart2 = " /usr/share/omilo/scripts/install_cmu_us_slt_arctic.sh";
-    downloadFilename = "/tmp/cmu-us-slt-arctic-voice_0.95-1_all.deb";
-    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu-us-slt-arctic-voice_0.95-1_all.deb";
+    installationCommandPart2 = " /usr/share/omilo-qt5/scripts/install_cmu_us_slt_arctic.sh";
+    downloadFilename = "/tmp/cmu_us_slt_arctic-0.95-release.tar.bz2";
+    downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/cmu_us_slt_arctic-0.95-release.tar.bz2";
     startDownload();
 }
 
 void InstallVoicesDialog::on_awbRemoveButton_clicked()
 {
-    removeCommandPart2 = " /usr/share/omilo/scripts/remove_cmu_us_awb_arctic.sh";
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_cmu_us_awb_arctic.sh";
     removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
 }
 
 void InstallVoicesDialog::on_bdlRemoveButton_clicked()
 {
-    removeCommandPart2 = " /usr/share/omilo/scripts/remove_cmu_us_bdl_arctic.sh";
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_cmu_us_bdl_arctic.sh";
     removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
 }
 
 void InstallVoicesDialog::on_clbRemoveButton_clicked()
 {
-    removeCommandPart2 = " /usr/share/omilo/scripts/remove_cmu_us_clb_arctic.sh";
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_cmu_us_clb_arctic.sh";
     removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
 }
 
 void InstallVoicesDialog::on_jmkRemoveButton_clicked()
 {
-    removeCommandPart2 = " /usr/share/omilo/scripts/remove_cmu_us_jmk_arctic.sh";
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_cmu_us_jmk_arctic.sh";
     removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
 }
 
 void InstallVoicesDialog::on_kspRemoveButton_clicked()
 {
-    removeCommandPart2 = " /usr/share/omilo/scripts/remove_cmu_us_ksp_arctic.sh";
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_cmu_us_ksp_arctic.sh";
     removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
 }
 
 void InstallVoicesDialog::on_rmsRemoveButton_clicked()
 {
-    removeCommandPart2 = " /usr/share/omilo/scripts/remove_cmu_us_rms_arctic.sh";
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_cmu_us_rms_arctic.sh";
     removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
 }
 
 void InstallVoicesDialog::on_sltRemoveButton_clicked()
 {
-    removeCommandPart2 = " /usr/share/omilo/scripts/remove_cmu_us_slt_arctic.sh";
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_cmu_us_slt_arctic.sh";
     removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
 }
 
-void InstallVoicesDialog::isSelectedVoiceInstalled()
+void InstallVoicesDialog::isSelectedVoiceInstalled(QString voice)
 {
     bool found = false;
     int size = engineInfo->installedVoices.size();
     for (int i = 0; i < size; i++)
     {
         VoiceInfo tmp = engineInfo->installedVoices.at(i);
-        if (tmp.name == currentVoice)
+        if (tmp.name == voice)
             found = true;
     }
     if (!found)

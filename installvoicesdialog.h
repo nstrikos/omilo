@@ -16,11 +16,13 @@ public:
     ~InstallVoicesDialog();
     void showWindow(QString currentVoice);
 
+public slots:
+    void isSelectedVoiceInstalled(QString voice);
+
 private slots:
     void downloadFinished();
     void installationFinished();
     void removeFinished();
-    void isSelectedVoiceInstalled();
     void on_closeButton_clicked();
     void on_awbRemoveButton_clicked();
     void on_awbInstallButton_clicked();

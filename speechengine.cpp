@@ -5,6 +5,7 @@ SpeechEngine::SpeechEngine(QString voice)
     this->voice = voice;
     maryServerProcess = new QProcess();
     speechVoice = NULL;
+    testVoice = new GreekGoogleMaryVoice();
     count = 1;
     producedFiles = 0;
     spokenFiles = 0;
@@ -23,6 +24,11 @@ SpeechEngine::~SpeechEngine()
     {
         delete this->speechVoice;
         speechVoice = NULL;
+    }
+    if (testVoice != NULL)
+    {
+        delete this->testVoice;
+        testVoice = NULL;
     }
     delete maryTestingDownloadManager;
     maryServerProcess->close();
@@ -245,7 +251,14 @@ SpeechVoice* SpeechEngine::getSpeechVoice()
 
 void SpeechEngine::startMaryProcess()
 {
+    //QString command = javaExecPath + " -showversion -ea -Xms40m -Xmx" + QString::number(maxMaryMemory) + "m -cp \"" + maryPath + "/lib/*\" -Dmary.base=\"" + maryPath + "\" marytts.server.Mary";
+
+    //qDebug() << command;
+
     maryServerProcess->start("java -showversion -ea -Xms40m -Xmx" + QString::number(maxMaryMemory) + "m -cp \"/usr/share/omilo-qt5/marytts-5.0/lib/*\" -Dmary.base=\"/usr/share/omilo-qt5/marytts-5.0\" marytts.server.Mary");
+    //maryServerProcess->start(command);
+
+    //maryServerProcess->start(javaExecPath + "-showversion -ea -Xms40m -Xmx" + QString::number(maxMaryMemory) + "m -cp \"/usr/share/omilo-qt5/marytts-5.0/lib/*\" -Dmary.base=\"/usr/share/omilo-qt5/marytts-5.0\" marytts.server.Mary");
 }
 
 void SpeechEngine::voiceFileCreated(QString filename)
@@ -290,7 +303,15 @@ void SpeechEngine::voiceFileCreated(QString filename)
 
 void SpeechEngine::testMaryServer()
 {
-    maryTestingDownloadManager->performSpeak("/tmp/omilo-test.wav", "Welcome to omilo", "LOCALE=el&VOICE=emily-v2.0.1-hmm");
+    //maryTestingDownloadManager->performSpeak("/tmp/omilo-test.wav", "Welcome to omilo", "LOCALE=el&VOICE=emily-v2.0.1-hmm");
+    testVoice->performSpeak("/tmp/omilo-test.wav", "Welcome to omilo");
+}
+
+void SpeechEngine::stopTestingMaryServer()
+{
+    //maryTestingDownloadManager->cancelDownload();
+    delete testVoice;
+    testVoice = NULL;
 }
 
 void SpeechEngine::setDurationStretch(unsigned int duration)

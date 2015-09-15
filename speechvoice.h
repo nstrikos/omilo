@@ -39,7 +39,4 @@ signals:
 };
 
 
-
-
-
 #endif // SPEECHVOICE_H

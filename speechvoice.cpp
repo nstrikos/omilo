@@ -13,7 +13,7 @@ void SpeechVoice::emitFileCreatedSignal()
 
 void SpeechVoice::setDurationStretch(unsigned int duration)
 {
-    durationStretch = duration;
+    this->durationStretch = duration;
 }
 
 void SpeechVoice::setTargetMean(unsigned int target)

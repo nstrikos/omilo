@@ -7,7 +7,6 @@
 #include "festivalvoice.h"
 #include "flitevoice.h"
 #include "maryvoice.h"
-#include "googlevoice.h"
 #include "downloadmanager.h"
 #include "textprocess.h"
 //#include "genericplayer.h"
@@ -30,6 +29,7 @@ public:
     void setTargetMean(unsigned int target);
     SpeechVoice *getSpeechVoice();
     void testMaryServer();
+    void stopTestingMaryServer();
     bool getIsProcessing();
     void setSplitMode(bool mode);
     void setPlaylist(QMediaPlaylist* playerList);
@@ -37,6 +37,7 @@ public:
 private:
     QString text;
     SpeechVoice *speechVoice; //We are using strategy pattern
+    SpeechVoice *testVoice;
     QProcess *maryServerProcess;
     void createVoice(SpeechVoice *sVoice); //We need a factory here
     void startMaryProcess();

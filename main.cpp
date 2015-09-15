@@ -23,7 +23,9 @@ int main(int argc, char *argv[])
 {
     Q_INIT_RESOURCE(omilo);
 
+    //QApplication::setDesktopSettingsAware(false);
     QApplication a(argc, argv);
+
     QTranslator appTranslator;
     appTranslator.load("omilo_" + QLocale::system().name(), ":/translations");
     a.installTranslator(&appTranslator);

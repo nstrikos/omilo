@@ -13,6 +13,7 @@ public:
 private slots:
     void checkMaryServer();
 
+
 private:
     SpeechEngine *engine;
     QTimer timer;

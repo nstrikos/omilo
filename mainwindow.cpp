@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QFont font("Liberation Sans", 12);
+    QApplication::setFont(font);
     initFunctions();
 
     //If splash screen is disabled the window is shown without close buttons
@@ -26,7 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    //delete genericPlayer;
     hotKeyThread.terminate();
     writeSettings();
     if (editorVoiceOptionsDialog != NULL)
@@ -40,22 +41,17 @@ MainWindow::~MainWindow()
 
     if (maryStartupTimer != NULL)
         delete maryStartupTimer;
-    delete checkInstalledVoiceTimer;
     delete engineInfo;
     delete player;
     delete playlist;
     delete engine;
     delete fontComboBox;
-    delete spinBox;
+    delete trayIconMenu;
+    delete trayIcon;
+    delete splashScreen;
     removeTempFiles();
     delete ui;
 }
-
-//void MainWindow::closeEvent(QCloseEvent *event)
-//{
-
-//    event->accept();
-//}
 
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
@@ -103,31 +99,38 @@ void MainWindow::initFunctions()
 void MainWindow::initVariables()
 {
     editorVoiceOptionsDialog = NULL;
-    installVoicesDialog = NULL;
-    fliteSettingsDialog = NULL;
+    selectedVoiceLabel = NULL;
+
+    //installVoicesDialog = NULL;
+
+    //this dialog has to be initialized because we use it
+    //to check if voice is installed before speaking
+    installVoicesDialog = new InstallVoicesDialog(this);
+    connect(installVoicesDialog, SIGNAL(updateVoice()), this, SLOT(setDefaultVoice()));
+    installVoicesDialog->setModal(true);
+    fliteSettingsDialog = new FliteSettingsDialog();
+
+    //fliteSettingsDialog = NULL;
     splashScreen = NULL;
     maryStartupTimer = NULL;
-    //genericPlayer = new GenericPlayer();
     engine = new SpeechEngine(engineVoice);
     engine->setSplitMode(splitMode);
     startUpThread = new StartupThread(engine);
     engineInfo = new SpeechEngineInfo();
-    checkInstalledVoiceTimer = new QTimer();
-    connect(checkInstalledVoiceTimer, SIGNAL(timeout()), this, SLOT(checkInstalledVoice()));
-    checkInstalledVoiceTimer->start(5000);
+    checkInstalledVoice();
     hotKeyThread.start();
     clipboard = QApplication::clipboard();
     fontComboBox = new QFontComboBox;
-    spinBox = new QSpinBox;
-    spinBox->setMinimum(8);
-    spinBox->setMaximum(72);
-    spinBox->setValue(qApp->font().pointSize());
+    //spinBox = new QSpinBox;
+    //spinBox->setMinimum(8);
+    //spinBox->setMaximum(72);
+    //spinBox->setValue(qApp->font().pointSize());
     defaultPalette = ui->textEdit->palette();
     invertedPalette = ui->textEdit->palette();
     invertedPalette.setColor(QPalette::Text, QColor(255, 255, 255));
     invertedPalette.setColor(QPalette::Base, QColor(0, 0, 0));
-    beginBlock = 0;
-    endBlock = 0;
+    //beginBlock = 0;
+    //endBlock = 0;
     engineIsProcessing = false;
     splashScreenIsDisabled = false;
     speakIcon = QIcon(":/images/speak.png");
@@ -161,15 +164,15 @@ void MainWindow::setupPlayer()
     connect(controls, SIGNAL(play()), player, SLOT(play()));
     connect(controls, SIGNAL(pause()), player, SLOT(pause()));
     connect(controls, SIGNAL(stop()), player, SLOT(stop()));
-    connect(controls, SIGNAL(stop()), this, SLOT(on_cancelButton_clicked()));
-    connect(controls, SIGNAL(next()), this, SLOT(next()));
-    connect(controls, SIGNAL(previous()), this, SLOT(previous()));
-    connect(controls, SIGNAL(changeVolume(int)), player, SLOT(setVolume(int)));
-    connect(controls, SIGNAL(changeMuting(bool)), player, SLOT(setMuted(bool)));
+    //connect(controls, SIGNAL(stop()), this, SLOT(on_cancelButton_clicked()));
+    //connect(controls, SIGNAL(next()), this, SLOT(next()));
+    //connect(controls, SIGNAL(previous()), this, SLOT(previous()));
+    //connect(controls, SIGNAL(changeVolume(int)), player, SLOT(setVolume(int)));
+    //connect(controls, SIGNAL(changeMuting(bool)), player, SLOT(setMuted(bool)));
     connect(player, SIGNAL(stateChanged(QMediaPlayer::State)),
             controls, SLOT(setState(QMediaPlayer::State)));
-    connect(player, SIGNAL(volumeChanged(int)), controls, SLOT(setVolume(int)));
-    connect(player, SIGNAL(mutedChanged(bool)), controls, SLOT(setMuted(bool)));
+    //connect(player, SIGNAL(volumeChanged(int)), controls, SLOT(setVolume(int)));
+    //connect(player, SIGNAL(mutedChanged(bool)), controls, SLOT(setMuted(bool)));
 }
 
 void MainWindow::setupLayout()
@@ -186,7 +189,8 @@ void MainWindow::setupLayout()
     //ui->horizontalLayout->setAlignment(Qt::AlignLeft);
     ui->horizontalLayout->setStretch(6,1);
 
-    selectedVoiceLabel = new QLabel(this);
+    if (selectedVoiceLabel == NULL)
+        selectedVoiceLabel = new QLabel(this);
     ui->statusBar->addWidget(selectedVoiceLabel);
     updateVoiceLabel();
     engineStatusLabel = new QLabel(this);
@@ -205,13 +209,9 @@ void MainWindow::connectSignalsToSlots()
     connect(startUpThread, SIGNAL(maryServerIsUp()), this, SLOT(updateMaryStatus()));
     connect(&hotKeyThread, SIGNAL(playPressed()), this, SLOT(hotKeyPlayPressed()));
     connect(&hotKeyThread, SIGNAL(stopPressed()), this, SLOT(hotKeyStopPressed()));
-    connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(hotKeyShowWindowPressed()));
+    //connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(hotKeyShowWindowPressed()));
     connect(fontComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(fontChanged(QString)));
-    connect(spinBox, SIGNAL(valueChanged(int)), this, SLOT(spinBoxValueChanged(int)));
     connect(playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(highlightSelection()));
-//    connect(genericPlayer, SIGNAL(currentIndexChanged()), this, SLOT(highlightGoogleSelection()));
-//    connect(genericPlayer, SIGNAL(playing()), this, SLOT(enableCancelButton()));
-//    connect(genericPlayer, SIGNAL(playingFinished()), this, SLOT(disableCancelButton()));
 }
 
 void MainWindow::createActions()
@@ -252,9 +252,9 @@ void MainWindow::createActions()
     connect(exportToWavAction, SIGNAL(triggered()), this, SLOT(exportToWav()));
     exportToWavAction->setEnabled(false);
 
-    exitAction = new QAction(tr("E&xit"), this);
-    exitAction->setShortcut(QKeySequence::Quit);
-    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
+//    exitAction = new QAction(tr("E&xit"), this);
+//    exitAction->setShortcut(QKeySequence::Quit);
+//    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
 
     undoAction = new QAction(tr("&Undo"), this);
     undoAction->setShortcut(QKeySequence::Undo);
@@ -299,7 +299,7 @@ void MainWindow::createActions()
     cancelAction->setShortcut(tr("F12"));
     QIcon cancelIcon = QIcon(":/images/stop.png");
     cancelAction->setIcon(cancelIcon);
-    connect(cancelAction, SIGNAL(triggered()), this, SLOT(on_cancelButton_clicked()));
+    //connect(cancelAction, SIGNAL(triggered()), this, SLOT(on_cancelButton_clicked()));
     cancelAction->setEnabled(false);
     //ui->cancelButton->setIcon(cancelIcon);
 
@@ -358,6 +358,7 @@ void MainWindow::createActions()
     restoreAction = new QAction(tr("&Restore"), this);
     connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
     quitAction = new QAction(tr("&Quit"), this);
+    quitAction->setShortcut(QKeySequence::Quit);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     cutAction->setEnabled(false);
     copyAction->setEnabled(false);
@@ -389,7 +390,7 @@ void MainWindow::createMenus()
         fileMenu->addAction(recentFileActions[i]);
 
     fileMenu->addAction(exportToWavAction);
-    fileMenu->addAction(exitAction);
+    fileMenu->addAction(quitAction);
 
     editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(undoAction);
@@ -414,16 +415,16 @@ void MainWindow::createMenus()
     speakMenu->addAction(rateUpAction);
     speakMenu->addSeparator();
     speakMenu->addAction(speakFromCurrentPositionAction);
-    speakMenu->addAction(enableSplitModeAction);
+    //speakMenu->addAction(enableSplitModeAction);
 
     optionsMenu = menuBar()->addMenu(tr("&Options"));
     optionsMenu->addAction(installVoicesAction);
     optionsMenu->addAction(showFliteSettingsAction);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
-    viewMenu->addAction(showFontListAction);
-    viewMenu->addAction(increasePointSizeAction);
-    viewMenu->addAction(decreasePointSizeAction);
+    //viewMenu->addAction(showFontListAction);
+    //viewMenu->addAction(increasePointSizeAction);
+    //viewMenu->addAction(decreasePointSizeAction);
     viewMenu->addAction(boldAction);
     viewMenu->addAction(invertColorsAction);
 
@@ -494,7 +495,6 @@ void MainWindow::createTrayIcon()
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
-
     QIcon icon = QIcon(":/images/audio-input.png");
     trayIcon->setIcon(icon);
     setWindowIcon(icon);
@@ -508,7 +508,7 @@ void MainWindow::setupSplashScreen()
     if (!splashScreenIsDisabled)
     {
         splashScreen = new QSplashScreen();
-        splashScreen->setPixmap(QPixmap(":images/audio-input-splash.jpg"));
+        splashScreen->setPixmap(QPixmap(":images/audio-input-splash.png"));
         splashScreen->show();
         Qt::Alignment topRight = Qt::AlignRight | Qt::AlignTop;
         splashScreen->showMessage(tr("Loading Mary voices..."), topRight, Qt::black);
@@ -554,7 +554,7 @@ void MainWindow::newFile()
         ui->textEdit->clear();
         setCurrentFile("");
     }
-    on_cancelButton_clicked();
+    cancelButton_clicked();
 }
 
 void MainWindow::openFile()
@@ -712,7 +712,7 @@ void MainWindow::loadFile(const QString &filename)
 #endif
 
     setCurrentFile(filename);
-    on_cancelButton_clicked();
+    cancelButton_clicked();
 }
 
 void MainWindow::readSettings()
@@ -725,6 +725,8 @@ void MainWindow::readSettings()
     recentFiles = settings.value("recentFiles").toStringList();
     updateRecentFileActions();
     engineVoice = settings.value("MainWindowVoice").toString();
+    if (engineVoice == "" )
+        engineVoice = KalFestival;
     voice = engineVoice;
     writeVoiceToFile(voice);
     //splashScreenIsDisabled = settings.value("SplashScreen").toBool();
@@ -749,7 +751,7 @@ void MainWindow::exportToWav()
     QString filename = QFileDialog::getSaveFileName(this);
     if (!filename.isEmpty())
     {
-        filename += ".wav";
+        //filename += ".wav";
         QString text = ui->textEdit->document()->toPlainText();
         engine->exportWav(filename, text);
         updateControlsWhenEngineIsProcessing();
@@ -760,7 +762,7 @@ void MainWindow::speakButtonPressed()
 {
     QString text = ui->textEdit->document()->toPlainText();
     if (engineIsProcessing)
-        on_cancelButton_clicked();
+        cancelButton_clicked();
     else
         speakText(text);
 }
@@ -799,10 +801,14 @@ void MainWindow::speakText(QString text)
     controls->disablePlayButton();
     playlist->clear();
 //    genericPlayer->stop();
-    beginQueue.clear();
-    endQueue.clear();
+    //beginQueue.clear();
+    //endQueue.clear();
     cursorPosition = 0;
-    engine->setSpeechVoice(engineVoice);
+
+//    if (installVoicesDialog != NULL)
+//        installVoicesDialog->isSelectedVoiceInstalled(engineVoice);
+    checkInstalledVoice();
+
     engine->speak(text);
     ui->textEdit->verticalScrollBar()->setSliderPosition(0);
 }
@@ -821,18 +827,22 @@ void MainWindow::selectVoice()
         updateVoiceLabel();
         writeVoiceToFile(voice);
         updateControlsWhenVoiceIsGoogle();
+        engine->setSpeechVoice(engineVoice);
+
+        if (fliteSettingsDialog != NULL)
+            fliteSettingsDialog->resetDialog();
     }
 }
 
 void MainWindow::installVoices()
 {
-    if (!installVoicesDialog)
-    {
-        installVoicesDialog = new InstallVoicesDialog(this);
-        connect(installVoicesDialog, SIGNAL(updateVoice()), this, SLOT(setDefaultVoice()));
-        installVoicesDialog->setModal(true);
-    }
-    installVoicesDialog->showWindow(engine->getSpeechVoice()->getName());
+//    if (!installVoicesDialog)
+//    {
+//        installVoicesDialog = new InstallVoicesDialog(this);
+//        connect(installVoicesDialog, SIGNAL(updateVoice()), this, SLOT(setDefaultVoice()));
+//        installVoicesDialog->setModal(true);
+//    }
+    installVoicesDialog->showWindow(engineVoice);
 }
 
 //The new code will mainly evolve this functio
@@ -868,26 +878,24 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
     QFileInfo fileInfo(filename);
     if (fileInfo.exists())
     {
-        if (split)
-        {
-            //SOS append before play
-            //otherwise highlight selection will point to the previous text part
-            beginQueue.append(begin);
-            endQueue.append(end);
-        }
-        else
-        {
-            beginQueue.append(0);
-            endQueue.append(0);
-        }
-        //        if (currentVoice == GoogleGreek || currentVoice == GoogleEnglish || currentVoice == GoogleGerman)
-        //        {
-        //            genericPlayer->addToPlayList(filename);
-        //            genericPlayer->play();
-        //        }
-        //        else
+//        if (split)
+//        {
+//            //SOS append before play
+//            //otherwise highlight selection will point to the previous text part
+//            beginQueue.append(begin);
+//            endQueue.append(end);
+//        }
+//        else
+//        {
+//            beginQueue.append(0);
+//            endQueue.append(0);
+//        }
+
         {
             QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
+
+            //This is an important change for gstreamer to handle wav files
+            //player->setMedia(QUrl::fromLocalFile(filename));
             playlist->addMedia(url);
             if (player->state() == QMediaPlayer::StoppedState)
                 player->play();
@@ -1005,6 +1013,8 @@ void MainWindow::updateDurationInfo(qint64 currentInfo)
 
 void MainWindow::updateVoiceLabel()
 {
+    if (selectedVoiceLabel == NULL)
+        selectedVoiceLabel = new QLabel(this);
     selectedVoiceLabel->setText(tr("Voice: ") + engineVoice);
 }
 
@@ -1049,7 +1059,7 @@ void MainWindow::removeTempFiles()
     }
 }
 
-void MainWindow::on_cancelButton_clicked()
+void MainWindow::cancelButton_clicked()
 {
     //if (engine->getIsProcessing())
     engine->cancel();
@@ -1138,7 +1148,9 @@ void MainWindow::splashTimerExpired()
 
 void MainWindow::setDefaultVoice()
 {
-    engine->setSpeechVoice(KalFestival);
+    engineVoice = KalFestival;
+    voice = KalFestival;
+    engine->setSpeechVoice(voice);
     updateVoiceLabel();
 }
 
@@ -1150,7 +1162,7 @@ void MainWindow::checkInstalledVoice()
     for (int i = 0; i < size; i++)
     {
         VoiceInfo tmp = engineInfo->installedVoices.at(i);
-        if (tmp.name == engine->getSpeechVoice()->getName())
+        if (tmp.name == engineVoice)
             found = true;
     }
     if (!found)
@@ -1170,7 +1182,7 @@ void MainWindow::hotKeyPlayPressed()
 void MainWindow::hotKeyStopPressed()
 {
     //player->stop();
-    on_cancelButton_clicked();
+    cancelButton_clicked();
     player->stop();
 }
 
@@ -1193,8 +1205,8 @@ void MainWindow::speakSelectedText()
     updateControlsWhenEngineIsProcessing();
     player->stop();
     playlist->clear();
-    beginQueue.clear();
-    endQueue.clear();
+    //beginQueue.clear();
+    //endQueue.clear();
     engine->speak(text, false);
     //    speakText(text);
 }
@@ -1225,11 +1237,11 @@ void MainWindow::showWindowWithoutCloseButton()
         splashScreen = NULL;
     }
 
-    if (startUpThread != NULL)
-    {
-        delete startUpThread;
-        startUpThread = NULL;
-    }
+//    if (startUpThread != NULL)
+//    {
+//        delete startUpThread;
+//        startUpThread = NULL;
+//    }
 
     if (maryStartupTimer != NULL)
     {
@@ -1245,7 +1257,7 @@ void MainWindow::showWindowWithoutCloseButton()
 void MainWindow::updateFont()
 {
     QFont font = fontComboBox->currentFont(); //Get the current font
-    font.setPointSize(this->spinBox->value());
+    //font.setPointSize(this->spinBox->value());
     font.setBold(boldAction->isChecked());
     ui->textEdit->setFont(font);
 }
@@ -1260,12 +1272,12 @@ void MainWindow::invertPalette()
 
 void MainWindow::increasePointSize()
 {
-    spinBox->setValue(spinBox->value() + 1);
+    //spinBox->setValue(spinBox->value() + 1);
 }
 
 void MainWindow::decreasePointSize()
 {
-    spinBox->setValue(spinBox->value() - 1);
+    //spinBox->setValue(spinBox->value() - 1);
 }
 
 void MainWindow::showFontList()
@@ -1278,31 +1290,31 @@ void MainWindow::highlightSelection()
     int currentIndex = playlist->currentIndex();
     if ( currentIndex >= 0 )
     {
-        if (!beginQueue.isEmpty() && (!endQueue.isEmpty()))
-        {
-            beginBlock = this->beginQueue.dequeue();// + cursorPosition;
-            endBlock = this->endQueue.dequeue();// + cursorPosition;
-        }
-        if (endBlock > 0)
-        {
-            beginBlock += cursorPosition;
-            endBlock += cursorPosition;
-            if (endBlock > ui->textEdit->document()->toPlainText().size())
-                endBlock = ui->textEdit->document()->toPlainText().size();
-            QTextCursor cursor = ui->textEdit->textCursor();
-            cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
-            cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
-            ui->textEdit->setTextCursor(cursor);
-        }
-        if (endBlock == 0)
-        {
-            beginBlock = 0;
-            endBlock = 0;
-            QTextCursor cursor = ui->textEdit->textCursor();
-            cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
-            cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
-            ui->textEdit->setTextCursor(cursor);
-        }
+//        if (!beginQueue.isEmpty() && (!endQueue.isEmpty()))
+//        {
+//            beginBlock = this->beginQueue.dequeue();// + cursorPosition;
+//            endBlock = this->endQueue.dequeue();// + cursorPosition;
+//        }
+//        if (endBlock > 0)
+//        {
+//            beginBlock += cursorPosition;
+//            endBlock += cursorPosition;
+//            if (endBlock > ui->textEdit->document()->toPlainText().size())
+//                endBlock = ui->textEdit->document()->toPlainText().size();
+//            QTextCursor cursor = ui->textEdit->textCursor();
+//            cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+//            cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+//            ui->textEdit->setTextCursor(cursor);
+//        }
+//        if (endBlock == 0)
+//        {
+//            beginBlock = 0;
+//            endBlock = 0;
+//            QTextCursor cursor = ui->textEdit->textCursor();
+//            cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+//            cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+//            ui->textEdit->setTextCursor(cursor);
+//        }
         //ui->cancelButton->setEnabled(true);
         cancelAction->setEnabled(true);
     }
@@ -1310,22 +1322,22 @@ void MainWindow::highlightSelection()
 
 void MainWindow::highlightGoogleSelection()
 {
-    if (!beginQueue.isEmpty() && (!endQueue.isEmpty()))
-    {
-        beginBlock = this->beginQueue.dequeue();// + cursorPosition;
-        endBlock = this->endQueue.dequeue();// + cursorPosition;
-        if (endBlock > 0)
-        {
-            beginBlock += cursorPosition;
-            endBlock += cursorPosition;
-            if (endBlock > ui->textEdit->document()->toPlainText().size())
-                endBlock = ui->textEdit->document()->toPlainText().size();
-            QTextCursor cursor = ui->textEdit->textCursor();
-            cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
-            cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
-            ui->textEdit->setTextCursor(cursor);
-        }
-    }
+//    if (!beginQueue.isEmpty() && (!endQueue.isEmpty()))
+//    {
+//        beginBlock = this->beginQueue.dequeue();// + cursorPosition;
+//        endBlock = this->endQueue.dequeue();// + cursorPosition;
+//        if (endBlock > 0)
+//        {
+//            beginBlock += cursorPosition;
+//            endBlock += cursorPosition;
+//            if (endBlock > ui->textEdit->document()->toPlainText().size())
+//                endBlock = ui->textEdit->document()->toPlainText().size();
+//            QTextCursor cursor = ui->textEdit->textCursor();
+//            cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+//            cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+//            ui->textEdit->setTextCursor(cursor);
+//        }
+//    }
 }
 
 
@@ -1341,14 +1353,14 @@ void MainWindow::speakFromCurrentPosition()
     removeTempFiles();
     player->stop();
     playlist->clear();
-    beginQueue.clear();
-    endQueue.clear();
+    //beginQueue.clear();
+    //endQueue.clear();
     QString text = ui->textEdit->document()->toPlainText();
     QTextCursor cursor = ui->textEdit->textCursor();
     cursorPosition = cursor.position();
     text = text.right(text.size() - cursorPosition);
     engine->setSpeechVoice(engineVoice);
-    engine->speak(text, true);
+    engine->speak(text, false);
 }
 
 void MainWindow::enableCancelButton()

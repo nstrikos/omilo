@@ -5,6 +5,7 @@ StartupThread::StartupThread(SpeechEngine *speechEngine)
     this->engine = speechEngine;
     connect(&timer, SIGNAL(timeout()), this, SLOT(checkMaryServer()));
     timer.start(50);
+    checkMaryServer();
 }
 
 void StartupThread::checkMaryServer()
@@ -21,10 +22,13 @@ void StartupThread::checkMaryServer()
     if (size == 0)
     {
         engine->testMaryServer();
+        //maryVoice->performSpeak("/tmp/omilo-test.wav", "Welcome to omilo");
+        //performSpeak("/tmp/omilo-test.wav", "Welcome to omilo", "LOCALE=el&VOICE=google-10");
     }
     else
     {
         timer.stop();
+        engine->stopTestingMaryServer();
         QFile::remove(filename);
         emit maryServerIsUp();
     }

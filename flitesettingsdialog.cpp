@@ -75,3 +75,12 @@ void FliteSettingsDialog::on_okButton_clicked()
 {
     this->accept();
 }
+
+void FliteSettingsDialog::resetDialog()
+{
+    ui->checkBox->setChecked(false);
+    ui->durationSlider->setValue(100);
+    ui->targetSlider->setValue(100);
+    updateDurationLabel();
+    updateTargetLabel();
+}

@@ -9,7 +9,7 @@ progressDialog::progressDialog(QProcess *process, QString filename, QWidget *par
     progressBar->setValue(0);
     updateMaxSize();
     connect(&timer, SIGNAL(timeout()), this, SLOT(checkDownloadFileSize()));
-    timer.start(5000);
+    timer.start(1000);
 }
 
 void progressDialog::closeEvent(QCloseEvent *event)
@@ -35,20 +35,20 @@ void progressDialog::on_cancelButton_clicked()
 
 void progressDialog::updateMaxSize()
 {
-    if (downloadFile == "/tmp/cmu-us-awb-arctic-voice_0.95-1_all.deb")
-        maxSize = 148;
-    else if (downloadFile == "/tmp/cmu-us-bdl-arctic-voice_0.95-1_all.deb")
-        maxSize = 106;
-    else if (downloadFile == "/tmp/cmu-us-clb-arctic-voice_0.95-1_all.deb")
-        maxSize = 145;
-    else if (downloadFile == "/tmp/cmu-us-jmk-arctic-voice_0.95-1_all.deb")
-        maxSize = 109;
-    else if (downloadFile == "/tmp/cmu-us-ksp-arctic-voice_0.95-1_all.deb")
-        maxSize = 136;
-    else if (downloadFile == "/tmp/cmu-us-rms-arctic-voice_0.95-1_all.deb")
-        maxSize = 134;
-    else if (downloadFile == "/tmp/cmu-us-slt-arctic-voice_0.95-1_all.deb")
-        maxSize = 132;
+    if (downloadFile == "/tmp/cmu_us_awb_arctic-0.95-release.tar.bz2")
+        maxSize = 123;
+    else if (downloadFile == "/tmp/cmu_us_bdl_arctic-0.95-release.tar.bz2")
+        maxSize = 90;
+    else if (downloadFile == "/tmp/cmu_us_clb_arctic-0.95-release.tar.bz2")
+        maxSize = 124;
+    else if (downloadFile == "/tmp/cmu_us_jmk_arctic-0.95-release.tar.bz2")
+        maxSize = 87;
+    else if (downloadFile == "/tmp/cmu_us_ksp_arctic-0.95-release.tar.bz2")
+        maxSize = 113;
+    else if (downloadFile == "/tmp/cmu_us_rms_arctic-0.95-release.tar.bz2")
+        maxSize = 110;
+    else if (downloadFile == "/tmp/cmu_us_slt_arctic-0.95-release.tar.bz2")
+        maxSize = 114;
 }
 
 void progressDialog::checkDownloadFileSize()
