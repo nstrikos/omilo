@@ -65,6 +65,7 @@ private slots:
     void displayErrorMessage();
     void updateMaryStatus();
     void cancelButton_clicked();
+    void displayHelp();
     void displayAboutMessage();
     void play();
     void stop();
@@ -144,6 +145,7 @@ private:
     QAction *cancelAction;
     QAction *voiceOptionAction;
     QAction *installVoicesAction;
+    QAction *helpAction;
     QAction *aboutAction;
     QAction *playAction;
     QAction *stopAction;

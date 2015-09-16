@@ -3,6 +3,7 @@
 
 #include <QProcess>
 #include <QFile>
+#include <QLocale>
 
 #include "definitions.h"
 

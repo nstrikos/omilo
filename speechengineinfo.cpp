@@ -72,7 +72,6 @@ void SpeechEngineInfo::update()
 
     voiceToAdd.mode = flite;
     voiceToAdd.language = QLocale::languageToString(QLocale::English);
-    //if(QFile::exists("/usr/bin/flite"))
     if (QFile::exists("/usr/share/omilo-qt5/flite/flite"))
     {
         voiceToAdd.name = RmsFlite;
@@ -84,21 +83,9 @@ void SpeechEngineInfo::update()
         voiceToAdd.name = Kal16Flite;
         installedVoices.push_back(voiceToAdd);
     }
-//    else
-//    {
-//        voiceToAdd.name = RmsFlite;
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = SltFlite;
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = AwbFlite;
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = Kal16Flite;
-//        availableVoices.push_back(voiceToAdd);
-//    }
 
     voiceToAdd.mode = marytts;
     if (QDir("/usr/share/omilo-qt5/marytts-5.0").exists())
-    //if (QDir(maryPath).exists())
     {
         voiceToAdd.name = ItalianMary;
         voiceToAdd.language = QLocale::languageToString(QLocale::Italian);
@@ -135,38 +122,4 @@ void SpeechEngineInfo::update()
         voiceToAdd.name = SpikeMary;
         installedVoices.push_back(voiceToAdd);
     }
-//    else
-//    {
-//        voiceToAdd.name = ItalianMary;
-//        voiceToAdd.language = QLocale::languageToString(QLocale::Italian);
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = GermanMary;
-//        voiceToAdd.language = QLocale::languageToString(QLocale::German);
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = TurkishMary;
-//        voiceToAdd.language = QLocale::languageToString(QLocale::Turkish);
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = GreekHercules;
-//        voiceToAdd.language = QLocale::languageToString(QLocale::Greek);
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = GreekMary;
-//        voiceToAdd.language = QLocale::languageToString(QLocale::Greek);
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = FrenchMary;
-//        voiceToAdd.language = QLocale::languageToString(QLocale::French);
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.language = QLocale::languageToString(QLocale::English);
-//        voiceToAdd.name = CmuRmsMary;
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = CmuSltMary;
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = ObadiahMary;
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = PoppyMary;
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = PrudenceMary;
-//        availableVoices.push_back(voiceToAdd);
-//        voiceToAdd.name = SpikeMary;
-//        availableVoices.push_back(voiceToAdd);
-//    }
 }

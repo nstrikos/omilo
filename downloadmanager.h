@@ -2,7 +2,6 @@
 #define DOWNLOADMANAGER_H
 
 #include <QtNetwork>
-#include "definitions.h"
 
 class DownloadManager : public QObject
 {

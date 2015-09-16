@@ -21,9 +21,7 @@ void StartupThread::checkMaryServer()
     }
     if (size == 0)
     {
-        engine->testMaryServer();
-        //maryVoice->performSpeak("/tmp/omilo-test.wav", "Welcome to omilo");
-        //performSpeak("/tmp/omilo-test.wav", "Welcome to omilo", "LOCALE=el&VOICE=google-10");
+        engine->testMaryServer();       
     }
     else
     {

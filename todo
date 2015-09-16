@@ -1,6 +1,6 @@
-fliteresetdialog
 implement shortcuts for pause
-valgrind
+clean code
+add debug
 
 void SpeechEngine::voiceFileCreated(QString filename)
 

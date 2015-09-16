@@ -10,6 +10,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QScrollBar>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -304,8 +305,11 @@ void MainWindow::createActions()
     //ui->cancelButton->setIcon(cancelIcon);
 
     aboutAction = new QAction(tr("About"), this);
-    aboutAction->setShortcut(tr("F1"));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(displayAboutMessage()));
+
+    helpAction = new QAction(tr("Help"), this);
+    helpAction->setShortcut(tr("F1"));
+    connect(helpAction, SIGNAL(triggered()), this, SLOT(displayHelp()));
 
     boldAction = new QAction(tr("Bold"), this);
     boldAction->setShortcut(tr("Ctrl+B"));
@@ -429,6 +433,7 @@ void MainWindow::createMenus()
     viewMenu->addAction(invertColorsAction);
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
+    helpMenu->addAction(helpAction);
     helpMenu->addAction(aboutAction);
 }
 
@@ -1068,6 +1073,11 @@ void MainWindow::cancelButton_clicked()
     updateControlsWhenEngineIsIdle();
     //ui->cancelButton->setEnabled(false);
     cancelAction->setEnabled(false);
+}
+
+void MainWindow::displayHelp()
+{
+    QDesktopServices::openUrl(QUrl("file:///usr/share/omilo-qt5/README"));
 }
 
 void MainWindow::displayAboutMessage()

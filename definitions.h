@@ -2,10 +2,6 @@
 #define DEFINITIONS_H
 
 #include <QString>
-#include <QLocale>
-#include <QDir>
-#include <limits>
-
 
 #define KalFestival "Kal Festival"
 #define AwbCmuFestival "Awb Cmu Festival"
@@ -44,9 +40,6 @@ const QString voiceTextEditorFile = "/tmp/omiloTextEditorVoice.txt";
 const QString showCommandFile = "/tmp/omiloShowcommand.txt";
 const unsigned int maxMaryMemory = 2048;
 const unsigned int minMaryMemory = 350;
-//const QString installationDir = QDir::homePath() + "/.omilo-qt5/";
-//const QString javaExecPath = installationDir + "jre1.8.0_60/bin/java";
-//const QString maryPath = installationDir + "marytts-5.0";
 
 #define maximumNumberOfFiles 1000000
 

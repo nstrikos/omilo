@@ -54,10 +54,8 @@ void HotKeyThread::run()
         {
         case KeyPress:
             XLookupString(&ev.xkey,text,255,&key,0);
-            //if ( text[0] == '\014') // 'n' is pressed
             if (key == 65479) //F10 pressed
                 emit playPressed();
-            //else if ( text[0] == '\015') // 'm' is pressed
             else if (key == 65480) //F11 pressed
                 emit stopPressed();
             else if (key == 65481)
@@ -70,7 +68,6 @@ void HotKeyThread::run()
         XUngrabKey(dpy,keycode,modifiers,grab_window);
         XUngrabKey(dpy,keycode2,modifiers,grab_window);
     }
-    //stopped = true;
-
+    stopped = true;
     XCloseDisplay(dpy);
 }
