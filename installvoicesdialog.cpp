@@ -16,14 +16,17 @@ InstallVoicesDialog::InstallVoicesDialog(QWidget *parent) : QDialog(parent)
     connect(installationProcess, SIGNAL(finished(int)), this, SLOT(installationFinished()));
     connect(removeProcess, SIGNAL(finished(int)), this, SLOT(removeFinished()));
 
-    QFile file1("/usr/bin/gksu");
-    QFile file2("/usr/bin/kdesu");
-    QFile file3("/usr/bin/gnomesu");
+    QFile file1("/usr/bin/pkexec");
+    QFile file2("/usr/bin/gksu");
+    QFile file3("/usr/bin/kdesu");
+    QFile file4("/usr/bin/gnomesu");
     if (file1.exists())
-        sudoCommand = "gksu ";
+        sudoCommand = "pkexec ";
     else if (file2.exists())
-        sudoCommand = "kdesu ";
+        sudoCommand = "gksu ";
     else if (file3.exists())
+        sudoCommand = "kdesu ";
+    else if (file4.exists())
         sudoCommand = "gnomesu ";
 }
 
@@ -135,7 +138,11 @@ void InstallVoicesDialog::downloadFinished()
         QString text = tr("Installing...");
         myProgressDialog->textBrowser->setText(text);
         myProgressDialog->progressBar->setValue(100);
-        installationProcess->start("sh", QStringList() << "-c" << sudoCommand + installationCommandPart2);
+        QString command = "sh";
+        QString c = "-c";
+        QStringList list;
+        list << c << sudoCommand + installationCommandPart2;
+        installationProcess->start(command, list);        
     }
     else
         myProgressDialog->hide();

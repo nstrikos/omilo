@@ -14,7 +14,7 @@ SpeechEngine::SpeechEngine(QString voice)
     setSpeechVoice(voice);
     maryTestingDownloadManager = new DownloadManager();
     textProcess = new TextProcess();
-    splitMode = true;
+    splitMode = false;
     googleTimer = new QTimer();
 }
 
@@ -213,6 +213,12 @@ void SpeechEngine::setSpeechVoice(QString sVoice)
         createVoice(new AwbFliteVoice());
     else if (sVoice == Kal16Flite)
         createVoice(new Kal16FliteVoice());
+    else if (sVoice == FemFlite)
+        createVoice(new FemFliteVoice());
+    else if (sVoice == JmkFlite)
+        createVoice(new JmkFliteVoice());
+    else if (sVoice == RxrFlite)
+        createVoice(new RxrFliteVoice());
     else if (sVoice == ItalianMary)
         createVoice(new ItalianMaryVoice());
     else if (sVoice == GermanMary)
@@ -328,7 +334,8 @@ void SpeechEngine::setTargetMean(unsigned int target)
 
 void SpeechEngine::setSplitMode(bool mode)
 {
-    this->splitMode = mode;
+    //this->splitMode = mode;
+    this->splitMode = false;
 }
 
 void SpeechEngine::setPlaylist(QMediaPlaylist* playlist)

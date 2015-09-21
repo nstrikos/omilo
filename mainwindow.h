@@ -39,7 +39,6 @@ public:
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
-    //void closeEvent(QCloseEvent *event);
 
 private slots:
     void newFile();
@@ -77,7 +76,6 @@ private slots:
     void hotKeyPlayPressed();
     void hotKeyStopPressed();
     void speakSelectedText();
-    //void hotKeyShowWindowPressed();
     void fontChanged(const QString &arg1);
     void spinBoxValueChanged(int arg1);
     void invertPalette();
@@ -87,12 +85,9 @@ private slots:
     void showFontList();
     void updateControlsWhenEngineIsIdle();
     void enableSplitMode();
+    void toggleUseTrayIcon();
     void highlightSelection();
-    void highlightGoogleSelection();
-    void enableCancelButton();
-    void disableCancelButton();
     void speakFromCurrentPosition();
-    void updateControlsWhenVoiceIsGoogle();
 
 private:
     Ui::MainWindow *ui;
@@ -101,7 +96,6 @@ private:
     void connectSignalsToSlots();
     void createActions();
     void createMenus();
-    void createToolBars();
     void createTrayIcon();
     void readSettings();
     void setupSplashScreen();
@@ -120,8 +114,8 @@ private:
     void updateVoiceLabel();
     void updateControlsWhenEngineIsProcessing();
     void removeTempFiles();
-    void writeVoiceToFile(QString string);
-    void showWindowWithoutCloseButton();
+    void showMainWindow();
+    void showHideTrayIcon();
 
     QString curfile;
     enum {MaxRecentFiles = 5};
@@ -133,7 +127,6 @@ private:
     QAction *saveAction;
     QAction *saveAsAction;
     QAction *exportToWavAction;
-    //QAction *exitAction;
     QAction *undoAction;
     QAction *redoAction;
     QAction *cutAction;
@@ -149,23 +142,17 @@ private:
     QAction *aboutAction;
     QAction *playAction;
     QAction *stopAction;
-    //QAction *previousAction;
-    //QAction *nextAction;
-    //QAction *volumeMuteAction;
-    //QAction *volumeUpAction;
-    //QAction *volumeDownAction;
     QAction *rateUpAction;
     QAction *rateDownAction;
-//    QAction *toggleSplashAction;
     QAction *showFliteSettingsAction;
     QAction *speakSelectedTextAction;
-    //QAction *hideWindowAction;
     QAction *boldAction;
     QAction *invertColorsAction;
     QAction *increasePointSizeAction;
     QAction *decreasePointSizeAction;
     QAction *showFontListAction;
     QAction *enableSplitModeAction;
+    QAction *toggleUseTrayIconAction;
     QAction *speakFromCurrentPositionAction;
     QAction *minimizeAction;
     QAction *maximizeAction;
@@ -179,22 +166,19 @@ private:
     QMenu *viewMenu;
     QMenu *helpMenu;
 
-    //QToolBar *fileToolBar;
-    //QToolBar *editToolBar;
     QToolBar *speakToolBar;
-    //QToolBar *optionsToolBar;
     //QToolBar *viewToolBar;
-    //QToolBar *helpToolBar;
 
     SpeechEngine *engine;
     QString engineVoice; //variable to hold engine voice after reading from settings
+    QString voice; //which of two should I keep???
+
     EditorVoiceOptionsDialog *editorVoiceOptionsDialog;
     InstallVoicesDialog *installVoicesDialog;
 
     QMediaPlayer *player;
     QMediaPlaylist *playlist;
     PlaylistModel *playlistModel;
-//    QAbstractItemView *playlistView;
     QSlider *slider;
     qint64 duration;
     void updateDurationInfo(qint64 currentInfo);
@@ -210,11 +194,9 @@ private:
     StartupThread *startUpThread;
     QSplashScreen *splashScreen;
     PlayerControls *controls;
-    bool splashScreenIsDisabled;
     FliteSettingsDialog *fliteSettingsDialog;
     QTimer *maryStartupTimer;
     SpeechEngineInfo *engineInfo;
-    QString voice;
     HotKeyThread hotKeyThread;
     QClipboard *clipboard;
     QProcess soxProcess;
@@ -227,10 +209,10 @@ private:
     //unsigned int endBlock;
     bool splitMode;
     unsigned int cursorPosition;
-    //GenericPlayer *genericPlayer;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
+    bool useTrayIcon;
     bool engineIsProcessing;
     QIcon speakIcon;
     QIcon cancelIcon;

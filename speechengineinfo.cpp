@@ -83,6 +83,29 @@ void SpeechEngineInfo::update()
         voiceToAdd.name = Kal16Flite;
         installedVoices.push_back(voiceToAdd);
     }
+    voiceToAdd.name = FemFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/cmu_us_fem.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = JmkFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/cmu_us_jmk.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = RxrFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/cmu_us_rxr.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
 
     voiceToAdd.mode = marytts;
     if (QDir("/usr/share/omilo-qt5/marytts-5.0").exists())

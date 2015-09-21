@@ -87,4 +87,61 @@ private:
     }
 };
 
+class FemFliteVoice : public FliteVoice
+{
+public:
+    FemFliteVoice()
+    {
+        durationStretch = defDurationStretch;
+        targetMean = defTargetMean;
+    }
+    QString getName()
+    {
+        return FemFlite;
+    }
+private:
+    QString voiceCommand()
+    {
+        return "-voice /usr/share/omilo-qt5/flite/cmu_us_fem.flitevox";
+    }
+};
+
+class JmkFliteVoice : public FliteVoice
+{
+public:
+    JmkFliteVoice()
+    {
+        durationStretch = defDurationStretch;
+        targetMean = defTargetMean;
+    }
+    QString getName()
+    {
+        return JmkFlite;
+    }
+private:
+    QString voiceCommand()
+    {
+        return "-voice /usr/share/omilo-qt5/flite/cmu_us_jmk.flitevox";
+    }
+};
+
+class RxrFliteVoice : public FliteVoice
+{
+public:
+    RxrFliteVoice()
+    {
+        durationStretch = defDurationStretch;
+        targetMean = defTargetMean;
+    }
+    QString getName()
+    {
+        return RxrFlite;
+    }
+private:
+    QString voiceCommand()
+    {
+        return "-voice /usr/share/omilo-qt5/flite/cmu_us_rxr.flitevox";
+    }
+};
+
 #endif // FLITEVOICE_H

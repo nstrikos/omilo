@@ -1,6 +1,6 @@
 implement shortcuts for pause
 clean code
-add debug
+add debug symbols
 
 void SpeechEngine::voiceFileCreated(QString filename)
 
