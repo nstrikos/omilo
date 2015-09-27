@@ -1022,7 +1022,7 @@ void MainWindow::displayAboutMessage()
 {
     QMessageBox::about(this, tr("About Omilo-Qt5"),
                        tr("Omilo - Text To Speech\n"
-                          "Version 0.2\n"
+                          "Version 0.3\n"
                           "Developer : nstrikos@yahoo.gr\n"
                           "Webpage : http://anoikto.webs.com/omilo\n"
                           "Icons: Gartoon Redux 1.11 "));
