@@ -13,7 +13,7 @@ class EditorVoiceOptionsDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit EditorVoiceOptionsDialog(QString *voice, QWidget *parent = 0);
+    explicit EditorVoiceOptionsDialog(QString *voice, SpeechEngineInfo *speechEngineInfo, QWidget *parent = 0);
     ~EditorVoiceOptionsDialog();
 
     void selectVoice();

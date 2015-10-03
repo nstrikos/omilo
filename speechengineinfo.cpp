@@ -2,7 +2,14 @@
 
 SpeechEngineInfo::SpeechEngineInfo()
 {
+    qDebug() << "Creating new information class...";
     update();
+    qDebug() << "Creating new information class completed.";
+}
+
+SpeechEngineInfo::~SpeechEngineInfo()
+{
+    qDebug() << "Deleting information class...";
 }
 
 //If we need to add a new voice we need to re-code this function
@@ -145,4 +152,20 @@ void SpeechEngineInfo::update()
         voiceToAdd.name = SpikeMary;
         installedVoices.push_back(voiceToAdd);
     }
+}
+
+engineMode SpeechEngineInfo::getVoiceMode(QString voice)
+{
+    unsigned int i;
+    QString voiceString;
+
+    for (i = 0; i < installedVoices.size() - 1; i++)
+    {
+        voiceString = installedVoices.at(i).name;
+        if (voiceString == voice)
+        {
+            return installedVoices.at(i).mode;
+        }
+    }
+    return unknown;
 }

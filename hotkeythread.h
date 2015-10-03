@@ -2,6 +2,7 @@
 #define HOTKEYTHREAD_H
 
 #include <QThread>
+#include <QDebug>
 
 class HotKeyThread : public QThread
 {

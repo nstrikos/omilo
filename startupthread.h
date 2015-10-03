@@ -9,6 +9,7 @@ class StartupThread : public QObject
 
 public:
     StartupThread(SpeechEngine *speechEngine);
+    ~StartupThread();
 
 private slots:
     void checkMaryServer();

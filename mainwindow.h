@@ -5,22 +5,18 @@
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 #include <QLabel>
-#include <QListView>
 #include <QSplashScreen>
 #include <QClipboard>
-#include <QFontComboBox>
-#include <QSpinBox>
-#include <QCheckBox>
 #include <QSystemTrayIcon>
 #include "speechengine.h"
 #include "editorvoiceoptionsdialog.h"
 #include "installvoicesdialog.h"
 #include "flitesettingsdialog.h"
+#include "fontsettingsdialog.h"
 #include "playercontrols.h"
 #include "playlistmodel.h"
 #include "startupthread.h"
 #include "hotkeythread.h"
-//#include "genericplayer.h"
 
 class QAction;
 class QMenu;
@@ -63,7 +59,7 @@ private slots:
     void addToPlaylist(QString filename, bool split, unsigned int begin, unsigned int end);
     void displayErrorMessage();
     void updateMaryStatus();
-    void cancelButton_clicked();
+    void cancel();
     void displayHelp();
     void displayAboutMessage();
     void play();
@@ -76,13 +72,9 @@ private slots:
     void hotKeyPlayPressed();
     void hotKeyStopPressed();
     void speakSelectedText();
-    void fontChanged(const QString &arg1);
-    void spinBoxValueChanged(int arg1);
     void invertPalette();
-    void updateFont();
-    void increasePointSize();
-    void decreasePointSize();
-    void showFontList();
+    void showFontSettingsDialog();
+    void setBold();
     void updateControlsWhenEngineIsIdle();
     void enableSplitMode();
     void toggleUseTrayIcon();
@@ -116,6 +108,7 @@ private:
     void removeTempFiles();
     void showMainWindow();
     void showHideTrayIcon();
+    void setFliteControls();
 
     QString curfile;
     enum {MaxRecentFiles = 5};
@@ -146,11 +139,9 @@ private:
     QAction *rateDownAction;
     QAction *showFliteSettingsAction;
     QAction *speakSelectedTextAction;
+    QAction *showFontSettingsDialogAction;
     QAction *boldAction;
-    QAction *invertColorsAction;
-    QAction *increasePointSizeAction;
-    QAction *decreasePointSizeAction;
-    QAction *showFontListAction;
+    QAction *invertColorsAction;    
     QAction *enableSplitModeAction;
     QAction *toggleUseTrayIconAction;
     QAction *speakFromCurrentPositionAction;
@@ -167,7 +158,6 @@ private:
     QMenu *helpMenu;
 
     QToolBar *speakToolBar;
-    //QToolBar *viewToolBar;
 
     SpeechEngine *engine;
     QString engineVoice; //variable to hold engine voice after reading from settings
@@ -200,15 +190,16 @@ private:
     HotKeyThread hotKeyThread;
     QClipboard *clipboard;
     QProcess soxProcess;
-    QFontComboBox *fontComboBox;
     QPalette defaultPalette;
     QPalette invertedPalette;
-    //QQueue<unsigned int> beginQueue;
-    //QQueue<unsigned int> endQueue;
-    //unsigned int beginBlock;
-    //unsigned int endBlock;
+    QQueue<unsigned int> beginQueue;
+    QQueue<unsigned int> endQueue;
+    unsigned int beginBlock;
+    unsigned int endBlock;
     bool splitMode;
     unsigned int cursorPosition;
+    int fliteDuration;
+    int fliteTargetMean;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -216,6 +207,8 @@ private:
     bool engineIsProcessing;
     QIcon speakIcon;
     QIcon cancelIcon;
+
+    FontSettingsDialog *fontSettingsDialog;
 };
 
 #endif // MAINWINDOW_H

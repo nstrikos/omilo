@@ -4,6 +4,7 @@
 
 HotKeyThread::HotKeyThread()
 {
+    qDebug() << "Registering hot keys...";
     stopped = false;
 }
 
@@ -54,12 +55,24 @@ void HotKeyThread::run()
         {
         case KeyPress:
             XLookupString(&ev.xkey,text,255,&key,0);
-            if (key == 65479) //F10 pressed
+            if (key == 65479)
+            {
+                //F10 pressed
+                qDebug() << "F10 pressed...";
                 emit playPressed();
-            else if (key == 65480) //F11 pressed
+            }
+            else if (key == 65480)
+            {
+                //F11 pressed
+                qDebug() << "F11 pressed...";
                 emit stopPressed();
+            }
             else if (key == 65481)
+            {
+                //F12 pressed
+                qDebug() << "F12 pressed";
                 emit showWindowPressed();
+            }
         }
     }
 

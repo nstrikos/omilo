@@ -2,10 +2,16 @@
 
 StartupThread::StartupThread(SpeechEngine *speechEngine)
 {
+    qDebug() << "Starting mary server testing tread...";
     this->engine = speechEngine;
     connect(&timer, SIGNAL(timeout()), this, SLOT(checkMaryServer()));
     timer.start(50);
     checkMaryServer();
+}
+
+StartupThread::~StartupThread()
+{
+    qDebug() << "Deleting start up thread...";
 }
 
 void StartupThread::checkMaryServer()
@@ -25,9 +31,10 @@ void StartupThread::checkMaryServer()
     }
     else
     {
+        qDebug() << "Mary server is up...";
         timer.stop();
-        engine->stopTestingMaryServer();
         QFile::remove(filename);
+        engine->stopTestingMaryServer();
         emit maryServerIsUp();
     }
 }

@@ -1,18 +1,19 @@
 #include "editorvoiceoptionsdialog.h"
 #include "ui_editorvoiceoptionsdialog.h"
 
-EditorVoiceOptionsDialog::EditorVoiceOptionsDialog(QString *voice, QWidget *parent) :
+EditorVoiceOptionsDialog::EditorVoiceOptionsDialog(QString *voice, SpeechEngineInfo *speechEngineInfo, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::EditorVoiceOptionsDialog)
 {
     ui->setupUi(this);
-    engineInfo = new SpeechEngineInfo();
+    engineInfo = speechEngineInfo;
     this->voice = voice;
+    qDebug() << "Voice options dialog created...";
 }
 
 EditorVoiceOptionsDialog::~EditorVoiceOptionsDialog()
 {
-    delete engineInfo;
+    qDebug() << "Deleting voice options dialog...";
     delete ui;
 }
 
@@ -42,11 +43,14 @@ void EditorVoiceOptionsDialog::selectVoice()
 
 void EditorVoiceOptionsDialog::on_cancelButton_clicked()
 {
+    qDebug() << "Voice options dialog rejected...";
     this->reject();
 }
 
 void EditorVoiceOptionsDialog::on_okButton_clicked()
 {
     *voice = ui->comboBox->currentText();
+    qDebug() << "Voice options dialog executed...";
+    qDebug() << "Voice now is: " << *voice;
     this->accept();
 }

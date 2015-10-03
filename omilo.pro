@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     playlistmodel.cpp \
     flitesettingsdialog.cpp \
     hotkeythread.cpp \
-    textprocess.cpp
+    textprocess.cpp \
+    fontsettingsdialog.cpp
 
 HEADERS  += mainwindow.h \
     installvoicesdialog.h \
@@ -47,13 +48,15 @@ HEADERS  += mainwindow.h \
     playlistmodel.h \
     flitesettingsdialog.h \
     hotkeythread.h \
-    textprocess.h
+    textprocess.h \
+    fontsettingsdialog.h
 
 FORMS    += mainwindow.ui \
     installvoicesdialog.ui \
     progressdialog.ui \
     editorvoiceoptionsdialog.ui \
-    flitesettingsdialog.ui
+    flitesettingsdialog.ui \
+    fontsettingsdialog.ui
 
 CONFIG += mobility
 MOBILITY = 

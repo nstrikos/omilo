@@ -1,13 +1,12 @@
 #include "flitesettingsdialog.h"
 #include "ui_flitesettingsdialog.h"
 
-FliteSettingsDialog::FliteSettingsDialog(QWidget *parent) :
+FliteSettingsDialog::FliteSettingsDialog(QString voice, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FliteSettingsDialog)
 {
+    this->voice = voice;
     ui->setupUi(this);
-    duration = 100;
-    target = 100;
     ui->checkBox->setChecked(false);
     ui->durationSlider->setEnabled(false);
     ui->durationSlider->setValue(duration);
@@ -18,11 +17,34 @@ FliteSettingsDialog::FliteSettingsDialog(QWidget *parent) :
     connect(ui->checkBox, SIGNAL(clicked()), this, SLOT(checkBoxChanged()));
     connect(ui->durationSlider, SIGNAL(valueChanged(int)), this, SLOT(updateDuration()));
     connect(ui->targetSlider, SIGNAL(valueChanged(int)), this, SLOT(updateTarget()));
+    update(voice);
+    qDebug() << "Flite settings dialog created...";
 }
 
 FliteSettingsDialog::~FliteSettingsDialog()
 {
+    qDebug() << "Deleting flite settings dialog...";
     delete ui;
+}
+
+void FliteSettingsDialog::update(QString voice)
+{
+    //The dialog should be updated only when flite voice is active
+    //Further, the whole dialog should be active only when flite voice is active
+
+    this->voice = voice;
+    qDebug() << "Updating flite dialog controls. Voice is: " << voice;
+    if (voice == SltFlite)
+        target = defSltTargetMean;
+    else
+        target = defTargetMean;
+    duration = defDurationStretch;
+    qDebug() << "Target mean is: " << target;
+    qDebug() << "Duration is: " << duration;
+    ui->durationSlider->setValue(duration);
+    ui->targetSlider->setValue(target);
+    updateDurationLabel();
+    updateTargetLabel();
 }
 
 void FliteSettingsDialog::checkBoxChanged()
@@ -36,6 +58,7 @@ void FliteSettingsDialog::checkBoxChanged()
     {
         ui->durationSlider->setEnabled(false);
         ui->targetSlider->setEnabled(false);
+        update(voice);
     }
 }
 
@@ -74,13 +97,4 @@ void FliteSettingsDialog::updateTargetLabel()
 void FliteSettingsDialog::on_okButton_clicked()
 {
     this->accept();
-}
-
-void FliteSettingsDialog::resetDialog()
-{
-    ui->checkBox->setChecked(false);
-    ui->durationSlider->setValue(100);
-    ui->targetSlider->setValue(100);
-    updateDurationLabel();
-    updateTargetLabel();
 }

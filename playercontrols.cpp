@@ -146,12 +146,14 @@ void PlayerControls::decreaseRate()
 {
     if (rateBox->currentIndex() > 0)
         rateBox->setCurrentIndex(rateBox->currentIndex() - 1);
+    qDebug() << "Rate set to " << rateBox->currentText();
 }
 
 void PlayerControls::increaseRate()
 {
     if (rateBox->currentIndex() < rateBox->count() - 1)
         rateBox->setCurrentIndex(rateBox->currentIndex() + 1);
+    qDebug() << "Rate set to " << rateBox->currentText();
 }
 
 float PlayerControls::getPlaybackRate()

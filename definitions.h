@@ -48,6 +48,7 @@ const unsigned int minMaryMemory = 350;
 
 enum engineMode
 {
+    unknown = -1,
     festival = 0,
     festivalCmu = 1,
     flite = 2,

@@ -28,10 +28,13 @@ InstallVoicesDialog::InstallVoicesDialog(QWidget *parent) : QDialog(parent)
         sudoCommand = "kdesu ";
     else if (file4.exists())
         sudoCommand = "gnomesu ";
+
+    qDebug() << "Install voices dialog created...";
 }
 
 InstallVoicesDialog::~InstallVoicesDialog()
 {
+    qDebug() << "Deleting install voices dialog...";
     delete installationProcess;
     delete removeProcess;
     delete downloadProcess;
