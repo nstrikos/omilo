@@ -22,6 +22,7 @@ signals:
     void playPressed();
     void stopPressed();
     void showWindowPressed();
+    void pausePressed();
 };
 
 #endif // HOTKEYTHREAD_H

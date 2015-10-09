@@ -15,6 +15,7 @@ SpeechEngineInfo::~SpeechEngineInfo()
 //If we need to add a new voice we need to re-code this function
 void SpeechEngineInfo::update()
 {
+    qDebug() << "Updating speech engine info...";
     installedVoices.clear();
     availableVoices.clear();
     VoiceInfo voiceToAdd;
@@ -23,7 +24,7 @@ void SpeechEngineInfo::update()
     voiceToAdd.name = KalFestival;
     voiceToAdd.language = QLocale::languageToString(QLocale::English);
     if(QDir("/usr/share/omilo-qt5/festival/lib/voices/english/kal_diphone").exists())
-       installedVoices.push_back(voiceToAdd);
+        installedVoices.push_back(voiceToAdd);
     else
         availableVoices.push_back(voiceToAdd);
 
@@ -159,12 +160,15 @@ engineMode SpeechEngineInfo::getVoiceMode(QString voice)
     unsigned int i;
     QString voiceString;
 
-    for (i = 0; i < installedVoices.size() - 1; i++)
+    if (installedVoices.size() > 0)
     {
-        voiceString = installedVoices.at(i).name;
-        if (voiceString == voice)
+        for (i = 0; i < installedVoices.size() - 1; i++)
         {
-            return installedVoices.at(i).mode;
+            voiceString = installedVoices.at(i).name;
+            if (voiceString == voice)
+            {
+                return installedVoices.at(i).mode;
+            }
         }
     }
     return unknown;

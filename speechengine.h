@@ -10,7 +10,8 @@
 #include "downloadmanager.h"
 #include "textprocess.h"
 #include <QMediaPlaylist>
-#include "QTimer"
+#include <QTimer>
+#include <QQueue>
 
 class SpeechEngine : public QObject
 {
@@ -19,6 +20,7 @@ public:
     SpeechEngine(QString voice);
     ~SpeechEngine();
     void speak(QString text);
+    void speakWithoutSplitting(QString text);
     void exportWav(QString filename, QString text);
     void cancel();
     void setSpeechVoice(QString sVoice);
@@ -29,7 +31,6 @@ public:
     void stopTestingMaryServer();
     bool getIsProcessing();
     void setSplitMode(bool mode);
-    //    void setPlaylist(QMediaPlaylist* playerList);
 
 private:
     QString text;
@@ -39,32 +40,36 @@ private:
     void createVoice(SpeechVoice *sVoice); //We need a factory here
     void startMaryProcess();
     QString voice;
-    unsigned int count;
+    //unsigned int count;
     QString filename;
     unsigned int durationStretch;
     unsigned int targetMean;
     bool isProcessing;
-    bool splitMode;
-    //    bool currentSplitMode;
-    //    TextContainer textContainer;
-    //    unsigned int begin;
-    //    unsigned int end;
-    //    QMediaPlaylist *playlist;
-    //    int producedFiles;
-    //    int spokenFiles;
-    //      QString currentVoice;
-    //    TextProcess *textProcess;
-
-
+    bool splitMode;    
+    int currentId;
+    int maxId;
+    int mergeCounter;
+    QString mergeCommand;
+    QProcess *mergeProcess;
+    QProcess finalSoxProcess;
+    void startMerging();
+    TextProcess *textProcess;
+    bool overlap;
+    int limit;
+    QQueue<QString> soxFiles;
 
 private slots:
     void voiceFileCreated(QString filename);
-//    void processList();
-//    void filePlayed();
+    void processList();
+    void continueMerging();
+    void finalMerge();
 
 signals:
     void fileCreated(QString filename, bool split, unsigned int begin, unsigned int end);
     void processingFinished();
+    void newMaxId(int maxId);
+    void newId(int id);
+    void soxFinished();
 };
 
 #endif // SPEECHENGINE_H

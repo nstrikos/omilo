@@ -80,6 +80,8 @@ private slots:
     void toggleUseTrayIcon();
     void highlightSelection();
     void speakFromCurrentPosition();
+    void setMaxId(int maxId);
+    void setCurrentId(int id);
 
 private:
     Ui::MainWindow *ui;
@@ -103,6 +105,7 @@ private:
     void updateRecentFileActions();
     QString strippedName(const QString &fileName);
     void speakText(QString text);
+    void speakTextWithoutSplitting(QString text);
     void updateVoiceLabel();
     void updateControlsWhenEngineIsProcessing();
     void removeTempFiles();
@@ -181,6 +184,9 @@ private:
     QLabel *historyLabel;
     QLabel *selectedVoiceLabel;
     QLabel *engineStatusLabel;
+    QLabel *percentStatusLabel;
+    int maxId;
+    int currentId;
     StartupThread *startUpThread;
     QSplashScreen *splashScreen;
     PlayerControls *controls;
@@ -194,8 +200,8 @@ private:
     QPalette invertedPalette;
     QQueue<unsigned int> beginQueue;
     QQueue<unsigned int> endQueue;
-    unsigned int beginBlock;
-    unsigned int endBlock;
+    int beginBlock;
+    int endBlock;
     bool splitMode;
     unsigned int cursorPosition;
     int fliteDuration;

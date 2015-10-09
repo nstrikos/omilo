@@ -1,4 +1,5 @@
 #include "textprocess.h"
+#include <QDebug>
 
 TextContainer::TextContainer()
 {
@@ -42,6 +43,7 @@ TextContainer TextProcess::getTextContainer()
 void TextProcess::processText()
 {
     textContainer.clear();
+    list.clear();
     QQueue<unsigned int> queue;
     int size = text.size();
     int i = 0;
@@ -49,15 +51,20 @@ void TextProcess::processText()
     while ( i < size)
     {
         QString ch = text.at(i);
-        if ( ch == "." )//|| ch == ",")
+        if  ( ( ch == "." )   ||  (ch == "\n") )
         {
             if ( i < size - 1)
             {
                 QString nextChar = text.at(i+1);
-                if (nextChar == " " || nextChar == "\t" || nextChar == "\n")
+                if  ( (ch == ".") && (nextChar == " " || nextChar == "\t" || nextChar == "\n") )
                 {
                     queue.append(i);
                     //textContainer.end.append(i);
+                    i++;
+                }
+                else if ( ch == "\n")
+                {
+                    queue.append(i);
                     i++;
                 }
                 else
@@ -105,6 +112,7 @@ void TextProcess::processText()
     int m = 0;
 //    if (textList.size() > 0)
 //        textList.clear();
+    int counter = 0;
     while(queue.size() > 0)
     {
         int n = queue.dequeue();
@@ -113,6 +121,18 @@ void TextProcess::processText()
         textContainer.end.append(n);
         //line = line.trimmed();
         textContainer.text.append(line);
+        MyItem item;
+        item.id = counter;
+        item.text = line;
+        item.begin = m;
+        item.end = n;
+        QString number = QString("%1").arg(counter, 6, 10, QLatin1Char('0'));
+        item.filename = "/tmp/omilo-" + number + ".wav";
+        qDebug() << item.id;
+        qDebug() << item.text;
+        qDebug() << item.filename;
+        list.append(item);
+        counter++;
         m = n + 1;
     }
 }

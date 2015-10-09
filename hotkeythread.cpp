@@ -31,6 +31,7 @@ void HotKeyThread::run()
     int             keycode         = XKeysymToKeycode(dpy, XK_F10);
     int             keycode2        = XKeysymToKeycode(dpy, XK_F11);
     int             keycode3        = XKeysymToKeycode(dpy, XK_F12);
+    int             keycode4         = XKeysymToKeycode(dpy, XK_F9);
     Window          grab_window     = root;
     Bool            owner_events    = False;
     int             pointer_mode    = GrabModeAsync;
@@ -44,6 +45,9 @@ void HotKeyThread::run()
              pointer_mode,
              keyboard_mode);
     XGrabKey(dpy, keycode3, modifiers, grab_window, owner_events,
+             pointer_mode,
+             keyboard_mode);
+    XGrabKey(dpy, keycode4, modifiers, grab_window, owner_events,
              pointer_mode,
              keyboard_mode);
 
@@ -70,8 +74,14 @@ void HotKeyThread::run()
             else if (key == 65481)
             {
                 //F12 pressed
-                qDebug() << "F12 pressed";
+                qDebug() << "F12 pressed...";
                 emit showWindowPressed();
+            }
+            else if (key == 65478)
+            {
+                //F9 pressed
+                qDebug() << "F9 pressed...";
+                emit pausePressed();
             }
         }
     }

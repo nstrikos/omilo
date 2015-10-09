@@ -83,6 +83,7 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
     menu.addAction(copyAction);
     menu.addAction(pasteAction);
     menu.addSeparator();
+    menu.addAction(speakFromCurrentPositionAction);
     menu.addAction(speakSelectedTextAction);
     menu.exec(event->globalPos());
 }
@@ -166,6 +167,8 @@ void MainWindow::initVariables()
     beginBlock = 0;
     endBlock = 0;
     engineIsProcessing = false;
+    maxId = 0;
+    currentId = 0;
 
     qDebug() << "Setup icons...";
     speakIcon = QIcon(":/images/speak.png");
@@ -174,7 +177,7 @@ void MainWindow::initVariables()
     qDebug() << "All application variables are initialized.";
 }
 
-//not ok
+//ok
 void MainWindow::setupPlayer()
 {
     qDebug() << "Setting up media player...";
@@ -183,9 +186,6 @@ void MainWindow::setupPlayer()
     playlist = new QMediaPlaylist();
     playlist->setPlaybackMode(QMediaPlaylist::Sequential);
     player->setPlaylist(playlist);
-
-    //Why is this here?
-//    engine->setPlaylist(playlist);
 
     playlistModel = new PlaylistModel(this);
     playlistModel->setPlaylist(playlist);
@@ -207,6 +207,7 @@ void MainWindow::setupPlayer()
     connect(controls, SIGNAL(play()), player, SLOT(play()));
     connect(controls, SIGNAL(pause()), player, SLOT(pause()));
     connect(controls, SIGNAL(stop()), player, SLOT(stop()));
+    connect(controls, SIGNAL(stop()), this, SLOT(stop()));
     connect(player, SIGNAL(stateChanged(QMediaPlayer::State)),
             controls, SLOT(setState(QMediaPlayer::State)));
 
@@ -229,11 +230,16 @@ void MainWindow::setupLayout()
 
     if (selectedVoiceLabel == NULL)
         selectedVoiceLabel = new QLabel(this);
-    ui->statusBar->addWidget(selectedVoiceLabel);
     updateVoiceLabel();
     engineStatusLabel = new QLabel(this);
     engineStatusLabel->setText(tr("Speech engine is idle"));
+    percentStatusLabel = new QLabel(this);
+    percentStatusLabel->setAlignment(Qt::AlignRight);
+    percentStatusLabel->setText("");
+    ui->statusBar->addWidget(selectedVoiceLabel);
     ui->statusBar->addWidget(engineStatusLabel);
+    ui->statusBar->addWidget(percentStatusLabel);
+    ui->statusBar->addWidget(percentStatusLabel,1);
     qDebug() << "Setting Qt layout completed.";
 }
 
@@ -245,9 +251,13 @@ void MainWindow::connectSignalsToSlots()
     connect(ui->speakButton, SIGNAL(clicked()), this, SLOT(speakButtonPressed()));
     connect(engine, SIGNAL(fileCreated(QString, bool, unsigned int, unsigned int)), this, SLOT(addToPlaylist(QString, bool, unsigned int, unsigned int)));
     connect(engine, SIGNAL(processingFinished()), this, SLOT(updateControlsWhenEngineIsIdle()));
+    connect(engine, SIGNAL(newMaxId(int)), this, SLOT(setMaxId(int)));
+    connect(engine, SIGNAL(newId(int)), this, SLOT(setCurrentId(int)));
     connect(startUpThread, SIGNAL(maryServerIsUp()), this, SLOT(updateMaryStatus()));
     connect(&hotKeyThread, SIGNAL(playPressed()), this, SLOT(hotKeyPlayPressed()));
     connect(&hotKeyThread, SIGNAL(stopPressed()), this, SLOT(hotKeyStopPressed()));
+    connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(showNormal()));
+    connect(&hotKeyThread, SIGNAL(pausePressed()), this, SLOT(play()));
     connect(playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(highlightSelection()));
     qDebug() << "All Qt signals are connected.";
 }
@@ -796,7 +806,15 @@ void MainWindow::cancel()
     qDebug() << "Stopping all actions...";
     engine->cancel();
     player->stop();
+    beginBlock = 0;
+    endBlock = 0;
+    beginQueue.clear();
+    endQueue.clear();
+    removeTempFiles();
+    controls->disablePlayButton();
+    playlist->clear();
     updateControlsWhenEngineIsIdle();
+    percentStatusLabel->setText("");
 }
 
 //ok
@@ -814,6 +832,9 @@ void MainWindow::speakButtonPressed()
     else
     {
         QString text = ui->textEdit->document()->toPlainText();
+        cursorPosition = 0;
+        ui->textEdit->verticalScrollBar()->setSliderPosition(0);
+        ui->textEdit->horizontalScrollBar()->setSliderPosition(0);
         speakText(text);
     }
 }
@@ -829,15 +850,44 @@ void MainWindow::speakFromCurrentPosition()
     speakText(text);
 }
 
-//ok
+//not ok
 void MainWindow::speakSelectedText()
 {
     qDebug() << "Speak selected text.";
     QTextCursor cursor(ui->textEdit->textCursor());
-    const QString text = cursor.selectedText();
-    //beginQueue.clear();
-    //endQueue.clear();
-    speakText(text);
+    QString text = cursor.selectedText();
+    speakTextWithoutSplitting(text);
+}
+
+//not ok
+void MainWindow::speakTextWithoutSplitting(QString text)
+{
+    updateControlsWhenEngineIsProcessing();
+    removeTempFiles();
+    player->stop();
+    controls->disablePlayButton();
+    playlist->clear();
+    //cursorPosition = 0;
+    beginBlock = 0;
+    endBlock = 0;
+    beginQueue.clear();
+    endQueue.clear();
+    percentStatusLabel->setText("");
+    checkInstalledVoice();
+
+    engine->setSpeechVoice(engineVoice);
+    qDebug() << "Set engine voice: " << engineVoice;
+    splitMode = false;
+    engine->setSplitMode(splitMode);
+    qDebug() << "Set split mode: " << splitMode;
+    if (fliteSettingsDialog != NULL)
+    {
+        engine->setDurationStretch(fliteSettingsDialog->getDuration());
+        engine->setTargetMean(fliteSettingsDialog->getTarget());
+    }
+    engine->speakWithoutSplitting(text);
+    qDebug() << "Speak text : " << text;
+    //ui->textEdit->verticalScrollBar()->setSliderPosition(0);
 }
 
 //not ok
@@ -849,10 +899,16 @@ void MainWindow::speakText(QString text)
     controls->disablePlayButton();
     playlist->clear();
     //cursorPosition = 0;
+    beginBlock = 0;
+    endBlock = 0;
+    beginQueue.clear();
+    endQueue.clear();
+    percentStatusLabel->setText("");
     checkInstalledVoice();
 
     engine->setSpeechVoice(engineVoice);
     qDebug() << "Set engine voice: " << engineVoice;
+    splitMode = enableSplitModeAction->isChecked();
     engine->setSplitMode(splitMode);
     qDebug() << "Set split mode: " << splitMode;
     if (fliteSettingsDialog != NULL)
@@ -872,6 +928,7 @@ void MainWindow::hotKeyPlayPressed()
     ui->textEdit->clear();
     QString text = clipboard->text(QClipboard::Selection);
     ui->textEdit->append(text);
+    cursorPosition = 0;
     speakText(text);
 }
 
@@ -1137,9 +1194,6 @@ void MainWindow::play()
 //ok
 void MainWindow::stop()
 {
-    if (engine->getIsProcessing())
-        engine->cancel();
-
     qDebug() << "Stop media player.";
     player->stop();
 }
@@ -1304,16 +1358,9 @@ void MainWindow::showHideTrayIcon()
 //The new code will mainly evolve this function
 void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin, unsigned int end)
 {
-    QString currentVoice = engine->getSpeechVoice()->getName();
-    //    QFileInfo fileInfo(filename);
+    //QString currentVoice = engine->getSpeechVoice()->getName();
 
     float rate = controls->getPlaybackRate();
-
-
-    //if (rate == 1)
-    //{
-    //QFile::copy(filename, "/tmp/temp.wav");
-
 
     if (rate != 1)
     {
@@ -1323,13 +1370,6 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
         soxProcess.waitForFinished();
         QFile::remove("/tmp/temp.wav");
     }
-    //}
-
-    //    QFile::copy(filename, "/tmp/temp.wav");
-    //    QString command = "sox /tmp/temp.wav " + filename + " equalizer 30 .71q +7.2 equalizer 85 1.10q +5.6 equalizer 155 1.80q 0 equalizer 300 .71q -7.2 equalizer 500 2.90q -4.8 equalizer 1500 2.9q +1.6 equalizer 3000 .51q +8 equalizer 6000 0.51q +11.2 equalizer 7000 0.51q +12 equalizer 8000 0.51q +12";
-    //    soxProcess.start(command);
-    //    soxProcess.waitForFinished();
-    //    QFile::remove("/tmp/temp.wav");
 
     QFileInfo fileInfo(filename);
     if (fileInfo.exists())
@@ -1353,7 +1393,9 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
             //This is an important change for gstreamer to handle wav files
             //player->setMedia(QUrl::fromLocalFile(filename));
             playlist->addMedia(url);
-            if (player->state() == QMediaPlayer::StoppedState)
+            //if (player->state() == QMediaPlayer::StoppedState)
+            //    player->play();
+            if (playlist->currentIndex() == -1)
                 player->play();
         }
     }
@@ -1361,37 +1403,41 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
 
 void MainWindow::highlightSelection()
 {
-    //    int currentIndex = playlist->currentIndex();
-    //    if ( currentIndex >= 0 )
-    //    {
-    //        if (!beginQueue.isEmpty() && (!endQueue.isEmpty()))
-    //        {
-    //            beginBlock = this->beginQueue.dequeue();// + cursorPosition;
-    //            endBlock = this->endQueue.dequeue();// + cursorPosition;
-    //        }
-    //        if (endBlock > 0)
-    //        {
-    //            beginBlock += cursorPosition;
-    //            endBlock += cursorPosition;
-    //            if (endBlock > ui->textEdit->document()->toPlainText().size())
-    //                endBlock = ui->textEdit->document()->toPlainText().size();
-    //            QTextCursor cursor = ui->textEdit->textCursor();
-    //            cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
-    //            cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
-    //            ui->textEdit->setTextCursor(cursor);
-    //        }
-    //        if (endBlock == 0)
-    //        {
-    //            beginBlock = 0;
-    //            endBlock = 0;
-    //            QTextCursor cursor = ui->textEdit->textCursor();
-    //            cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
-    //            cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
-    //            ui->textEdit->setTextCursor(cursor);
-    //        }
-    //        //ui->cancelButton->setEnabled(true);
-    //        cancelAction->setEnabled(true);
-    //    }
+    if (splitMode)
+    {
+
+        int currentIndex = playlist->currentIndex();
+        if ( currentIndex >= 0 )
+        {
+            if (!beginQueue.isEmpty() && (!endQueue.isEmpty()))
+            {
+                beginBlock = this->beginQueue.dequeue();// + cursorPosition;
+                endBlock = this->endQueue.dequeue();// + cursorPosition;
+            }
+            if (endBlock > 0)
+            {
+                beginBlock += cursorPosition;
+                endBlock += cursorPosition;
+                if (endBlock > ui->textEdit->document()->toPlainText().size())
+                    endBlock = ui->textEdit->document()->toPlainText().size();
+                QTextCursor cursor = ui->textEdit->textCursor();
+                cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+                cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+                ui->textEdit->setTextCursor(cursor);
+            }
+            if (endBlock == 0)
+            {
+                beginBlock = 0;
+                endBlock = 0;
+                QTextCursor cursor = ui->textEdit->textCursor();
+                cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+                cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+                ui->textEdit->setTextCursor(cursor);
+            }
+            //ui->cancelButton->setEnabled(true);
+            cancelAction->setEnabled(true);
+        }
+    }
 }
 
 //ok
@@ -1450,4 +1496,16 @@ void MainWindow::exportToWav()
         engine->exportWav(filename, text);
         updateControlsWhenEngineIsProcessing();
     }
+}
+
+void MainWindow::setMaxId(int maxId)
+{
+    this->maxId = maxId;
+}
+
+void MainWindow::setCurrentId(int id)
+{
+    this->currentId = id;
+    double percent = (double) currentId / maxId * 100;
+    percentStatusLabel->setText(" " + tr("Processed ") + QString::number(currentId) + tr(" of ") + QString::number(maxId) + " " + QString::number(percent, 'f', 2) + "%");
 }
