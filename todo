@@ -1,3 +1,6 @@
+remove "-" slash etc.
+cancel shortcut not working
+add access support when exporting is finished
 Export wav - Pri High
 export with rate
 check mergeprocess finished code

@@ -31,6 +31,7 @@ public:
     void stopTestingMaryServer();
     bool getIsProcessing();
     void setSplitMode(bool mode);
+    void setExportToWav(bool value);
 
 private:
     QString text;
@@ -57,6 +58,7 @@ private:
     bool overlap;
     int limit;
     QQueue<QString> soxFiles;
+    bool exportToWav;
 
 private slots:
     void voiceFileCreated(QString filename);
@@ -70,6 +72,9 @@ signals:
     void newMaxId(int maxId);
     void newId(int id);
     void soxFinished();
+    void exportFinished();
+    void mergeId(int id, int size);
+    void mergeInfo(QString info);
 };
 
 #endif // SPEECHENGINE_H

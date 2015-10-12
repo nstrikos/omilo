@@ -16,8 +16,10 @@ SpeechEngine::SpeechEngine(QString voice)
     mergeCounter = 0;
     mergeCommand = "";
     mergeProcess = new QProcess;
+    exportToWav = false;
     connect(mergeProcess, SIGNAL(finished(int)), this, SLOT(continueMerging()));
     connect(this, SIGNAL(soxFinished()), this, SLOT(finalMerge()));
+    connect(&finalSoxProcess, SIGNAL(finished(int)), this, SIGNAL(exportFinished()));
     qDebug() << "Creating new speech engine completed.";
 }
 
@@ -54,6 +56,7 @@ bool SpeechEngine::getIsProcessing()
 void SpeechEngine::speak(QString text)
 {
 
+    exportToWav = false;
     if (isProcessing == true)
         cancel();
 
@@ -107,28 +110,31 @@ void SpeechEngine::processList()
         //??????????
         emit processingFinished();
 
-        //Remove silenced files
-        QQueue<QString> filelist;
-        for (int i = 0; i < textProcess->list.size() - 1; i++)
+        if (exportToWav)
         {
-            QString filename = textProcess->list.at(i).filename;
-            int size = 0;
-            QFile myFile(filename);
-            if (myFile.open(QIODevice::ReadOnly)){
-                size = myFile.size();
-                myFile.close();
-            }
-            if (size < 4000)
+            //Remove silenced files
+            QQueue<QString> filelist;
+            for (int i = 0; i < textProcess->list.size() - 1; i++)
             {
-                qDebug() << "Removed " << filename << " with size " << size << "and text " << textProcess->list.at(i).text;
-                QFile::remove(filename);
+                QString filename = textProcess->list.at(i).filename;
+                int size = 0;
+                QFile myFile(filename);
+                if (myFile.open(QIODevice::ReadOnly)){
+                    size = myFile.size();
+                    myFile.close();
+                }
+                if (size < 4000)
+                {
+                    qDebug() << "Removed " << filename << " with size " << size << "and text " << textProcess->list.at(i).text;
+                    QFile::remove(filename);
+                }
+                else
+                {
+                    filelist.enqueue(textProcess->list.at(i).filename);
+                }
             }
-            else
-            {
-                filelist.enqueue(textProcess->list.at(i).filename);
-            }
+            startMerging();
         }
-        startMerging();
     }
 
 }
@@ -166,6 +172,7 @@ void SpeechEngine::continueMerging()
                 QFile::rename("/tmp/omilo-exp-" + QString::number(limit)  + ".wav", "/tmp/omilo-exp-tmp.wav");
                 QString command = "sox /tmp/omilo-exp-tmp.wav " + mergeCommand + " " + "/tmp/omilo-exp-" + QString::number(limit)  + ".wav";
                 mergeProcess->start(command);
+                emit mergeId(mergeCounter, textProcess->list.size());
                 mergeCommand = "";
                 qDebug() << command;
             }
@@ -180,6 +187,7 @@ void SpeechEngine::continueMerging()
             soxFiles.enqueue("/tmp/omilo-exp-" + QString::number(limit)  + ".wav");
             overlap = true;
             mergeProcess->start(command);
+            emit mergeId(mergeCounter, textProcess->list.size());
             qDebug() << command;
             qDebug() << "Merging finished";
         }
@@ -216,8 +224,9 @@ void SpeechEngine::finalMerge()
     {
         mergeCommand += " " + soxFiles.at(i);
     }
-    QString command = "sox " + mergeCommand + " /home/nick/omilo-exp.wav";
+    QString command = "sox " + mergeCommand + " " + filename;
     finalSoxProcess.start(command);
+    emit mergeInfo(tr("Creating file..."));
     qDebug() << command;
 }
 
@@ -265,8 +274,35 @@ void SpeechEngine::finalMerge()
 
 void SpeechEngine::exportWav(QString filename, QString text)
 {
-    this->filename = filename;
-    speechVoice->performSpeak(filename, text);
+    //    this->filename = filename;
+    //    exportToWav = true;
+    //    speechVoice->performSpeak(filename, text);
+    exportToWav = true;
+    if (isProcessing == true)
+        cancel();
+
+    if (splitMode == false)
+    {
+        this->filename = filename;
+        //if ( count > maximumNumberOfFiles )
+        //    count = 1;
+        this->text = text;
+        isProcessing = true;
+        speechVoice->performSpeak(filename, text);
+    }
+    else
+    {
+
+        this->filename = filename;
+        textProcess->setText(text);
+        textProcess->processText();
+        currentId = 0;
+        maxId = textProcess->list.size() - 1;
+        mergeProcess->close();
+        qDebug() << "Maxid:" << maxId;
+        emit newMaxId(maxId);
+        processList();
+    }
 }
 
 void SpeechEngine::cancel()
@@ -305,14 +341,19 @@ void SpeechEngine::voiceFileCreated(QString filename)
     {
         if (splitMode)
         {
-            emit fileCreated(filename, splitMode, textProcess->list.at(currentId).begin, textProcess->list.at(currentId).end);
+            if (!exportToWav)
+                emit fileCreated(filename, splitMode, textProcess->list.at(currentId).begin, textProcess->list.at(currentId).end);
             emit newId(currentId);
             currentId++;
             processList();
         }
         else
         {
-            emit fileCreated(filename, splitMode, 0, 0);
+            if (!exportToWav)
+                emit fileCreated(filename, splitMode, 0, 0);
+            if (exportToWav)
+                emit exportFinished();
+            exportToWav = false;
             emit processingFinished();
         }
 
@@ -423,6 +464,11 @@ void SpeechEngine::setTargetMean(unsigned int target)
 void SpeechEngine::setSplitMode(bool mode)
 {
     this->splitMode = mode;
+}
+
+void SpeechEngine::setExportToWav(bool value)
+{
+    exportToWav = value;
 }
 
 //void SpeechEngine::setPlaylist(QMediaPlaylist* playlist)

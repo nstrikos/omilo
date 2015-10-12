@@ -253,6 +253,9 @@ void MainWindow::connectSignalsToSlots()
     connect(engine, SIGNAL(processingFinished()), this, SLOT(updateControlsWhenEngineIsIdle()));
     connect(engine, SIGNAL(newMaxId(int)), this, SLOT(setMaxId(int)));
     connect(engine, SIGNAL(newId(int)), this, SLOT(setCurrentId(int)));
+    connect(engine, SIGNAL(exportFinished()), this, SLOT(showExportFinishedMessage()));
+    connect(engine, SIGNAL(mergeId(int,int)), this, SLOT(setMergeId(int,int)));
+    connect(engine, SIGNAL(mergeInfo(QString)), this, SLOT(setMergeInfo(QString)));
     connect(startUpThread, SIGNAL(maryServerIsUp()), this, SLOT(updateMaryStatus()));
     connect(&hotKeyThread, SIGNAL(playPressed()), this, SLOT(hotKeyPlayPressed()));
     connect(&hotKeyThread, SIGNAL(stopPressed()), this, SLOT(hotKeyStopPressed()));
@@ -1491,8 +1494,36 @@ void MainWindow::exportToWav()
     QString filename = QFileDialog::getSaveFileName(this);
     if (!filename.isEmpty())
     {
-        //filename += ".wav";
+        if (!filename.endsWith(".wav"))
+        {
+            QMessageBox::about(this, tr("Omilo-Qt5"),
+                               tr("Not a wav file.\n"
+                                  ".wav will be added"));
+            filename += ".wav";
+        }
         QString text = ui->textEdit->document()->toPlainText();
+        updateControlsWhenEngineIsProcessing();
+        removeTempFiles();
+        player->stop();
+        controls->disablePlayButton();
+        playlist->clear();
+        beginBlock = 0;
+        endBlock = 0;
+        beginQueue.clear();
+        endQueue.clear();
+        percentStatusLabel->setText("");
+        checkInstalledVoice();
+
+        engine->setSpeechVoice(engineVoice);
+        qDebug() << "Set engine voice: " << engineVoice;
+        splitMode = enableSplitModeAction->isChecked();
+        engine->setSplitMode(splitMode);
+        qDebug() << "Set split mode: " << splitMode;
+        if (fliteSettingsDialog != NULL)
+        {
+            engine->setDurationStretch(fliteSettingsDialog->getDuration());
+            engine->setTargetMean(fliteSettingsDialog->getTarget());
+        }
         engine->exportWav(filename, text);
         updateControlsWhenEngineIsProcessing();
     }
@@ -1508,4 +1539,23 @@ void MainWindow::setCurrentId(int id)
     this->currentId = id;
     double percent = (double) currentId / maxId * 100;
     percentStatusLabel->setText(" " + tr("Processed ") + QString::number(currentId) + tr(" of ") + QString::number(maxId) + " " + QString::number(percent, 'f', 2) + "%");
+}
+
+void MainWindow::showExportFinishedMessage()
+{
+    qDebug() << "Exporting finished...";
+    QMessageBox::about(this, tr("Omilo-Qt5"),
+                       tr("File created successfully"));
+    percentStatusLabel->setText("");
+}
+
+void MainWindow::setMergeId(int id, int size)
+{
+    double percent = (double) id / size * 100;
+    percentStatusLabel->setText(" " + tr("Merged ") + QString::number(id) + tr(" of ") + QString::number(size) + " " + QString::number(percent, 'f', 2) + "%");
+}
+
+void MainWindow::setMergeInfo(QString info)
+{
+    percentStatusLabel->setText(info);
 }

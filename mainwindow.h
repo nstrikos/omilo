@@ -82,6 +82,9 @@ private slots:
     void speakFromCurrentPosition();
     void setMaxId(int maxId);
     void setCurrentId(int id);
+    void showExportFinishedMessage();
+    void setMergeId(int id, int size);
+    void setMergeInfo(QString info);
 
 private:
     Ui::MainWindow *ui;
