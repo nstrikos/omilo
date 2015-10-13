@@ -2,8 +2,8 @@
 #define TEXTPROCESS_H
 
 #include <QString>
-#include <QStringList>
 #include <QQueue>
+#include "definitions.h"
 
 class TextContainer
 {
@@ -16,15 +16,7 @@ public:
     QQueue<unsigned int> end;
 };
 
-class MyItem
-{
-public:
-    unsigned int id;
-    QString text;
-    unsigned int begin;
-    unsigned int end;
-    QString filename;
-};
+
 
 //class MyList
 //{
@@ -41,7 +33,7 @@ public:
     void setText(QString text);
     void processText();
     TextContainer getTextContainer();
-    QQueue<MyItem> list;
+    QQueue<TextProcessItem> list;
 
 private:
     QString text;

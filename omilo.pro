@@ -28,7 +28,9 @@ SOURCES += main.cpp\
     flitesettingsdialog.cpp \
     hotkeythread.cpp \
     textprocess.cpp \
-    fontsettingsdialog.cpp
+    fontsettingsdialog.cpp \
+    soundfilesmerger.cpp \
+    emptyfilesremover.cpp
 
 HEADERS  += mainwindow.h \
     installvoicesdialog.h \
@@ -49,7 +51,9 @@ HEADERS  += mainwindow.h \
     flitesettingsdialog.h \
     hotkeythread.h \
     textprocess.h \
-    fontsettingsdialog.h
+    fontsettingsdialog.h \
+    soundfilesmerger.h \
+    emptyfilesremover.h
 
 FORMS    += mainwindow.ui \
     installvoicesdialog.ui \

@@ -121,7 +121,7 @@ void TextProcess::processText()
         textContainer.end.append(n);
         //line = line.trimmed();
         textContainer.text.append(line);
-        MyItem item;
+        TextProcessItem item;
         item.id = counter;
         item.text = line;
         item.begin = m;

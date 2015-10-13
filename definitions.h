@@ -62,4 +62,14 @@ struct VoiceInfo
     QString language;
 };
 
+class TextProcessItem
+{
+public:
+    unsigned int id;
+    QString text;
+    unsigned int begin;
+    unsigned int end;
+    QString filename;
+};
+
 #endif // DEFINITIONS_H

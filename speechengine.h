@@ -9,6 +9,7 @@
 #include "maryvoice.h"
 #include "downloadmanager.h"
 #include "textprocess.h"
+#include "soundfilesmerger.h"
 #include <QMediaPlaylist>
 #include <QTimer>
 #include <QQueue>
@@ -51,7 +52,6 @@ private:
     int maxId;
     int mergeCounter;
     QString mergeCommand;
-    QProcess *mergeProcess;
     QProcess finalSoxProcess;
     void startMerging();
     TextProcess *textProcess;
@@ -59,12 +59,11 @@ private:
     int limit;
     QQueue<QString> soxFiles;
     bool exportToWav;
+    SoundFilesMerger *soundFilesMerger;
 
 private slots:
     void voiceFileCreated(QString filename);
-    void processList();
-    void continueMerging();
-    void finalMerge();
+    void processList();    
 
 signals:
     void fileCreated(QString filename, bool split, unsigned int begin, unsigned int end);
