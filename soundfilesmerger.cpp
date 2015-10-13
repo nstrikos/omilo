@@ -127,4 +127,3 @@ void SoundFilesMerger::finalMerge()
     emit mergeInfo(tr("Creating file..."));
     qDebug() << command;
 }
-

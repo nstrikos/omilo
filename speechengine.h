@@ -33,6 +33,7 @@ public:
     bool getIsProcessing();
     void setSplitMode(bool mode);
     void setExportToWav(bool value);
+    void setRate(double rate);
 
 private:
     QString text;
@@ -53,6 +54,7 @@ private:
     int mergeCounter;
     QString mergeCommand;
     QProcess finalSoxProcess;
+    QProcess soxProcess;
     void startMerging();
     TextProcess *textProcess;
     bool overlap;
@@ -60,6 +62,7 @@ private:
     QQueue<QString> soxFiles;
     bool exportToWav;
     SoundFilesMerger *soundFilesMerger;
+    double rate;
 
 private slots:
     void voiceFileCreated(QString filename);

@@ -30,7 +30,8 @@ MainWindow::~MainWindow()
     qDebug() << "Terminate hot keys.";
     hotKeyThread.terminate();
 
-    writeSettings();
+    //writeSettings();
+    settingsWriter.write(pos(), size(), recentFiles, engineVoice, useTrayIcon, splitMode);
 
     if (editorVoiceOptionsDialog != NULL)
         delete editorVoiceOptionsDialog;
@@ -128,6 +129,7 @@ void MainWindow::initVariables()
 
 
     setCurrentFile("");
+    rate = 1.0;
 
     //Initialize forms
 
@@ -294,11 +296,11 @@ void MainWindow::createActions()
     }
 
     voiceOptionAction = new QAction(tr("Select &voice..."), this);
-    voiceOptionAction->setShortcut(tr("F3"));
+    voiceOptionAction->setShortcut(tr("F4"));
     connect(voiceOptionAction, SIGNAL(triggered()), this, SLOT(selectVoice()));
 
     installVoicesAction = new QAction(tr("Instal&l voices..."), this);
-    installVoicesAction->setShortcut(tr("F4"));
+    installVoicesAction->setShortcut(tr("F5"));
     connect(installVoicesAction, SIGNAL(triggered()), this, SLOT(installVoices()));
 
     exportToWavAction = new QAction(tr("&Export to wav..."), this);
@@ -346,10 +348,11 @@ void MainWindow::createActions()
     connect(speakSelectedTextAction, SIGNAL(triggered()), this, SLOT(speakSelectedText()));
 
     cancelAction = new QAction(tr("Cance&l"), this);
-    cancelAction->setShortcut(tr("F12"));
+    cancelAction->setShortcut(tr("F3"));
     QIcon cancelIcon = QIcon(":/images/stop.png");
     cancelAction->setIcon(cancelIcon);
     cancelAction->setEnabled(false);
+    connect(cancelAction, SIGNAL(triggered()), this, SLOT(cancel()));
 
     aboutAction = new QAction(tr("About"), this);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(displayAboutMessage()));
@@ -401,7 +404,7 @@ void MainWindow::createActions()
     rateUpAction->setShortcut(tr("Ctrl+9"));
     connect(rateUpAction, SIGNAL(triggered()), this, SLOT(rateUp()));
     showFliteSettingsAction = new QAction(tr("Flite settings..."), this);
-    showFliteSettingsAction->setShortcut(tr("F5"));
+    showFliteSettingsAction->setShortcut(tr("F6"));
     connect(showFliteSettingsAction, SIGNAL(triggered()), this, SLOT(showFliteDialog()));
     restoreAction = new QAction(tr("&Restore"), this);
     connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
@@ -714,7 +717,6 @@ void MainWindow::documentWasModified()
 //ok
 void MainWindow::loadFile(const QString &filename)
 {
-    qDebug() << "Loading file...";
     QFile file(filename);
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
@@ -737,6 +739,7 @@ void MainWindow::loadFile(const QString &filename)
 
     setCurrentFile(filename);
     cancel();
+    qDebug() << "Loaded file..." << filename;
 }
 
 //ok
@@ -761,20 +764,6 @@ void MainWindow::readSettings()
     enableSplitModeAction->setChecked(splitMode);
 
     qDebug() << "Reading user settings completed.";
-}
-
-//ok
-void MainWindow::writeSettings()
-{
-    qDebug() << "Writing user settings...";
-    QSettings settings("Omilo-qt5", "Omilo-qt5");
-    settings.setValue("MainWindowPosition", pos());
-    settings.setValue("MainWindowSize", size());
-    settings.setValue("recentFiles", recentFiles);
-    settings.setValue("MainWindowVoice", engineVoice);
-    settings.setValue("useTrayIcon", useTrayIcon);
-    settings.setValue("SplitMode", splitMode);
-    qDebug() << "Writing user settings completed.";
 }
 
 //ok
@@ -853,7 +842,7 @@ void MainWindow::speakFromCurrentPosition()
     speakText(text);
 }
 
-//not ok
+//ok
 void MainWindow::speakSelectedText()
 {
     qDebug() << "Speak selected text.";
@@ -919,6 +908,8 @@ void MainWindow::speakText(QString text)
         engine->setDurationStretch(fliteSettingsDialog->getDuration());
         engine->setTargetMean(fliteSettingsDialog->getTarget());
     }
+    rate = controls->getPlaybackRate();
+    engine->setRate(rate);
     engine->speak(text);
     qDebug() << "Speak text : " << text;
     //ui->textEdit->verticalScrollBar()->setSliderPosition(0);
@@ -1186,15 +1177,7 @@ void MainWindow::showFliteDialog()
     if (!fliteSettingsDialog)
         fliteSettingsDialog = new FliteSettingsDialog(engineVoice, this);
     fliteSettingsDialog->setModal(true);
-    fliteSettingsDialog->exec();
-
-    //No need to set here flite settings
-    //We set them before we speak
-    //if (fliteSettingsDialog->exec())
-    //    {
-    //        engine->setDurationStretch(fliteSettingsDialog->getDuration());
-    //        engine->setTargetMean(fliteSettingsDialog->getTarget());
-    //    }
+    fliteSettingsDialog->exec();    
 }
 
 //ok
@@ -1330,16 +1313,16 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
 {
     //QString currentVoice = engine->getSpeechVoice()->getName();
 
-    float rate = controls->getPlaybackRate();
+//    float rate = controls->getPlaybackRate();
 
-    if (rate != 1)
-    {
-        QFile::copy(filename, "/tmp/temp.wav");
-        QString command = "sox /tmp/temp.wav " + filename + " tempo " + QString::number(controls->getPlaybackRate());
-        soxProcess.start(command);
-        soxProcess.waitForFinished();
-        QFile::remove("/tmp/temp.wav");
-    }
+//    if (rate != 1)
+//    {
+//        QFile::copy(filename, "/tmp/temp.wav");
+//        QString command = "sox /tmp/temp.wav " + filename + " tempo " + QString::number(controls->getPlaybackRate());
+//        soxProcess.start(command);
+//        soxProcess.waitForFinished();
+//        QFile::remove("/tmp/temp.wav");
+//    }
 
     QFileInfo fileInfo(filename);
     if (fileInfo.exists())
@@ -1371,6 +1354,7 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
     }
 }
 
+//not ok
 void MainWindow::highlightSelection()
 {
     if (splitMode)
@@ -1456,6 +1440,7 @@ void MainWindow::invertPalette()
     }
 }
 
+//not ok
 void MainWindow::exportToWav()
 {
     QString filename = QFileDialog::getSaveFileName(this);
@@ -1491,16 +1476,20 @@ void MainWindow::exportToWav()
             engine->setDurationStretch(fliteSettingsDialog->getDuration());
             engine->setTargetMean(fliteSettingsDialog->getTarget());
         }
+        rate = controls->getPlaybackRate();
+        engine->setRate(rate);
         engine->exportWav(filename, text);
         updateControlsWhenEngineIsProcessing();
     }
 }
 
+//ok
 void MainWindow::setMaxId(int maxId)
 {
     this->maxId = maxId;
 }
 
+//ok
 void MainWindow::setCurrentId(int id)
 {
     this->currentId = id;
@@ -1508,6 +1497,7 @@ void MainWindow::setCurrentId(int id)
     percentStatusLabel->setText(" " + tr("Processed ") + QString::number(currentId) + tr(" of ") + QString::number(maxId) + " " + QString::number(percent, 'f', 2) + "%");
 }
 
+//ok
 void MainWindow::showExportFinishedMessage()
 {
     qDebug() << "Exporting finished...";
@@ -1516,12 +1506,14 @@ void MainWindow::showExportFinishedMessage()
     percentStatusLabel->setText("");
 }
 
+//ok
 void MainWindow::setMergeId(int id, int size)
 {
     double percent = (double) id / size * 100;
     percentStatusLabel->setText(" " + tr("Merged ") + QString::number(id) + tr(" of ") + QString::number(size) + " " + QString::number(percent, 'f', 2) + "%");
 }
 
+//ok
 void MainWindow::setMergeInfo(QString info)
 {
     percentStatusLabel->setText(info);

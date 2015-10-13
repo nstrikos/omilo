@@ -1,26 +1,18 @@
-remove "-" slash etc.
-cancel shortcut not working
 add access support when exporting is finished
-Export wav - Pri High
-export with rate
-check mergeprocess finished code
-report on removed files because they are silenced - which are removed what text they contain
 add removing files info on status bar
-offer option not to merge wav files
+check mergeprocess finished code
 check mergeprocess exit status
 split in dots - split in new line
+
+add heinrich to about
+remove "-" slash etc.
 is liberation fonts needed?
 add new flite voices
 option to remove mary voices
 clean code
 add debug symbols
+previous  - next
 
-
-void SpeechEngine::voiceFileCreated(QString filename)
-
-50. -> 50os
-
-omilo creates many wav files
 
 speech.conf at home folder
 omilo-screen-reader -> QThread: Destroyed while thread is still running
@@ -29,22 +21,11 @@ see heinrich suggestions
 upload marytts language
 update webpage
 omilo-screen-reader -ctrl-shift-f12 with numlock off
-add fonts shortcuts (font, pointsize, bold)
-translate (Bold)
 german translation for omilo
 player rate for omilo-cli, omilo-text-editor-cli
 german translation for omilo-screen-reader
 omilo-screen-reader mary port
 /media/data/nick/apps/marytts/marytts-runtime/src/main/resources/marytts/config
-omilo -> seek forward???seek backward???
-
-When we change memory for mary server we restart server.
-This should be announced - Pri Low
-
-When mary server reaches a limit, it restarts.
-This should be announced - Pri Low
-
-
 
 Restart orca - speech-dispatcher shortcut - Pri Medium
 

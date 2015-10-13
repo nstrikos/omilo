@@ -28,7 +28,7 @@ private:
     int limit;
     QQueue<QString> soxFiles;
     bool exportToWav;
-    QQueue<TextProcessItem> *list;
+    QQueue<TextProcessItem> *list;    
 
     void removeEmptyFiles();
     void startMerging();

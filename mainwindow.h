@@ -18,6 +18,7 @@
 #include "startupthread.h"
 #include "hotkeythread.h"
 #include "tempfilesremover.h"
+#include "settingswriter.h"
 
 class QAction;
 class QMenu;
@@ -101,7 +102,6 @@ private:
     void setupPlayer();
     void setupLayout();
     void initVariables();
-    void writeSettings();
     bool maybeSave();
     bool saveFile(const QString &filename);
     void loadFile(const QString &filename);
@@ -220,6 +220,8 @@ private:
 
     FontSettingsDialog *fontSettingsDialog;
     TempFilesRemover tempFilesRemover;
+    SettingsWriter settingsWriter;
+    double rate;
 };
 
 #endif // MAINWINDOW_H

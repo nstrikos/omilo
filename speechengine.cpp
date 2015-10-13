@@ -176,6 +176,16 @@ void SpeechEngine::voiceFileCreated(QString filename)
     isProcessing = false;
     if (filename != "/tmp/omilo.wav") // omilo.wav is used for checking mary server
     {
+
+        if (rate != 1)
+        {
+            QFile::remove("/tmp/omilo-tmp.wav");
+            QFile::rename(filename, "/tmp/omilo-tmp.wav");
+            QString command = "sox /tmp/omilo-tmp.wav " + filename + " tempo " + QString::number(rate);
+            soxProcess.start(command);
+            soxProcess.waitForFinished();
+        }
+
         if (splitMode)
         {
             if (!exportToWav)
@@ -304,4 +314,9 @@ void SpeechEngine::setSplitMode(bool mode)
 void SpeechEngine::setExportToWav(bool value)
 {
     exportToWav = value;
+}
+
+void SpeechEngine::setRate(double rate)
+{
+    this->rate = rate;
 }
