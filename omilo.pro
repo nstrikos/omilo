@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     textprocess.cpp \
     fontsettingsdialog.cpp \
     soundfilesmerger.cpp \
-    emptyfilesremover.cpp
+    emptyfilesremover.cpp \
+    tempfilesremover.cpp
 
 HEADERS  += mainwindow.h \
     installvoicesdialog.h \
@@ -53,7 +54,8 @@ HEADERS  += mainwindow.h \
     textprocess.h \
     fontsettingsdialog.h \
     soundfilesmerger.h \
-    emptyfilesremover.h
+    emptyfilesremover.h \
+    tempfilesremover.h
 
 FORMS    += mainwindow.ui \
     installvoicesdialog.ui \

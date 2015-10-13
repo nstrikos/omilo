@@ -17,6 +17,7 @@
 #include "playlistmodel.h"
 #include "startupthread.h"
 #include "hotkeythread.h"
+#include "tempfilesremover.h"
 
 class QAction;
 class QMenu;
@@ -111,7 +112,7 @@ private:
     void speakTextWithoutSplitting(QString text);
     void updateVoiceLabel();
     void updateControlsWhenEngineIsProcessing();
-    void removeTempFiles();
+    //void removeTempFiles();
     void showMainWindow();
     void showHideTrayIcon();
     void setFliteControls();
@@ -218,6 +219,7 @@ private:
     QIcon cancelIcon;
 
     FontSettingsDialog *fontSettingsDialog;
+    TempFilesRemover tempFilesRemover;
 };
 
 #endif // MAINWINDOW_H
