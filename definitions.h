@@ -25,6 +25,7 @@
 #define GreekHercules "Mary Hercules Greek"
 #define GreekGoogleMary "Google Mary Greek"
 #define FrenchMary "Mary French"
+#define CmuBdlMary "Mary Cmu Bdl"
 #define CmuRmsMary "Mary Cmu Rms"
 #define CmuSltMary "Mary Cmu Slt"
 #define ObadiahMary "Mary Obadiah"

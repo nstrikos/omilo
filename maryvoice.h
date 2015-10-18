@@ -135,6 +135,22 @@ class FrenchMaryVoice : public MaryVoice
     }
 };
 
+class CmuBdlMaryVoice : public MaryVoice
+{
+    QString getName()
+    {
+        return CmuBdlMary;
+    }
+    QString getLanguage()
+    {
+        return QLocale::languageToString(QLocale::English);
+    }
+    QString voiceCommand()
+    {
+        return "LOCALE=en_US&VOICE=cmu-bdl-hsmm";
+    }
+};
+
 class CmuRmsMaryVoice : public MaryVoice
 {
     QString getName()

@@ -57,8 +57,6 @@ private:
     QProcess soxProcess;
     void startMerging();
     TextProcess *textProcess;
-    bool overlap;
-    int limit;
     QQueue<QString> soxFiles;
     bool exportToWav;
     SoundFilesMerger *soundFilesMerger;

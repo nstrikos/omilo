@@ -140,6 +140,9 @@ void SpeechEngineInfo::update()
         voiceToAdd.language = QLocale::languageToString(QLocale::French);
         installedVoices.push_back(voiceToAdd);
         voiceToAdd.language = QLocale::languageToString(QLocale::English);
+        voiceToAdd.name = CmuBdlMary;
+        installedVoices.push_back(voiceToAdd);
+        voiceToAdd.language = QLocale::languageToString(QLocale::English);
         voiceToAdd.name = CmuRmsMary;
         installedVoices.push_back(voiceToAdd);
         voiceToAdd.name = CmuSltMary;

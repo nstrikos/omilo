@@ -253,6 +253,8 @@ void SpeechEngine::setSpeechVoice(QString sVoice)
         createVoice(new TurkishMaryVoice());
     else if (sVoice == FrenchMary)
         createVoice(new FrenchMaryVoice());
+    else if (sVoice == CmuBdlMary)
+        createVoice(new CmuBdlMaryVoice());
     else if (sVoice == CmuRmsMary)
         createVoice(new CmuRmsMaryVoice());
     else if (sVoice == CmuSltMary)
