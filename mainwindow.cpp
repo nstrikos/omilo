@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     initFunctions();
 }
 
-//ok
 MainWindow::~MainWindow()
 {
     qDebug() << "Closing application...";
@@ -30,7 +29,6 @@ MainWindow::~MainWindow()
     qDebug() << "Terminate hot keys.";
     hotKeyThread.terminate();
 
-    //writeSettings();
     settingsWriter.write(pos(), size(), recentFiles, engineVoice, useTrayIcon, splitMode);
 
     if (editorVoiceOptionsDialog != NULL)
@@ -44,6 +42,13 @@ MainWindow::~MainWindow()
 
     if (fontSettingsDialog != NULL)
         delete fontSettingsDialog;
+
+    if (exportProgressDialog != NULL)
+        delete exportProgressDialog;
+
+    if (displayMessageDialog != NULL)
+        delete displayMessageDialog;
+
 
     if (startUpThread != NULL)
         delete startUpThread;
@@ -72,11 +77,11 @@ MainWindow::~MainWindow()
         delete splashScreen;
     }
 
+    percentStatusLabel->setText(tr("Removing temporary files..."));
     tempFilesRemover.remove();
     delete ui;
 }
 
-//ok
 void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QMenu menu(this);
@@ -89,7 +94,6 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
     menu.exec(event->globalPos());
 }
 
-//ok
 void MainWindow::initFunctions()
 {
     qDebug() << "Initializing application...";
@@ -122,7 +126,6 @@ void MainWindow::initFunctions()
     qDebug() << "Application initialized.";
 }
 
-//not ok
 void MainWindow::initVariables()
 {
     qDebug() << "Initializing application variables...";
@@ -137,6 +140,8 @@ void MainWindow::initVariables()
     installVoicesDialog = NULL;
     fliteSettingsDialog = NULL;
     fontSettingsDialog = NULL;
+    exportProgressDialog = NULL;
+    displayMessageDialog = NULL;
 
     selectedVoiceLabel = NULL;
     splashScreen = NULL;
@@ -179,7 +184,6 @@ void MainWindow::initVariables()
     qDebug() << "All application variables are initialized.";
 }
 
-//ok
 void MainWindow::setupPlayer()
 {
     qDebug() << "Setting up media player...";
@@ -216,7 +220,6 @@ void MainWindow::setupPlayer()
     qDebug() << "Media player initialized.";
 }
 
-//ok
 void MainWindow::setupLayout()
 {
     qDebug() << "Setting Qt layout...";
@@ -245,7 +248,6 @@ void MainWindow::setupLayout()
     qDebug() << "Setting Qt layout completed.";
 }
 
-//ok
 void MainWindow::connectSignalsToSlots()
 {
     qDebug() << "Connected all Qt signals to slots...";
@@ -267,7 +269,6 @@ void MainWindow::connectSignalsToSlots()
     qDebug() << "All Qt signals are connected.";
 }
 
-//ok
 void MainWindow::createActions()
 {
     qDebug() << "Creating Qt actions...";
@@ -430,7 +431,6 @@ void MainWindow::createActions()
     qDebug() << "Qt actions created.";
 }
 
-//ok
 void MainWindow::createMenus()
 {
     qDebug() << "Creating Qt menus...";
@@ -470,6 +470,7 @@ void MainWindow::createMenus()
     speakMenu->addAction(rateDownAction);
     speakMenu->addAction(rateUpAction);
     speakMenu->addSeparator();
+    speakMenu->addAction(speakSelectedTextAction);
     speakMenu->addAction(speakFromCurrentPositionAction);
     speakMenu->addAction(enableSplitModeAction);
 
@@ -490,7 +491,6 @@ void MainWindow::createMenus()
     qDebug() << "Qt menus created.";
 }
 
-//ok
 void MainWindow::createTrayIcon()
 {
     qDebug() << "Trying to create tray icon...";
@@ -510,7 +510,6 @@ void MainWindow::createTrayIcon()
     qDebug() << "Creating tray icon completed.";
 }
 
-//ok
 void MainWindow::setupSplashScreen()
 {
     qDebug() << "Trying to set up splash screen...";
@@ -524,16 +523,18 @@ void MainWindow::setupSplashScreen()
     qDebug() << "Setting up splash screen completed.";
 }
 
-//ok
 void MainWindow::setupMaryStartupTimer()
 {
     qDebug() << "Set startup timer for 20 seconds...";
+
+    //We will wait for 20 seconds for mary server
+    //If timer expires we close splash screen
+
     maryStartupTimer = new QTimer();
     connect(maryStartupTimer, SIGNAL(timeout()), this, SLOT(splashTimerExpired()));
     maryStartupTimer->start(20000);
 }
 
-//ok
 void MainWindow::documentModified()
 {
     if (ui->textEdit->document()->isEmpty())
@@ -554,7 +555,6 @@ void MainWindow::documentModified()
     }
 }
 
-//ok
 void MainWindow::newFile()
 {
     qDebug() << "Creating new file...";
@@ -566,7 +566,6 @@ void MainWindow::newFile()
     cancel();
 }
 
-//ok
 void MainWindow::openFile()
 {
     qDebug() << "Open file...";
@@ -579,7 +578,6 @@ void MainWindow::openFile()
     }
 }
 
-//ok
 bool MainWindow::maybeSave()
 {
     if (ui->textEdit->document()->isModified())
@@ -597,7 +595,6 @@ bool MainWindow::maybeSave()
     return true;
 }
 
-//ok
 bool MainWindow::save()
 {
     qDebug() << "Save file...";
@@ -607,7 +604,6 @@ bool MainWindow::save()
         return saveFile(curfile);
 }
 
-//ok
 bool MainWindow::saveFile(const QString &filename)
 {
     QFile file(filename);
@@ -635,7 +631,6 @@ bool MainWindow::saveFile(const QString &filename)
     return true;
 }
 
-//ok
 bool MainWindow::saveAs()
 {
     qDebug() << "Saving as...";
@@ -646,7 +641,6 @@ bool MainWindow::saveAs()
     return saveFile(filename);
 }
 
-//ok
 void MainWindow::setCurrentFile(const QString &filename)
 {
     curfile = filename;
@@ -663,7 +657,6 @@ void MainWindow::setCurrentFile(const QString &filename)
     setWindowTitle(tr("%1[*]").arg(shownName));
 }
 
-//ok
 void MainWindow::updateRecentFileActions()
 {
     QMutableStringListIterator i(recentFiles);
@@ -691,13 +684,11 @@ void MainWindow::updateRecentFileActions()
     separatorAction->setVisible(!recentFiles.isEmpty());
 }
 
-//ok
 QString MainWindow::strippedName(const QString &fullFileName)
 {
     return QFileInfo(fullFileName).fileName();
 }
 
-//ok
 void MainWindow::openRecentFile()
 {
     if (maybeSave())
@@ -708,13 +699,11 @@ void MainWindow::openRecentFile()
     }
 }
 
-//ok
 void MainWindow::documentWasModified()
 {
     setWindowModified(ui->textEdit->document()->isModified());
 }
 
-//ok
 void MainWindow::loadFile(const QString &filename)
 {
     QFile file(filename);
@@ -742,7 +731,6 @@ void MainWindow::loadFile(const QString &filename)
     qDebug() << "Loaded file..." << filename;
 }
 
-//ok
 void MainWindow::readSettings()
 {
     qDebug() << "Reading user settings...";
@@ -757,7 +745,6 @@ void MainWindow::readSettings()
     engineVoice = settings.value("MainWindowVoice").toString();
     if (engineVoice == "" )
         engineVoice = KalFestival;
-    voice = engineVoice;
     useTrayIcon = settings.value("useTrayIcon").toBool();
     toggleUseTrayIconAction->setChecked(useTrayIcon);
     splitMode = settings.value("SplitMode").toBool();
@@ -766,7 +753,7 @@ void MainWindow::readSettings()
     qDebug() << "Reading user settings completed.";
 }
 
-//ok
+
 void MainWindow::updateControlsWhenEngineIsProcessing()
 {
     qDebug() << "Engine is processing. Updating controls...";
@@ -779,7 +766,6 @@ void MainWindow::updateControlsWhenEngineIsProcessing()
     cancelAction->setEnabled(true);
 }
 
-//ok
 void MainWindow::updateControlsWhenEngineIsIdle()
 {
     qDebug() << "Engine is idle. Updating controls...";
@@ -792,7 +778,6 @@ void MainWindow::updateControlsWhenEngineIsIdle()
     cancelAction->setEnabled(false);
 }
 
-//ok
 void MainWindow::cancel()
 {
     qDebug() << "Stopping all actions...";
@@ -809,13 +794,11 @@ void MainWindow::cancel()
     percentStatusLabel->setText("");
 }
 
-//ok
 void MainWindow::hotKeyStopPressed()
 {
     cancel();
 }
 
-//ok
 void MainWindow::speakButtonPressed()
 {
     qDebug() << "Speak button pressed.";
@@ -831,10 +814,9 @@ void MainWindow::speakButtonPressed()
     }
 }
 
-//ok
 void MainWindow::speakFromCurrentPosition()
 {
-    qDebug() << "Speak from current position";
+    qDebug() << "Speak from current position.";
     QString text = ui->textEdit->document()->toPlainText();
     QTextCursor cursor = ui->textEdit->textCursor();
     cursorPosition = cursor.position();
@@ -842,55 +824,75 @@ void MainWindow::speakFromCurrentPosition()
     speakText(text);
 }
 
-//ok
+void MainWindow::speakText(QString text)
+{
+    setVariablesBeforeSpeaking();
+    highlightMode = true;
+    qDebug() << "Speak text : " << text;
+    engine->speak(text);
+}
+
 void MainWindow::speakSelectedText()
 {
     qDebug() << "Speak selected text.";
     QTextCursor cursor(ui->textEdit->textCursor());
-    QString text = cursor.selectedText();
-    speakTextWithoutSplitting(text);
+
+    //cursor.selection.toPlainText() keeps \n characters, so we are able to split sentences
+    QString text = cursor.selection().toPlainText();
+    speakTextWithoutHighlight(text);
 }
 
-//not ok
-void MainWindow::speakTextWithoutSplitting(QString text)
+void MainWindow::speakTextWithoutHighlight(QString text)
 {
-    updateControlsWhenEngineIsProcessing();
-    tempFilesRemover.remove();
-    player->stop();
-    controls->disablePlayButton();
-    playlist->clear();
-    //cursorPosition = 0;
-    beginBlock = 0;
-    endBlock = 0;
-    beginQueue.clear();
-    endQueue.clear();
-    percentStatusLabel->setText("");
-    checkInstalledVoice();
-
-    engine->setSpeechVoice(engineVoice);
-    qDebug() << "Set engine voice: " << engineVoice;
-    splitMode = false;
-    engine->setSplitMode(splitMode);
-    qDebug() << "Set split mode: " << splitMode;
-    if (fliteSettingsDialog != NULL)
-    {
-        engine->setDurationStretch(fliteSettingsDialog->getDuration());
-        engine->setTargetMean(fliteSettingsDialog->getTarget());
-    }
-    engine->speakWithoutSplitting(text);
+    setVariablesBeforeSpeaking();
+    highlightMode = false;
     qDebug() << "Speak text : " << text;
-    //ui->textEdit->verticalScrollBar()->setSliderPosition(0);
+    engine->speak(text);
 }
 
-//not ok
-void MainWindow::speakText(QString text)
+void MainWindow::exportToWav()
+{
+    QString filename = QFileDialog::getSaveFileName(this);
+    if (!filename.isEmpty())
+    {
+        if (!filename.endsWith(".wav"))
+        {
+            if (displayMessageDialog == NULL)
+            {
+                displayMessageDialog = new DisplayMessageDialog(this);
+            }
+            displayMessageDialog->setText(tr("Not a wav file.\n .wav will be added."));
+            displayMessageDialog->show();
+            displayMessageDialog->exec();
+            filename += ".wav";
+        }
+        QString text = ui->textEdit->document()->toPlainText();
+
+        setVariablesBeforeSpeaking();
+
+        if (splitMode)
+        {
+            if (exportProgressDialog == NULL)
+            {
+                exportProgressDialog = new ExportProgressDialog(this);
+                qDebug() << "Export progress dialog created...";
+            }
+            exportProgressDialog->setLabelText(tr("Exporting..."));
+            exportProgressDialog->reset();
+            exportProgressDialog->show();
+            exportProgressDialog->setModal(true);
+        }
+        engine->exportWav(filename, text);
+    }
+}
+
+void MainWindow::setVariablesBeforeSpeaking()
 {
     updateControlsWhenEngineIsProcessing();
     tempFilesRemover.remove();
     player->stop();
     controls->disablePlayButton();
     playlist->clear();
-    //cursorPosition = 0;
     beginBlock = 0;
     endBlock = 0;
     beginQueue.clear();
@@ -910,15 +912,11 @@ void MainWindow::speakText(QString text)
     }
     rate = controls->getPlaybackRate();
     engine->setRate(rate);
-    engine->speak(text);
-    qDebug() << "Speak text : " << text;
-    //ui->textEdit->verticalScrollBar()->setSliderPosition(0);
+    qDebug() << "Set engine rate: " << rate;
 }
 
-//ok
 void MainWindow::hotKeyPlayPressed()
 {
-    qDebug() << "Hot key play pressed.";
     ui->textEdit->clear();
     QString text = clipboard->text(QClipboard::Selection);
     ui->textEdit->append(text);
@@ -926,7 +924,6 @@ void MainWindow::hotKeyPlayPressed()
     speakText(text);
 }
 
-//ok
 void MainWindow::selectVoice()
 {
     if (!editorVoiceOptionsDialog)
@@ -945,7 +942,6 @@ void MainWindow::selectVoice()
     }
 }
 
-//ok
 void MainWindow::setFliteControls()
 {
     if (engineInfo->getVoiceMode(engineVoice) == flite)
@@ -962,7 +958,6 @@ void MainWindow::setFliteControls()
     }
 }
 
-//ok
 void MainWindow::installVoices()
 {
     if (!installVoicesDialog)
@@ -974,14 +969,12 @@ void MainWindow::installVoices()
     installVoicesDialog->showWindow(engineVoice);
 }
 
-//ok
 void MainWindow::durationChanged(qint64 duration)
 {
     this->duration = duration/1000;
     slider->setMaximum(duration / 1000);
 }
 
-//ok
 void MainWindow::positionChanged(qint64 progress)
 {
     if (!slider->isSliderDown()) {
@@ -990,7 +983,6 @@ void MainWindow::positionChanged(qint64 progress)
     updateDurationInfo(progress / 1000);
 }
 
-//ok
 void MainWindow::jump(const QModelIndex &index)
 {
     if (index.isValid()) {
@@ -1006,13 +998,11 @@ void MainWindow::playlistPositionChanged(int currentItem)
     Q_UNUSED(currentItem);
 }
 
-//ok
 void MainWindow::seek(int seconds)
 {
     player->setPosition(seconds * 1000);
 }
 
-//ok
 void MainWindow::statusChanged(QMediaPlayer::MediaStatus status)
 {
     handleCursor(status);
@@ -1041,7 +1031,6 @@ void MainWindow::statusChanged(QMediaPlayer::MediaStatus status)
     }
 }
 
-//ok
 void MainWindow::handleCursor(QMediaPlayer::MediaStatus status)
 {
 #ifndef QT_NO_CURSOR
@@ -1054,33 +1043,28 @@ void MainWindow::handleCursor(QMediaPlayer::MediaStatus status)
 #endif
 }
 
-//ok
 void MainWindow::bufferingProgress(int progress)
 {
     setStatusInfo(tr("Buffering %4%").arg(progress));
 }
 
-//ok
 void MainWindow::setTrackInfo(const QString &info)
 {
     trackInfo = info;
     Q_UNUSED(trackInfo);
 }
 
-//ok
 void MainWindow::setStatusInfo(const QString &info)
 {
     statusInfo = info;
     Q_UNUSED(statusInfo)
 }
 
-//ok
 void MainWindow::displayErrorMessage()
 {
     setStatusInfo(player->errorString());
 }
 
-//ok
 void MainWindow::updateDurationInfo(qint64 currentInfo)
 {
     QString tStr;
@@ -1095,7 +1079,6 @@ void MainWindow::updateDurationInfo(qint64 currentInfo)
     labelDuration->setText(tStr);
 }
 
-//ok
 void MainWindow::updateVoiceLabel()
 {
     if (selectedVoiceLabel == NULL)
@@ -1103,7 +1086,6 @@ void MainWindow::updateVoiceLabel()
     selectedVoiceLabel->setText(tr("Voice: ") + engineVoice);
 }
 
-//ok
 void MainWindow::updateMaryStatus()
 {
     //startup thread connects here
@@ -1116,27 +1098,25 @@ void MainWindow::updateMaryStatus()
     showMainWindow();
 }
 
-//ok
 void MainWindow::displayHelp()
 {
     qDebug() << "Display help file...";
     QDesktopServices::openUrl(QUrl("file:///usr/share/omilo-qt5/README"));
 }
 
-//ok
 void MainWindow::displayAboutMessage()
 {
     qDebug() << "Display about message...";
-    QMessageBox::about(this, tr("About Omilo-Qt5"),
-                       tr("Omilo - Text To Speech\n"
-                          "Version 0.3\n"
-                          "Developer : nstrikos@yahoo.gr\n"
-                          "Webpage : http://anoikto.webs.com/omilo\n"
-                          "Icons: Gartoon Redux 1.11 "));
-
+    if (displayMessageDialog == NULL)
+    {
+        displayMessageDialog = new DisplayMessageDialog(this);
+    }
+    displayMessageDialog->setText(tr("Omilo - Text To Speech\nVersion 0.3\nDeveloper : nstrikos@yahoo.gr\nWebpage : http://anoikto.webs.com/omilo\nIcons: Gartoon Redux 1.11 "));
+    displayMessageDialog->show();
+    displayMessageDialog->setModal(true);
+    displayMessageDialog->exec();
 }
 
-//ok
 void MainWindow::play()
 {
     if ( (player->state() == QMediaPlayer::StoppedState) ||
@@ -1152,35 +1132,30 @@ void MainWindow::play()
     }
 }
 
-//ok
 void MainWindow::stop()
 {
     qDebug() << "Stop media player.";
     player->stop();
 }
 
-//ok
 void MainWindow::rateUp()
 {
     controls->increaseRate();
 }
 
-//ok
 void MainWindow::rateDown()
 {
     controls->decreaseRate();
 }
 
-//ok
 void MainWindow::showFliteDialog()
 {
     if (!fliteSettingsDialog)
         fliteSettingsDialog = new FliteSettingsDialog(engineVoice, this);
     fliteSettingsDialog->setModal(true);
-    fliteSettingsDialog->exec();    
+    fliteSettingsDialog->exec();
 }
 
-//ok
 void MainWindow::splashTimerExpired()
 {
     //Reaching here means mary startup time expired
@@ -1190,12 +1165,15 @@ void MainWindow::splashTimerExpired()
     qDebug() << "Startup timer expired...";
     showMainWindow();
 
-    QMessageBox::warning(this, tr("Warning"),
-                         tr("Loading takes too long\n"
-                            "Mary voices may not be available\n"));
+    if (displayMessageDialog == NULL)
+    {
+        displayMessageDialog = new DisplayMessageDialog(this);
+    }
+    displayMessageDialog->setText(tr("Loading takes too long\nMary voices may not be available."));
+    displayMessageDialog->show();
+    displayMessageDialog->exec();
 }
 
-//ok
 void MainWindow::setDefaultVoice()
 {
     qDebug() << "Setting default voice...";
@@ -1204,7 +1182,6 @@ void MainWindow::setDefaultVoice()
     updateVoiceLabel();
 }
 
-//ok
 void MainWindow::checkInstalledVoice()
 {
     //This should not be here
@@ -1233,7 +1210,6 @@ void MainWindow::checkInstalledVoice()
     }
 }
 
-//ok
 void MainWindow::showMainWindow()
 {
     //we close splash screen
@@ -1268,17 +1244,14 @@ void MainWindow::showMainWindow()
     this->show();
 }
 
-//ok
 void MainWindow::enableSplitMode()
 {
-    splitMode = enableSplitModeAction->isChecked();
     //We dont set split mode here because engine maybe processing
     //It's better to set when we speak
     //This way we dont mess up with voices and players
-    //engine->setSplitMode(splitMode);
+    splitMode = enableSplitModeAction->isChecked();
 }
 
-//ok
 void MainWindow::toggleUseTrayIcon()
 {
     if (useTrayIcon == true)
@@ -1289,7 +1262,6 @@ void MainWindow::toggleUseTrayIcon()
     showHideTrayIcon();
 }
 
-//ok
 void MainWindow::showHideTrayIcon()
 {
     if (useTrayIcon)
@@ -1308,22 +1280,8 @@ void MainWindow::showHideTrayIcon()
     }
 }
 
-//The new code will mainly evolve this function
 void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin, unsigned int end)
 {
-    //QString currentVoice = engine->getSpeechVoice()->getName();
-
-//    float rate = controls->getPlaybackRate();
-
-//    if (rate != 1)
-//    {
-//        QFile::copy(filename, "/tmp/temp.wav");
-//        QString command = "sox /tmp/temp.wav " + filename + " tempo " + QString::number(controls->getPlaybackRate());
-//        soxProcess.start(command);
-//        soxProcess.waitForFinished();
-//        QFile::remove("/tmp/temp.wav");
-//    }
-
     QFileInfo fileInfo(filename);
     if (fileInfo.exists())
     {
@@ -1354,47 +1312,46 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
     }
 }
 
-//not ok
 void MainWindow::highlightSelection()
 {
-    if (splitMode)
+    if (highlightMode)
     {
-
-        int currentIndex = playlist->currentIndex();
-        if ( currentIndex >= 0 )
+        if (splitMode)
         {
-            if (!beginQueue.isEmpty() && (!endQueue.isEmpty()))
+            int currentIndex = playlist->currentIndex();
+            if ( currentIndex >= 0 )
             {
-                beginBlock = this->beginQueue.dequeue();// + cursorPosition;
-                endBlock = this->endQueue.dequeue();// + cursorPosition;
+                if (!beginQueue.isEmpty() && (!endQueue.isEmpty()))
+                {
+                    beginBlock = this->beginQueue.dequeue();
+                    endBlock = this->endQueue.dequeue();
+                }
+                if (endBlock > 0)
+                {
+                    beginBlock += cursorPosition;
+                    endBlock += cursorPosition;
+                    if (endBlock > ui->textEdit->document()->toPlainText().size())
+                        endBlock = ui->textEdit->document()->toPlainText().size();
+                    QTextCursor cursor = ui->textEdit->textCursor();
+                    cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+                    cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+                    ui->textEdit->setTextCursor(cursor);
+                }
+                if (endBlock == 0)
+                {
+                    beginBlock = 0;
+                    endBlock = 0;
+                    QTextCursor cursor = ui->textEdit->textCursor();
+                    cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
+                    cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
+                    ui->textEdit->setTextCursor(cursor);
+                }
+                cancelAction->setEnabled(true);
             }
-            if (endBlock > 0)
-            {
-                beginBlock += cursorPosition;
-                endBlock += cursorPosition;
-                if (endBlock > ui->textEdit->document()->toPlainText().size())
-                    endBlock = ui->textEdit->document()->toPlainText().size();
-                QTextCursor cursor = ui->textEdit->textCursor();
-                cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
-                cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
-                ui->textEdit->setTextCursor(cursor);
-            }
-            if (endBlock == 0)
-            {
-                beginBlock = 0;
-                endBlock = 0;
-                QTextCursor cursor = ui->textEdit->textCursor();
-                cursor.setPosition(beginBlock, QTextCursor::MoveAnchor);
-                cursor.setPosition(endBlock, QTextCursor::KeepAnchor);
-                ui->textEdit->setTextCursor(cursor);
-            }
-            //ui->cancelButton->setEnabled(true);
-            cancelAction->setEnabled(true);
         }
     }
 }
 
-//ok
 void MainWindow::showFontSettingsDialog()
 {
     if (fontSettingsDialog == NULL)
@@ -1416,7 +1373,6 @@ void MainWindow::showFontSettingsDialog()
     }
 }
 
-//ok
 void MainWindow::setBold()
 {
     QFont font = ui->textEdit->font();
@@ -1425,7 +1381,6 @@ void MainWindow::setBold()
     qDebug() << "Bold: " << boldAction->isChecked();
 }
 
-//ok
 void MainWindow::invertPalette()
 {
     if (invertColorsAction->isChecked())
@@ -1440,80 +1395,49 @@ void MainWindow::invertPalette()
     }
 }
 
-//not ok
-void MainWindow::exportToWav()
-{
-    QString filename = QFileDialog::getSaveFileName(this);
-    if (!filename.isEmpty())
-    {
-        if (!filename.endsWith(".wav"))
-        {
-            QMessageBox::about(this, tr("Omilo-Qt5"),
-                               tr("Not a wav file.\n"
-                                  ".wav will be added"));
-            filename += ".wav";
-        }
-        QString text = ui->textEdit->document()->toPlainText();
-        updateControlsWhenEngineIsProcessing();
-        tempFilesRemover.remove();
-        player->stop();
-        controls->disablePlayButton();
-        playlist->clear();
-        beginBlock = 0;
-        endBlock = 0;
-        beginQueue.clear();
-        endQueue.clear();
-        percentStatusLabel->setText("");
-        checkInstalledVoice();
-
-        engine->setSpeechVoice(engineVoice);
-        qDebug() << "Set engine voice: " << engineVoice;
-        splitMode = enableSplitModeAction->isChecked();
-        engine->setSplitMode(splitMode);
-        qDebug() << "Set split mode: " << splitMode;
-        if (fliteSettingsDialog != NULL)
-        {
-            engine->setDurationStretch(fliteSettingsDialog->getDuration());
-            engine->setTargetMean(fliteSettingsDialog->getTarget());
-        }
-        rate = controls->getPlaybackRate();
-        engine->setRate(rate);
-        engine->exportWav(filename, text);
-        updateControlsWhenEngineIsProcessing();
-    }
-}
-
-//ok
 void MainWindow::setMaxId(int maxId)
 {
     this->maxId = maxId;
+    if (exportProgressDialog != NULL)
+        exportProgressDialog->setMaxId(maxId);
 }
 
-//ok
 void MainWindow::setCurrentId(int id)
 {
     this->currentId = id;
-    double percent = (double) currentId / maxId * 100;
-    percentStatusLabel->setText(" " + tr("Processed ") + QString::number(currentId) + tr(" of ") + QString::number(maxId) + " " + QString::number(percent, 'f', 2) + "%");
+    if (maxId != 0)
+    {
+        double percent = (double) currentId / maxId * 100;
+        percentStatusLabel->setText(" " + tr("Processed ") + QString::number(currentId) + tr(" of ") + QString::number(maxId) + " " + QString::number(percent, 'f', 2) + "%");
+    }
+    if (exportProgressDialog != NULL)
+        exportProgressDialog->setCurrentId(id);
 }
 
-//ok
 void MainWindow::showExportFinishedMessage()
 {
     qDebug() << "Exporting finished...";
-    QMessageBox::about(this, tr("Omilo-Qt5"),
-                       tr("File created successfully"));
+    if (exportProgressDialog != NULL)
+        exportProgressDialog->setVisible(false);
+    if (displayMessageDialog == NULL)
+    {
+        displayMessageDialog = new DisplayMessageDialog(this);
+    }
+    displayMessageDialog->setText(tr("File created successfully."));
+    displayMessageDialog->show();
+    displayMessageDialog->exec();
     percentStatusLabel->setText("");
 }
 
-//ok
 void MainWindow::setMergeId(int id, int size)
 {
     double percent = (double) id / size * 100;
     percentStatusLabel->setText(" " + tr("Merged ") + QString::number(id) + tr(" of ") + QString::number(size) + " " + QString::number(percent, 'f', 2) + "%");
+    exportProgressDialog->setMaxId(size);
+    exportProgressDialog->setCurrentId(id);
+    exportProgressDialog->setLabelText(tr("Merging..."));
 }
 
-//ok
 void MainWindow::setMergeInfo(QString info)
 {
     percentStatusLabel->setText(info);

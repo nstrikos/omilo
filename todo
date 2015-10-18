@@ -1,16 +1,19 @@
-add access support when exporting is finished
-add removing files info on status bar
-check mergeprocess finished code
-check mergeprocess exit status
 split in dots - split in new line
-
+translation
 add heinrich to about
-remove "-" slash etc.
-is liberation fonts needed?
-add new flite voices
-option to remove mary voices
 clean code
 add debug symbols
+
+
+ked festival voice
+mary should always be in split mode
+flite-festival in no split mode
+option not to hightlight text
+remove "-" slash etc.
+is liberation fonts needed?
+do not process the whole text when speaking - process the whole text only when exporting
+add new flite voices
+option to remove mary voices
 previous  - next
 
 

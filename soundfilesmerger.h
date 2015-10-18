@@ -36,6 +36,8 @@ private:
 private slots:
     void continueMerging();
     void finalMerge();
+    void handleMergeProcessError();
+    void handleFinalSoxProcessError();
 
 signals:
     void soxFinished();

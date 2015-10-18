@@ -4,6 +4,9 @@
 progressDialog::progressDialog(QProcess *process, QString filename, QWidget *parent) :QDialog(parent)
 {
     setupUi(this);
+    setWindowFlags(Qt::Dialog
+                   | Qt::FramelessWindowHint
+                   | Qt::CustomizeWindowHint);
     this->downloadProcess = process;
     this->downloadFile = filename;
     progressBar->setValue(0);

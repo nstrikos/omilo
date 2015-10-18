@@ -32,7 +32,9 @@ SOURCES += main.cpp\
     soundfilesmerger.cpp \
     emptyfilesremover.cpp \
     tempfilesremover.cpp \
-    settingswriter.cpp
+    settingswriter.cpp \
+    exportprogressdialog.cpp \
+    displaymessagedialog.cpp
 
 HEADERS  += mainwindow.h \
     installvoicesdialog.h \
@@ -57,14 +59,18 @@ HEADERS  += mainwindow.h \
     soundfilesmerger.h \
     emptyfilesremover.h \
     tempfilesremover.h \
-    settingswriter.h
+    settingswriter.h \
+    exportprogressdialog.h \
+    displaymessagedialog.h
 
 FORMS    += mainwindow.ui \
     installvoicesdialog.ui \
     progressdialog.ui \
     editorvoiceoptionsdialog.ui \
     flitesettingsdialog.ui \
-    fontsettingsdialog.ui
+    fontsettingsdialog.ui \
+    exportprogressdialog.ui \
+    displaymessagedialog.ui
 
 CONFIG += mobility
 MOBILITY = 

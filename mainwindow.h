@@ -19,12 +19,14 @@
 #include "hotkeythread.h"
 #include "tempfilesremover.h"
 #include "settingswriter.h"
+#include "exportprogressdialog.h"
+#include "displaymessagedialog.h"
 
 class QAction;
 class QMenu;
 
 namespace Ui {
-    class MainWindow;
+class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -91,6 +93,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    //Private functions
     void initFunctions();
     void connectSignalsToSlots();
     void createActions();
@@ -109,14 +112,15 @@ private:
     void updateRecentFileActions();
     QString strippedName(const QString &fileName);
     void speakText(QString text);
-    void speakTextWithoutSplitting(QString text);
+    void speakTextWithoutHighlight(QString text);
+    void setVariablesBeforeSpeaking();
     void updateVoiceLabel();
     void updateControlsWhenEngineIsProcessing();
-    //void removeTempFiles();
     void showMainWindow();
     void showHideTrayIcon();
     void setFliteControls();
 
+    //GUI Actions
     QString curfile;
     enum {MaxRecentFiles = 5};
     QStringList recentFiles;
@@ -148,7 +152,7 @@ private:
     QAction *speakSelectedTextAction;
     QAction *showFontSettingsDialogAction;
     QAction *boldAction;
-    QAction *invertColorsAction;    
+    QAction *invertColorsAction;
     QAction *enableSplitModeAction;
     QAction *toggleUseTrayIconAction;
     QAction *speakFromCurrentPositionAction;
@@ -157,6 +161,7 @@ private:
     QAction *restoreAction;
     QAction *quitAction;
 
+    //GUI Menus
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *speakMenu;
@@ -165,14 +170,32 @@ private:
     QMenu *helpMenu;
 
     QToolBar *speakToolBar;
+    QSystemTrayIcon *trayIcon;
+    QMenu *trayIconMenu;
+    QIcon speakIcon;
+    QIcon cancelIcon;
 
-    SpeechEngine *engine;
-    QString engineVoice; //variable to hold engine voice after reading from settings
-    QString voice; //which of two should I keep???
-
+    //Form variables
     EditorVoiceOptionsDialog *editorVoiceOptionsDialog;
     InstallVoicesDialog *installVoicesDialog;
+    FontSettingsDialog *fontSettingsDialog;
+    ExportProgressDialog *exportProgressDialog;
+    DisplayMessageDialog *displayMessageDialog;
+    FliteSettingsDialog *fliteSettingsDialog;
 
+    //Startup thread and splash screen variables
+    StartupThread *startUpThread;
+    QSplashScreen *splashScreen;
+
+    //Various classes
+    TempFilesRemover tempFilesRemover;
+    SettingsWriter settingsWriter;
+    HotKeyThread hotKeyThread;
+    QTimer *maryStartupTimer;
+    QClipboard *clipboard;
+
+    //Player related variables
+    PlayerControls *controls;
     QMediaPlayer *player;
     QMediaPlaylist *playlist;
     PlaylistModel *playlistModel;
@@ -185,43 +208,34 @@ private:
     QString trackInfo;
     QString statusInfo;
     QLabel *labelDuration;
-    QLabel *historyLabel;
+
+    //Status bar labels
     QLabel *selectedVoiceLabel;
     QLabel *engineStatusLabel;
     QLabel *percentStatusLabel;
-    int maxId;
-    int currentId;
-    StartupThread *startUpThread;
-    QSplashScreen *splashScreen;
-    PlayerControls *controls;
-    FliteSettingsDialog *fliteSettingsDialog;
-    QTimer *maryStartupTimer;
-    SpeechEngineInfo *engineInfo;
-    HotKeyThread hotKeyThread;
-    QClipboard *clipboard;
-    QProcess soxProcess;
+
+    //Textedit variables
     QPalette defaultPalette;
     QPalette invertedPalette;
     QQueue<unsigned int> beginQueue;
     QQueue<unsigned int> endQueue;
     int beginBlock;
     int endBlock;
-    bool splitMode;
     unsigned int cursorPosition;
-    int fliteDuration;
-    int fliteTargetMean;
 
-    QSystemTrayIcon *trayIcon;
-    QMenu *trayIconMenu;
+    //Engine variables
+    SpeechEngineInfo *engineInfo;
+    SpeechEngine *engine;
+    QString engineVoice;
+    double rate;
     bool useTrayIcon;
     bool engineIsProcessing;
-    QIcon speakIcon;
-    QIcon cancelIcon;
-
-    FontSettingsDialog *fontSettingsDialog;
-    TempFilesRemover tempFilesRemover;
-    SettingsWriter settingsWriter;
-    double rate;
+    bool splitMode;
+    bool highlightMode;
+    int fliteDuration;
+    int fliteTargetMean;
+    int maxId;
+    int currentId;
 };
 
 #endif // MAINWINDOW_H

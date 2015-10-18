@@ -11,8 +11,10 @@ SoundFilesMerger::SoundFilesMerger()
     emptyFilesRemover = new EmptyFilesRemover();
     exportToWav = false;
     connect(mergeProcess, SIGNAL(finished(int)), this, SLOT(continueMerging()));
+    connect(mergeProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(handleMergeProcessError()));
     connect(this, SIGNAL(soxFinished()), this, SLOT(finalMerge()));
     connect(&finalSoxProcess, SIGNAL(finished(int)), this, SIGNAL(exportFinished()));
+    connect(&finalSoxProcess, SIGNAL(error(QProcess::ProcessError)), this, SLOT(handleFinalSoxProcessError()));
     qDebug() << "Creating new soundfilemerger class completed.";
 }
 
@@ -126,4 +128,14 @@ void SoundFilesMerger::finalMerge()
     finalSoxProcess.start(command);
     emit mergeInfo(tr("Creating file..."));
     qDebug() << command;
+}
+
+void SoundFilesMerger::handleMergeProcessError()
+{
+    qDebug() << "Error in merging: " << mergeProcess->exitStatus();
+}
+
+void SoundFilesMerger::handleFinalSoxProcessError()
+{
+    qDebug() << "Error in final merging: " << finalSoxProcess.exitStatus();
 }
