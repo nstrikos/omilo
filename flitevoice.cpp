@@ -13,14 +13,14 @@ void FliteVoice::performSpeak(QString filename, QString text)
     QString duration = QString::number(durationStretch/100.0);
     command += " --setf duration_stretch=";
     command += duration;
-    qDebug() << "Duration is " << duration;
+    //qDebug() << "Duration is " << duration;
 
     QString target = QString::number(targetMean);
     command += " --setf int_f0_target_mean=";
     command +=target;
-    qDebug() << "Target mean is " << target;
+    //qDebug() << "Target mean is " << target;
 
-    qDebug() << "Processing command: " << command;
+    //qDebug() << "Processing command: " << command;
     createWavProcess->start(command);
 }
 

@@ -1,17 +1,16 @@
 split in dots - split in new line
 translation
 add heinrich to about
-clean code
 add debug symbols
 
 
+close all merge processes before processing
+can we speak immediately without waiting for text process?
+clean code
 ked festival voice
-mary should always be in split mode
 flite-festival in no split mode
-option not to hightlight text
 remove "-" slash etc.
 is liberation fonts needed?
-do not process the whole text when speaking - process the whole text only when exporting
 add new flite voices
 option to remove mary voices
 previous  - next

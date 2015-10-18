@@ -39,8 +39,7 @@ void ExportProgressDialog::setCurrentId(int currentId)
 {
     this->currentId = currentId;
     float percent = currentId * 100 / maxId ;
-    ui->progressBar->setValue( round (percent) );
-    qDebug() << currentId << maxId << percent;
+    ui->progressBar->setValue( round (percent) );    
 }
 
 void ExportProgressDialog::reset()

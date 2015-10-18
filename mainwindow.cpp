@@ -445,6 +445,7 @@ void MainWindow::createMenus()
     for (int i=0; i<MaxRecentFiles; ++i)
         fileMenu->addAction(recentFileActions[i]);
 
+    separatorAction = fileMenu->addSeparator();
     fileMenu->addAction(exportToWavAction);
     fileMenu->addAction(quitAction);
 

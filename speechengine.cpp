@@ -72,7 +72,6 @@ void SpeechEngine::speak(QString text)
         textProcess->processText();
         currentId = 0;
         maxId = textProcess->list.size() - 1;
-        qDebug() << "Maxid:" << maxId;
         emit newMaxId(maxId);
         processList();
     }
@@ -136,7 +135,6 @@ void SpeechEngine::exportWav(QString filename, QString text)
         currentId = 0;
         maxId = textProcess->list.size() - 1;
         //mergeProcess->close();
-        qDebug() << "Maxid:" << maxId;
         emit newMaxId(maxId);
         processList();
     }
