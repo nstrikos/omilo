@@ -1,9 +1,12 @@
 split in dots - split in new line
+set limit 1.000.000 to exporting sentences
 translation
 add heinrich to about
+add heinrich festival feature
+smil support
+add all features from mary client
+
 add debug symbols
-
-
 close all merge processes before processing
 can we speak immediately without waiting for text process?
 clean code
@@ -15,6 +18,17 @@ add new flite voices
 option to remove mary voices
 previous  - next
 
+see heinrich mail suggestions
+tesseract options
+omilo - tesseract      
+qml-smillaEnlarger
+emily
+omilo-screen-reader
+dsp theory - tts theory - greek voice - english voice
+threejs
+physics - GR
+python find contours - see opera bookmarks
+provide many solutions for scanning - see bookmark for this
 
 speech.conf at home folder
 omilo-screen-reader -> QThread: Destroyed while thread is still running

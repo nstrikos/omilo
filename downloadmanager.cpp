@@ -74,6 +74,7 @@ void DownloadManager::performSpeak(QString filename, QString text, QString voice
         downloading = true;
         finalCommand = "http://localhost:59127/process?INPUT_TEXT=";
         command1 = "&INPUT_TYPE=TEXT&OUTPUT_TYPE=AUDIO&AUDIO=WAVE_FILE&";
+        //command1 = "&INPUT_TYPE=SSML&OUTPUT_TYPE=AUDIO&AUDIO=WAVE_FILE&";
         command2 = voiceCommand;
         finalCommand = finalCommand + text + command1 + command2;
 

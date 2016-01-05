@@ -17,8 +17,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //Is it necessary to set fonts?
     QFont font("Liberation Sans", 12);
     QApplication::setFont(font);
+
     initFunctions();
 }
 
@@ -94,6 +97,7 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
     menu.exec(event->globalPos());
 }
 
+//ok
 void MainWindow::initFunctions()
 {
     qDebug() << "Initializing application...";
@@ -126,6 +130,7 @@ void MainWindow::initFunctions()
     qDebug() << "Application initialized.";
 }
 
+//ok
 void MainWindow::initVariables()
 {
     qDebug() << "Initializing application variables...";
@@ -184,6 +189,7 @@ void MainWindow::initVariables()
     qDebug() << "All application variables are initialized.";
 }
 
+//ok
 void MainWindow::setupPlayer()
 {
     qDebug() << "Setting up media player...";
@@ -220,6 +226,7 @@ void MainWindow::setupPlayer()
     qDebug() << "Media player initialized.";
 }
 
+//ok
 void MainWindow::setupLayout()
 {
     qDebug() << "Setting Qt layout...";
@@ -248,9 +255,10 @@ void MainWindow::setupLayout()
     qDebug() << "Setting Qt layout completed.";
 }
 
+//ok
 void MainWindow::connectSignalsToSlots()
 {
-    qDebug() << "Connected all Qt signals to slots...";
+    qDebug() << "Connect all Qt signals to slots...";
     connect(ui->textEdit->document(), SIGNAL(contentsChanged()), this, SLOT(documentWasModified()));
     connect(ui->speakButton, SIGNAL(clicked()), this, SLOT(speakButtonPressed()));
     connect(engine, SIGNAL(fileCreated(QString, bool, unsigned int, unsigned int)), this, SLOT(addToPlaylist(QString, bool, unsigned int, unsigned int)));
@@ -269,6 +277,7 @@ void MainWindow::connectSignalsToSlots()
     qDebug() << "All Qt signals are connected.";
 }
 
+//ok
 void MainWindow::createActions()
 {
     qDebug() << "Creating Qt actions...";
@@ -431,6 +440,7 @@ void MainWindow::createActions()
     qDebug() << "Qt actions created.";
 }
 
+//ok
 void MainWindow::createMenus()
 {
     qDebug() << "Creating Qt menus...";
@@ -492,6 +502,7 @@ void MainWindow::createMenus()
     qDebug() << "Qt menus created.";
 }
 
+//ok
 void MainWindow::createTrayIcon()
 {
     qDebug() << "Trying to create tray icon...";
@@ -511,6 +522,7 @@ void MainWindow::createTrayIcon()
     qDebug() << "Creating tray icon completed.";
 }
 
+//ok
 void MainWindow::setupSplashScreen()
 {
     qDebug() << "Trying to set up splash screen...";
@@ -524,6 +536,7 @@ void MainWindow::setupSplashScreen()
     qDebug() << "Setting up splash screen completed.";
 }
 
+//ok
 void MainWindow::setupMaryStartupTimer()
 {
     qDebug() << "Set startup timer for 20 seconds...";
@@ -536,6 +549,7 @@ void MainWindow::setupMaryStartupTimer()
     maryStartupTimer->start(20000);
 }
 
+//ok
 void MainWindow::documentModified()
 {
     if (ui->textEdit->document()->isEmpty())
@@ -556,6 +570,7 @@ void MainWindow::documentModified()
     }
 }
 
+//ok
 void MainWindow::newFile()
 {
     qDebug() << "Creating new file...";
@@ -567,6 +582,7 @@ void MainWindow::newFile()
     cancel();
 }
 
+//ok
 void MainWindow::openFile()
 {
     qDebug() << "Open file...";
@@ -579,6 +595,7 @@ void MainWindow::openFile()
     }
 }
 
+//ok
 bool MainWindow::maybeSave()
 {
     if (ui->textEdit->document()->isModified())
@@ -596,6 +613,7 @@ bool MainWindow::maybeSave()
     return true;
 }
 
+//ok
 bool MainWindow::save()
 {
     qDebug() << "Save file...";
@@ -605,6 +623,7 @@ bool MainWindow::save()
         return saveFile(curfile);
 }
 
+//ok
 bool MainWindow::saveFile(const QString &filename)
 {
     QFile file(filename);
@@ -632,6 +651,7 @@ bool MainWindow::saveFile(const QString &filename)
     return true;
 }
 
+//ok
 bool MainWindow::saveAs()
 {
     qDebug() << "Saving as...";
@@ -642,6 +662,7 @@ bool MainWindow::saveAs()
     return saveFile(filename);
 }
 
+//ok
 void MainWindow::setCurrentFile(const QString &filename)
 {
     curfile = filename;
@@ -658,6 +679,7 @@ void MainWindow::setCurrentFile(const QString &filename)
     setWindowTitle(tr("%1[*]").arg(shownName));
 }
 
+//ok
 void MainWindow::updateRecentFileActions()
 {
     QMutableStringListIterator i(recentFiles);
@@ -685,11 +707,13 @@ void MainWindow::updateRecentFileActions()
     separatorAction->setVisible(!recentFiles.isEmpty());
 }
 
+//ok
 QString MainWindow::strippedName(const QString &fullFileName)
 {
     return QFileInfo(fullFileName).fileName();
 }
 
+//ok
 void MainWindow::openRecentFile()
 {
     if (maybeSave())
@@ -700,11 +724,13 @@ void MainWindow::openRecentFile()
     }
 }
 
+//ok
 void MainWindow::documentWasModified()
 {
     setWindowModified(ui->textEdit->document()->isModified());
 }
 
+//ok
 void MainWindow::loadFile(const QString &filename)
 {
     QFile file(filename);
@@ -732,6 +758,7 @@ void MainWindow::loadFile(const QString &filename)
     qDebug() << "Loaded file..." << filename;
 }
 
+//ok
 void MainWindow::readSettings()
 {
     qDebug() << "Reading user settings...";
@@ -753,7 +780,6 @@ void MainWindow::readSettings()
 
     qDebug() << "Reading user settings completed.";
 }
-
 
 void MainWindow::updateControlsWhenEngineIsProcessing()
 {
@@ -925,6 +951,7 @@ void MainWindow::hotKeyPlayPressed()
     speakText(text);
 }
 
+//ok
 void MainWindow::selectVoice()
 {
     if (!editorVoiceOptionsDialog)
@@ -943,6 +970,7 @@ void MainWindow::selectVoice()
     }
 }
 
+//ok
 void MainWindow::setFliteControls()
 {
     if (engineInfo->getVoiceMode(engineVoice) == flite)
@@ -959,6 +987,7 @@ void MainWindow::setFliteControls()
     }
 }
 
+//ok
 void MainWindow::installVoices()
 {
     if (!installVoicesDialog)
@@ -970,12 +999,14 @@ void MainWindow::installVoices()
     installVoicesDialog->showWindow(engineVoice);
 }
 
+//ok
 void MainWindow::durationChanged(qint64 duration)
 {
     this->duration = duration/1000;
     slider->setMaximum(duration / 1000);
 }
 
+//ok
 void MainWindow::positionChanged(qint64 progress)
 {
     if (!slider->isSliderDown()) {
@@ -984,6 +1015,7 @@ void MainWindow::positionChanged(qint64 progress)
     updateDurationInfo(progress / 1000);
 }
 
+//ok
 void MainWindow::jump(const QModelIndex &index)
 {
     if (index.isValid()) {
@@ -999,11 +1031,13 @@ void MainWindow::playlistPositionChanged(int currentItem)
     Q_UNUSED(currentItem);
 }
 
+//ok
 void MainWindow::seek(int seconds)
 {
     player->setPosition(seconds * 1000);
 }
 
+//ok
 void MainWindow::statusChanged(QMediaPlayer::MediaStatus status)
 {
     handleCursor(status);
@@ -1032,6 +1066,7 @@ void MainWindow::statusChanged(QMediaPlayer::MediaStatus status)
     }
 }
 
+//ok
 void MainWindow::handleCursor(QMediaPlayer::MediaStatus status)
 {
 #ifndef QT_NO_CURSOR
@@ -1044,28 +1079,33 @@ void MainWindow::handleCursor(QMediaPlayer::MediaStatus status)
 #endif
 }
 
+//ok
 void MainWindow::bufferingProgress(int progress)
 {
     setStatusInfo(tr("Buffering %4%").arg(progress));
 }
 
+//ok
 void MainWindow::setTrackInfo(const QString &info)
 {
     trackInfo = info;
     Q_UNUSED(trackInfo);
 }
 
+//ok
 void MainWindow::setStatusInfo(const QString &info)
 {
     statusInfo = info;
     Q_UNUSED(statusInfo)
 }
 
+//ok
 void MainWindow::displayErrorMessage()
 {
     setStatusInfo(player->errorString());
 }
 
+//ok
 void MainWindow::updateDurationInfo(qint64 currentInfo)
 {
     QString tStr;
@@ -1080,6 +1120,7 @@ void MainWindow::updateDurationInfo(qint64 currentInfo)
     labelDuration->setText(tStr);
 }
 
+//ok
 void MainWindow::updateVoiceLabel()
 {
     if (selectedVoiceLabel == NULL)
@@ -1087,6 +1128,7 @@ void MainWindow::updateVoiceLabel()
     selectedVoiceLabel->setText(tr("Voice: ") + engineVoice);
 }
 
+//ok
 void MainWindow::updateMaryStatus()
 {
     //startup thread connects here
@@ -1099,12 +1141,14 @@ void MainWindow::updateMaryStatus()
     showMainWindow();
 }
 
+//ok
 void MainWindow::displayHelp()
 {
     qDebug() << "Display help file...";
     QDesktopServices::openUrl(QUrl("file:///usr/share/omilo-qt5/README"));
 }
 
+//ok
 void MainWindow::displayAboutMessage()
 {
     qDebug() << "Display about message...";
@@ -1118,6 +1162,7 @@ void MainWindow::displayAboutMessage()
     displayMessageDialog->exec();
 }
 
+//ok
 void MainWindow::play()
 {
     if ( (player->state() == QMediaPlayer::StoppedState) ||
@@ -1133,22 +1178,26 @@ void MainWindow::play()
     }
 }
 
+//ok
 void MainWindow::stop()
 {
     qDebug() << "Stop media player.";
     player->stop();
 }
 
+//ok
 void MainWindow::rateUp()
 {
     controls->increaseRate();
 }
 
+//ok
 void MainWindow::rateDown()
 {
     controls->decreaseRate();
 }
 
+//ok
 void MainWindow::showFliteDialog()
 {
     if (!fliteSettingsDialog)
@@ -1157,6 +1206,7 @@ void MainWindow::showFliteDialog()
     fliteSettingsDialog->exec();
 }
 
+//ok
 void MainWindow::splashTimerExpired()
 {
     //Reaching here means mary startup time expired
@@ -1175,6 +1225,7 @@ void MainWindow::splashTimerExpired()
     displayMessageDialog->exec();
 }
 
+//ok
 void MainWindow::setDefaultVoice()
 {
     qDebug() << "Setting default voice...";
@@ -1183,12 +1234,12 @@ void MainWindow::setDefaultVoice()
     updateVoiceLabel();
 }
 
+//ok
 void MainWindow::checkInstalledVoice()
 {
     //This should not be here
     //But it's nice to have a clean function to check
     //if voice is installed
-
 
     qDebug() << "Checking if selected voice is installed...";
     engineInfo->update();
@@ -1211,6 +1262,7 @@ void MainWindow::checkInstalledVoice()
     }
 }
 
+//ok
 void MainWindow::showMainWindow()
 {
     //we close splash screen
@@ -1245,6 +1297,7 @@ void MainWindow::showMainWindow()
     this->show();
 }
 
+//ok
 void MainWindow::enableSplitMode()
 {
     //We dont set split mode here because engine maybe processing
@@ -1253,6 +1306,7 @@ void MainWindow::enableSplitMode()
     splitMode = enableSplitModeAction->isChecked();
 }
 
+//ok
 void MainWindow::toggleUseTrayIcon()
 {
     if (useTrayIcon == true)
@@ -1263,6 +1317,7 @@ void MainWindow::toggleUseTrayIcon()
     showHideTrayIcon();
 }
 
+//ok
 void MainWindow::showHideTrayIcon()
 {
     if (useTrayIcon)
@@ -1281,6 +1336,7 @@ void MainWindow::showHideTrayIcon()
     }
 }
 
+//ok
 void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin, unsigned int end)
 {
     QFileInfo fileInfo(filename);
@@ -1353,6 +1409,7 @@ void MainWindow::highlightSelection()
     }
 }
 
+//ok
 void MainWindow::showFontSettingsDialog()
 {
     if (fontSettingsDialog == NULL)
@@ -1374,6 +1431,7 @@ void MainWindow::showFontSettingsDialog()
     }
 }
 
+//ok
 void MainWindow::setBold()
 {
     QFont font = ui->textEdit->font();
@@ -1382,6 +1440,7 @@ void MainWindow::setBold()
     qDebug() << "Bold: " << boldAction->isChecked();
 }
 
+//ok
 void MainWindow::invertPalette()
 {
     if (invertColorsAction->isChecked())

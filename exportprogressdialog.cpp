@@ -38,8 +38,11 @@ void ExportProgressDialog::setMaxId(int maxId)
 void ExportProgressDialog::setCurrentId(int currentId)
 {
     this->currentId = currentId;
-    float percent = currentId * 100 / maxId ;
-    ui->progressBar->setValue( round (percent) );    
+    if (maxId != 0)
+    {
+        float percent = currentId * 100 / maxId ;
+        ui->progressBar->setValue( round (percent) );
+    }
 }
 
 void ExportProgressDialog::reset()

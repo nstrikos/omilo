@@ -20,6 +20,9 @@ void EmptyFilesRemover::remove(QQueue<TextProcessItem> *list)
         {
             qDebug() << "Removed " << filename << " with size " << size << "and text " << list->at(i).text;
             QFile::remove(filename);
+            list->removeAt(i);
+            //We have to set i to previous position because the list has changed
+            i--;
         }
     }
     qDebug() << "Removing empty sound files finished.";
