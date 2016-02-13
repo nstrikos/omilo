@@ -11,6 +11,7 @@
 #define KspCmuFestival "Ksp Cmu Festival"
 #define RmsCmuFestival "Rms Cmu Festival"
 #define SltCmuFestival "Slt Cmu Festival"
+#define CustomFestival "Custom Festival"
 #define RmsFlite "Rms Flite"
 #define SltFlite "Slt Flite"
 #define AwbFlite "Awb Flite"
@@ -44,6 +45,9 @@ const QString voiceTextEditorFile = "/tmp/omiloTextEditorVoice.txt";
 const QString showCommandFile = "/tmp/omiloShowcommand.txt";
 const unsigned int maxMaryMemory = 2048;
 const unsigned int minMaryMemory = 350;
+
+const QString defaultFestivalCommand = "/usr/bin/text2wave";
+const QString defaultFestivalCommandArguments = "-eval '(voice_kal_diphone)'";
 
 #define maximumNumberOfFiles 1000000
 

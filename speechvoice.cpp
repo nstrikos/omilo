@@ -23,3 +23,15 @@ void SpeechVoice::setTargetMean(unsigned int target)
     targetMean = target;
     qDebug() << "Set target mean to " << targetMean;
 }
+
+void SpeechVoice::setCustomCommand(QString command)
+{
+    this->customCommand = command;
+    qDebug() << "Set custom command to: " << command;
+}
+
+void SpeechVoice::setCustomCommandArguments(QString arguments)
+{
+    this->customCommandArguments = arguments;
+    qDebug() << "Set custom command arguments to: " << arguments;
+}

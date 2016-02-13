@@ -78,6 +78,9 @@ void SpeechEngineInfo::update()
     else
         availableVoices.push_back(voiceToAdd);
 
+    voiceToAdd.name = CustomFestival;
+    installedVoices.push_back(voiceToAdd);
+
     voiceToAdd.mode = flite;
     voiceToAdd.language = QLocale::languageToString(QLocale::English);
     if (QFile::exists("/usr/share/omilo-qt5/flite/flite"))

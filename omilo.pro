@@ -34,7 +34,9 @@ SOURCES += main.cpp\
     tempfilesremover.cpp \
     settingswriter.cpp \
     exportprogressdialog.cpp \
-    displaymessagedialog.cpp
+    displaymessagedialog.cpp \
+    customfestivaldialog.cpp \
+    customfestivalvoice.cpp
 
 HEADERS  += mainwindow.h \
     installvoicesdialog.h \
@@ -61,7 +63,9 @@ HEADERS  += mainwindow.h \
     tempfilesremover.h \
     settingswriter.h \
     exportprogressdialog.h \
-    displaymessagedialog.h
+    displaymessagedialog.h \
+    customfestivaldialog.h \
+    customfestivalvoice.h
 
 FORMS    += mainwindow.ui \
     installvoicesdialog.ui \
@@ -70,7 +74,8 @@ FORMS    += mainwindow.ui \
     flitesettingsdialog.ui \
     fontsettingsdialog.ui \
     exportprogressdialog.ui \
-    displaymessagedialog.ui
+    displaymessagedialog.ui \
+    customfestivaldialog.ui
 
 CONFIG += mobility
 MOBILITY = 

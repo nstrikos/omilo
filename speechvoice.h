@@ -19,6 +19,8 @@ protected:
     bool cancelled;
     unsigned int durationStretch;
     unsigned int targetMean;
+    QString customCommand;
+    QString customCommandArguments;
 
 protected slots:
     void emitFileCreatedSignal();
@@ -33,6 +35,8 @@ public:
     virtual QString voiceCommand() = 0;
     void setDurationStretch(unsigned int duration);
     void setTargetMean(unsigned int target);
+    void setCustomCommand(QString command);
+    void setCustomCommandArguments(QString arguments);
 
 signals:
     void fileCreated(QString filename);

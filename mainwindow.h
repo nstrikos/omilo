@@ -21,6 +21,7 @@
 #include "settingswriter.h"
 #include "exportprogressdialog.h"
 #include "displaymessagedialog.h"
+#include "customfestivaldialog.h"
 
 class QAction;
 class QMenu;
@@ -72,6 +73,7 @@ private slots:
     void rateDown();
     void showFliteDialog();
     void setDefaultVoice();
+    void showCustomFestivalDialog();
     void checkInstalledVoice();
     void hotKeyPlayPressed();
     void hotKeyStopPressed();
@@ -89,6 +91,7 @@ private slots:
     void showExportFinishedMessage();
     void setMergeId(int id, int size);
     void setMergeInfo(QString info);
+    void showNormalAndRaise();
 
 private:
     Ui::MainWindow *ui;
@@ -142,6 +145,7 @@ private:
     QAction *cancelAction;
     QAction *voiceOptionAction;
     QAction *installVoicesAction;
+    QAction *customFestivalAction;
     QAction *helpAction;
     QAction *aboutAction;
     QAction *playAction;
@@ -182,6 +186,7 @@ private:
     ExportProgressDialog *exportProgressDialog;
     DisplayMessageDialog *displayMessageDialog;
     FliteSettingsDialog *fliteSettingsDialog;
+    CustomFestivalDialog *customFestivalDialog;
 
     //Startup thread and splash screen variables
     StartupThread *startUpThread;
@@ -234,6 +239,8 @@ private:
     bool highlightMode;
     int fliteDuration;
     int fliteTargetMean;
+    QString customFestivalCommand;
+    QString customFestivalCommandArguments;
     int maxId;
     int currentId;
 };

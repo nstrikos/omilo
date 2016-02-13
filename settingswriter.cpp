@@ -2,7 +2,7 @@
 #include <QDebug>
 
 void SettingsWriter::write(QPoint pos, QSize size, QStringList recentFiles, QString engineVoice,
-                           bool useTrayIcon, bool splitMode)
+                           bool useTrayIcon, bool splitMode, QString customFestivalCommand, QString customFestivalCommandArguments)
 {
     qDebug() << "Writing user settings...";
     QSettings settings("Omilo-qt5", "Omilo-qt5");
@@ -12,6 +12,8 @@ void SettingsWriter::write(QPoint pos, QSize size, QStringList recentFiles, QStr
     settings.setValue("MainWindowVoice", engineVoice);
     settings.setValue("useTrayIcon", useTrayIcon);
     settings.setValue("SplitMode", splitMode);
+    settings.setValue("customFestivalCommand", customFestivalCommand);
+    settings.setValue("customFestivalCommandArguments", customFestivalCommandArguments);
     qDebug() << "Writing user settings completed.";
 }
 

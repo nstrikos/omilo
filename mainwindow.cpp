@@ -32,7 +32,7 @@ MainWindow::~MainWindow()
     qDebug() << "Terminate hot keys.";
     hotKeyThread.terminate();
 
-    settingsWriter.write(pos(), size(), recentFiles, engineVoice, useTrayIcon, splitMode);
+    settingsWriter.write(pos(), size(), recentFiles, engineVoice, useTrayIcon, splitMode, customFestivalCommand, customFestivalCommandArguments);
 
     if (editorVoiceOptionsDialog != NULL)
         delete editorVoiceOptionsDialog;
@@ -147,6 +147,7 @@ void MainWindow::initVariables()
     fontSettingsDialog = NULL;
     exportProgressDialog = NULL;
     displayMessageDialog = NULL;
+    customFestivalDialog = NULL;
 
     selectedVoiceLabel = NULL;
     splashScreen = NULL;
@@ -271,7 +272,7 @@ void MainWindow::connectSignalsToSlots()
     connect(startUpThread, SIGNAL(maryServerIsUp()), this, SLOT(updateMaryStatus()));
     connect(&hotKeyThread, SIGNAL(playPressed()), this, SLOT(hotKeyPlayPressed()));
     connect(&hotKeyThread, SIGNAL(stopPressed()), this, SLOT(hotKeyStopPressed()));
-    connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(showNormal()));
+    connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(showNormalAndRaise()));
     connect(&hotKeyThread, SIGNAL(pausePressed()), this, SLOT(play()));
     connect(playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(highlightSelection()));
     qDebug() << "All Qt signals are connected.";
@@ -375,6 +376,10 @@ void MainWindow::createActions()
     showFontSettingsDialogAction->setShortcut(tr("Ctrl+F"));
     connect(showFontSettingsDialogAction, SIGNAL(triggered()), this, SLOT(showFontSettingsDialog()));
 
+    customFestivalAction = new QAction(tr("Custom festival command settings..."), this);
+    customFestivalAction->setShortcut(tr("Ctrl+U"));
+    connect(customFestivalAction, SIGNAL(triggered()), this, SLOT(showCustomFestivalDialog()));
+
     boldAction = new QAction(tr("Bold"), this);
     boldAction->setShortcut(tr("Ctrl+B"));
     boldAction->setCheckable(true);
@@ -419,7 +424,7 @@ void MainWindow::createActions()
     restoreAction = new QAction(tr("&Restore"), this);
     connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
     quitAction = new QAction(tr("&Quit"), this);
-    quitAction->setShortcut(QKeySequence::Quit);
+    quitAction->setShortcut(tr("Ctrl+Q"));
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     cutAction->setEnabled(false);
     copyAction->setEnabled(false);
@@ -488,6 +493,7 @@ void MainWindow::createMenus()
     optionsMenu = menuBar()->addMenu(tr("&Options"));
     optionsMenu->addAction(installVoicesAction);
     optionsMenu->addAction(showFliteSettingsAction);
+    optionsMenu->addAction(customFestivalAction);
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showFontSettingsDialogAction);
@@ -777,6 +783,12 @@ void MainWindow::readSettings()
     toggleUseTrayIconAction->setChecked(useTrayIcon);
     splitMode = settings.value("SplitMode").toBool();
     enableSplitModeAction->setChecked(splitMode);
+    customFestivalCommand = settings.value("customFestivalCommand").toString();
+    if (customFestivalCommand == "")
+        customFestivalCommand = defaultFestivalCommand;
+    customFestivalCommandArguments = settings.value("customFestivalCommandArguments").toString();
+    if (customFestivalCommandArguments == "")
+        customFestivalCommandArguments = defaultFestivalCommandArguments;
 
     qDebug() << "Reading user settings completed.";
 }
@@ -936,6 +948,11 @@ void MainWindow::setVariablesBeforeSpeaking()
     {
         engine->setDurationStretch(fliteSettingsDialog->getDuration());
         engine->setTargetMean(fliteSettingsDialog->getTarget());
+    }
+    if (engineVoice == CustomFestival)
+    {
+        engine->setCustomFestivalCommand(customFestivalCommand);
+        engine->setCustomFestivalCommandArguments(customFestivalCommandArguments);
     }
     rate = controls->getPlaybackRate();
     engine->setRate(rate);
@@ -1156,7 +1173,7 @@ void MainWindow::displayAboutMessage()
     {
         displayMessageDialog = new DisplayMessageDialog(this);
     }
-    displayMessageDialog->setText(tr("Omilo - Text To Speech\nVersion 0.3\nDeveloper : nstrikos@yahoo.gr\nWebpage : http://anoikto.webs.com/omilo\nIcons: Gartoon Redux 1.11 "));
+    displayMessageDialog->setText(tr("Omilo - Text To Speech\nVersion 0.3\nDeveloper : nstrikos@yahoo.gr\nWebpage : http://anoikto.webs.com/omilo\nGerman translation : Heinrich Schwietering\nheinrich.schwietering@gmx.de\nIcons: Gartoon Redux 1.11 "));
     displayMessageDialog->show();
     displayMessageDialog->setModal(true);
     displayMessageDialog->exec();
@@ -1501,4 +1518,31 @@ void MainWindow::setMergeId(int id, int size)
 void MainWindow::setMergeInfo(QString info)
 {
     percentStatusLabel->setText(info);
+}
+
+void MainWindow::showCustomFestivalDialog()
+{
+    if (!customFestivalDialog)
+        customFestivalDialog = new CustomFestivalDialog(&customFestivalCommand, &customFestivalCommandArguments, this);
+    customFestivalDialog->setModal(true);
+    customFestivalDialog->showDialog();
+
+    //customFestivalDialog->setCustomFestivalCommand(customFestivalCommand);
+    //customFestivalDialog->setCustomFestivalCommandArguments(customFestivalCommandArguments);
+
+    if (customFestivalDialog->exec())
+    {
+        //We dont set voice here because engine maybe processing
+        //It's better to set voice voice when we speak
+        //This way we dont mess up with voices and players
+        //engine->setSpeechVoice(engineVoice);
+
+    }
+}
+
+void MainWindow::showNormalAndRaise()
+{
+    this->showNormal();
+    this->raise();
+    QApplication::setActiveWindow(this);
 }

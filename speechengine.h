@@ -5,6 +5,7 @@
 #include "speechvoice.h"
 #include "festivalflitevoice.h"
 #include "festivalvoice.h"
+#include "customfestivalvoice.h"
 #include "flitevoice.h"
 #include "maryvoice.h"
 #include "downloadmanager.h"
@@ -27,6 +28,8 @@ public:
     void setSpeechVoice(QString sVoice);
     void setDurationStretch(unsigned int duration);
     void setTargetMean(unsigned int target);
+    void setCustomFestivalCommand(QString command);
+    void setCustomFestivalCommandArguments(QString arguments);
     SpeechVoice *getSpeechVoice();
     void testMaryServer();
     void stopTestingMaryServer();
@@ -47,6 +50,8 @@ private:
     QString filename;
     unsigned int durationStretch;
     unsigned int targetMean;
+    QString customFestivalCommand;
+    QString customFestivalCommandArguments;
     bool isProcessing;
     bool splitMode;    
     int currentId;

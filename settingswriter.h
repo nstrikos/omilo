@@ -10,7 +10,7 @@ class SettingsWriter
 {
 public:
     void write(QPoint pos, QSize size, QStringList recentFiles, QString engineVoice,
-                               bool useTrayIcon, bool splitMode);
+                               bool useTrayIcon, bool splitMode, QString customFestivalCommand, QString customFestivalCommandArguments);
 
 };
 

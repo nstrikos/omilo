@@ -162,7 +162,7 @@ void SpeechEngine::createVoice(SpeechVoice *sVoice)
         delete this->speechVoice;
         speechVoice = NULL;
     }
-    this->speechVoice = sVoice;
+    this->speechVoice = sVoice;    
     connect(speechVoice, SIGNAL(fileCreated(QString)), this, SLOT(voiceFileCreated(QString)));
 
     if (maryServerProcess->pid()  == 0)
@@ -223,6 +223,8 @@ void SpeechEngine::setSpeechVoice(QString sVoice)
         createVoice(new RmsCmuFestivalVoice());
     else if (sVoice == SltCmuFestival)
         createVoice(new SltCmuFestivalVoice());
+    else if (sVoice == CustomFestival)
+        createVoice(new CustomFestivalVoice());
     else if (sVoice == RmsFlite)
         createVoice(new RmsFliteVoice());
     else if (sVoice == SltFlite)
@@ -304,6 +306,18 @@ void SpeechEngine::setTargetMean(unsigned int target)
 {
     targetMean = target;
     speechVoice->setTargetMean(targetMean);
+}
+
+void SpeechEngine::setCustomFestivalCommand(QString command)
+{
+    this->customFestivalCommand = command;
+    speechVoice->setCustomCommand(command);
+}
+
+void SpeechEngine::setCustomFestivalCommandArguments(QString arguments)
+{
+    this->customFestivalCommandArguments = arguments;
+    speechVoice->setCustomCommandArguments(arguments);
 }
 
 void SpeechEngine::setSplitMode(bool mode)
