@@ -1359,29 +1359,38 @@ void MainWindow::addToPlaylist(QString filename, bool split, unsigned int begin,
     QFileInfo fileInfo(filename);
     if (fileInfo.exists())
     {
-        if (split)
-        {
-            //SOS append before play
-            //otherwise highlight selection will point to the previous text part
-            beginQueue.append(begin);
-            endQueue.append(end);
+        int size = 0;
+        QFile myFile(filename);
+        if (myFile.open(QIODevice::ReadOnly)){
+            size = myFile.size();
+            myFile.close();
         }
-        else
+        if (size > 4000)
         {
-            beginQueue.append(0);
-            endQueue.append(0);
-        }
+            if (split)
+            {
+                //SOS append before play
+                //otherwise highlight selection will point to the previous text part
+                beginQueue.append(begin);
+                endQueue.append(end);
+            }
+            else
+            {
+                beginQueue.append(0);
+                endQueue.append(0);
+            }
 
-        {
-            QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
+            {
+                QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
 
-            //This is an important change for gstreamer to handle wav files
-            //player->setMedia(QUrl::fromLocalFile(filename));
-            playlist->addMedia(url);
-            //if (player->state() == QMediaPlayer::StoppedState)
-            //    player->play();
-            if (playlist->currentIndex() == -1)
-                player->play();
+                //This is an important change for gstreamer to handle wav files
+                //player->setMedia(QUrl::fromLocalFile(filename));
+                playlist->addMedia(url);
+                //if (player->state() == QMediaPlayer::StoppedState)
+                //    player->play();
+                if (playlist->currentIndex() == -1)
+                    player->play();
+            }
         }
     }
 }
