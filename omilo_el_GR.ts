@@ -2,6 +2,47 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="el_GR">
 <context>
+    <name>CustomFestivalDialog</name>
+    <message>
+        <location filename="customfestivaldialog.ui" line="14"/>
+        <source>Custom festival command</source>
+        <translation>Ορισμός εντολής festival</translation>
+    </message>
+    <message>
+        <location filename="customfestivaldialog.ui" line="25"/>
+        <source>Custom festival command:</source>
+        <translation>Ορισμός εντολής για το festival:</translation>
+    </message>
+    <message>
+        <location filename="customfestivaldialog.ui" line="35"/>
+        <source>Custom festival command arguments:</source>
+        <translation>Ορισμός παραμέτρων για το festival:</translation>
+    </message>
+    <message>
+        <location filename="customfestivaldialog.ui" line="75"/>
+        <source>Cancel</source>
+        <translation>Ακύρωση</translation>
+    </message>
+    <message>
+        <location filename="customfestivaldialog.ui" line="85"/>
+        <source>OK</source>
+        <translation>ΟΚ</translation>
+    </message>
+</context>
+<context>
+    <name>DisplayMessageDialog</name>
+    <message>
+        <location filename="displaymessagedialog.ui" line="14"/>
+        <source>Information</source>
+        <translation>Πληροφορία</translation>
+    </message>
+    <message>
+        <location filename="displaymessagedialog.ui" line="38"/>
+        <source>OK</source>
+        <translation>ΟΚ</translation>
+    </message>
+</context>
+<context>
     <name>EditorVoiceOptionsDialog</name>
     <message>
         <location filename="editorvoiceoptionsdialog.ui" line="14"/>
@@ -33,6 +74,24 @@
     </message>
 </context>
 <context>
+    <name>ExportProgressDialog</name>
+    <message>
+        <location filename="exportprogressdialog.ui" line="17"/>
+        <source>Export progress</source>
+        <translation>Πρόοδος εξαγωγής</translation>
+    </message>
+    <message>
+        <location filename="exportprogressdialog.ui" line="38"/>
+        <source>Hide</source>
+        <translation>Απόκρυψη</translation>
+    </message>
+    <message>
+        <location filename="exportprogressdialog.ui" line="73"/>
+        <source>TextLabel</source>
+        <translation>Ετικέτα κειμένου</translation>
+    </message>
+</context>
+<context>
     <name>FliteSettingsDialog</name>
     <message>
         <location filename="flitesettingsdialog.ui" line="14"/>
@@ -46,18 +105,36 @@
     </message>
     <message>
         <location filename="flitesettingsdialog.ui" line="33"/>
-        <location filename="flitesettingsdialog.cpp" line="66"/>
+        <location filename="flitesettingsdialog.cpp" line="89"/>
         <source>Duration stretch:</source>
         <translation>Έκταση διάρκειας:</translation>
     </message>
     <message>
         <location filename="flitesettingsdialog.ui" line="56"/>
-        <location filename="flitesettingsdialog.cpp" line="71"/>
+        <location filename="flitesettingsdialog.cpp" line="94"/>
         <source>Target mean:</source>
         <translation>Μέσος στόχος:</translation>
     </message>
     <message>
         <location filename="flitesettingsdialog.ui" line="94"/>
+        <source>OK</source>
+        <translation>ΟΚ</translation>
+    </message>
+</context>
+<context>
+    <name>FontSettingsDialog</name>
+    <message>
+        <location filename="fontsettingsdialog.ui" line="14"/>
+        <source>Font settings</source>
+        <translation>Ρυθμίσεις γραμματοσειράς</translation>
+    </message>
+    <message>
+        <location filename="fontsettingsdialog.ui" line="47"/>
+        <source>Cancel</source>
+        <translation>Ακύρωση</translation>
+    </message>
+    <message>
+        <location filename="fontsettingsdialog.ui" line="54"/>
         <source>OK</source>
         <translation>ΟΚ</translation>
     </message>
@@ -157,7 +234,7 @@ p, li { white-space: pre-wrap; }
         <translation>Έξοδος</translation>
     </message>
     <message>
-        <location filename="installvoicesdialog.cpp" line="135"/>
+        <location filename="installvoicesdialog.cpp" line="141"/>
         <source>Installing...</source>
         <translation>Γίνεται εγκατάσταση...</translation>
     </message>
@@ -170,7 +247,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">Η απεγκατάσταση τελέιωσε</translation>
     </message>
     <message>
-        <location filename="installvoicesdialog.cpp" line="181"/>
+        <location filename="installvoicesdialog.cpp" line="191"/>
         <source>Downloading...
 Voice packages are over 100 Megabytes, this may take a while...
 Your password will be required.</source>
@@ -194,7 +271,7 @@ Your password will be required.</source>
         <translation type="vanished">Ακύρωση</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="519"/>
+        <location filename="mainwindow.cpp" line="540"/>
         <source>Loading Mary voices...</source>
         <translation>Γίνεται φόρτωση των φωνών...</translation>
     </message>
@@ -211,59 +288,64 @@ Your password will be required.</source>
         <translation type="vanished">Ιστορικό</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="198"/>
-        <location filename="mainwindow.cpp" line="791"/>
+        <location filename="mainwindow.cpp" line="248"/>
+        <location filename="mainwindow.cpp" line="812"/>
         <source>Speech engine is idle</source>
         <translation>Η μηχανή σύνθεσης είναι ανενεργή</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="220"/>
+        <location filename="mainwindow.cpp" line="286"/>
         <source>&amp;New</source>
         <translation>&amp;Νέο</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="224"/>
+        <location filename="mainwindow.cpp" line="290"/>
         <source>&amp;Open...</source>
         <translation>&amp;Άνοιγμα...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="228"/>
+        <location filename="mainwindow.cpp" line="294"/>
         <source>&amp;Save</source>
         <translation>Απο&amp;θήκευση</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="232"/>
+        <location filename="mainwindow.cpp" line="298"/>
         <source>Save &amp;As...</source>
         <translation>Αποθήκευση ω&amp;ς...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="243"/>
+        <location filename="mainwindow.cpp" line="309"/>
         <source>Select &amp;voice...</source>
         <translation>Επιλογή &amp;φωνής...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="244"/>
+        <location filename="mainwindow.cpp" line="362"/>
         <source>F3</source>
         <translation>F3</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="247"/>
+        <location filename="mainwindow.cpp" line="313"/>
         <source>Instal&amp;l voices...</source>
         <translation>Ε&amp;γκατάσταση φωνών...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="248"/>
+        <location filename="mainwindow.cpp" line="83"/>
+        <source>Removing temporary files...</source>
+        <translation>Απομάκρυνση προσωρινών αρχείων...</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="310"/>
         <source>F4</source>
         <translation>F4</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="251"/>
+        <location filename="mainwindow.cpp" line="317"/>
         <source>&amp;Export to wav...</source>
         <oldsource>&amp;Export to wav</oldsource>
         <translation>&amp;Εξαγωγη σε wav...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="252"/>
+        <location filename="mainwindow.cpp" line="318"/>
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
@@ -272,42 +354,42 @@ Your password will be required.</source>
         <translation type="vanished">Έ&amp;ξοδος</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="260"/>
+        <location filename="mainwindow.cpp" line="322"/>
         <source>&amp;Undo</source>
         <translation>Α&amp;ναίρεση</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="264"/>
+        <location filename="mainwindow.cpp" line="326"/>
         <source>&amp;Redo</source>
         <translation>Α&amp;κύρωση αναίρεσης</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="268"/>
+        <location filename="mainwindow.cpp" line="330"/>
         <source>Cu&amp;t</source>
         <translation>Αποκο&amp;πή</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="272"/>
+        <location filename="mainwindow.cpp" line="334"/>
         <source>&amp;Copy</source>
         <translation>&amp;Αντιγραφή</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="276"/>
+        <location filename="mainwindow.cpp" line="338"/>
         <source>&amp;Paste</source>
         <translation>&amp;Επικόλληση</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="280"/>
+        <location filename="mainwindow.cpp" line="342"/>
         <source>C&amp;lear</source>
         <translation>Κα&amp;θαρισμός</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="281"/>
+        <location filename="mainwindow.cpp" line="343"/>
         <source>Alt+C</source>
         <translation>Alt+C</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="284"/>
+        <location filename="mainwindow.cpp" line="346"/>
         <source>Select &amp;All</source>
         <translation>Επιλογή &amp;όλων</translation>
     </message>
@@ -316,138 +398,152 @@ Your password will be required.</source>
         <translation type="vanished">&amp;Μίλα</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="291"/>
+        <location filename="mainwindow.cpp" line="353"/>
         <source>F2</source>
         <translation>F2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="295"/>
+        <location filename="mainwindow.cpp" line="357"/>
         <source>&amp;Speak (selected text)</source>
         <translation>Μίλα (επιλεγμένο κείμενο)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="299"/>
+        <location filename="mainwindow.cpp" line="361"/>
         <source>Cance&amp;l</source>
         <translation>Α&amp;κύρωση</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="300"/>
         <source>F12</source>
-        <translation>F12</translation>
+        <translation type="vanished">F12</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="307"/>
+        <location filename="mainwindow.cpp" line="368"/>
         <source>About</source>
         <translation>Σ&amp;χετικά</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="310"/>
+        <location filename="mainwindow.cpp" line="371"/>
         <source>Help</source>
         <translation>Βοήθεια</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="311"/>
+        <location filename="mainwindow.cpp" line="372"/>
         <source>F1</source>
         <translation>F1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="314"/>
+        <location filename="mainwindow.cpp" line="375"/>
+        <source>Font settings...</source>
+        <translation>Ρυθμίσεις γραμματοσειράς</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="383"/>
         <source>Bold</source>
         <translation>Έντονα</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="315"/>
+        <location filename="mainwindow.cpp" line="384"/>
         <source>Ctrl+B</source>
         <translation>Ctrl+B</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="319"/>
+        <location filename="mainwindow.cpp" line="388"/>
         <source>Invert Colors</source>
         <translation>Αντιστροφή χρωμάτων</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="320"/>
+        <location filename="mainwindow.cpp" line="389"/>
         <source>Ctrl+I</source>
         <translation>Ctrl+I</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="324"/>
         <source>Increase font size</source>
-        <translation>Αύξηση μεγέθους</translation>
+        <translation type="vanished">Αύξηση μεγέθους</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="325"/>
         <source>Ctrl+L</source>
-        <translation>Ctrl+L</translation>
+        <translation type="vanished">Ctrl+L</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="328"/>
         <source>Decrease font size</source>
-        <translation>Μείωση μεγέθους</translation>
+        <translation type="vanished">Μείωση μεγέθους</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="329"/>
         <source>Ctrl+K</source>
-        <translation>Ctrl+K</translation>
+        <translation type="vanished">Ctrl+K</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="332"/>
         <source>Fonts</source>
-        <translation>Γραμματοσειρές</translation>
+        <translation type="vanished">Γραμματοσειρές</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="333"/>
+        <location filename="mainwindow.cpp" line="376"/>
         <source>Ctrl+F</source>
         <translation>Ctrl+F</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="336"/>
+        <location filename="mainwindow.cpp" line="379"/>
+        <source>Custom festival command settings...</source>
+        <translation>Ρυθμίσεις εντολών festival...</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="380"/>
+        <source>Ctrl+U</source>
+        <translation>Ctrl+U</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="393"/>
         <source>Enable split mode</source>
         <translation>Χωρισμός κειμένου</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="337"/>
+        <location filename="mainwindow.cpp" line="394"/>
+        <location filename="mainwindow.cpp" line="399"/>
         <source>Ctrl+T</source>
         <translation>Ctrl+T</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="341"/>
+        <location filename="mainwindow.cpp" line="398"/>
+        <source>Show icon in system tray</source>
+        <translation>Εμφάνιση εικονιδίου στη γραμμή εργασιών</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="403"/>
         <source>Speak from current position</source>
         <translation>Μίλα από την τρέχουσα θέση</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="342"/>
+        <location filename="mainwindow.cpp" line="404"/>
         <source>Ctrl+F2</source>
         <translation>Ctrl+F2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="345"/>
+        <location filename="mainwindow.cpp" line="407"/>
         <source>Stop</source>
         <translation>Σταμάτα</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="346"/>
+        <location filename="mainwindow.cpp" line="408"/>
         <source>Ctrl+1</source>
         <translation>Ctrl+1</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="362"/>
+        <location filename="mainwindow.cpp" line="424"/>
         <source>&amp;Restore</source>
         <translation>&amp;Επαναφορά</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="364"/>
+        <location filename="mainwindow.cpp" line="426"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished">Έ&amp;ξοδος</translation>
+        <translation>Έ&amp;ξοδος</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1086"/>
         <source>Omilo - Text To Speech
 Version 0.2
 Developer : nstrikos@yahoo.gr
 Webpage : http://anoikto.webs.com/omilo
 Icons: Gartoon Redux 1.11 </source>
-        <translation>Omilo - Text To Speech
+        <translation type="vanished">Omilo - Text To Speech
 Έκδοση 0.2
 Ανάπτυξη : nstrikos@yahoo.gr
 Ιστοσελίδα : http://anoikto.webs.com/omilo
@@ -462,12 +558,12 @@ Icons: Gartoon Redux 1.11 </translation>
         <translation type="vanished">Ctrl+2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="349"/>
+        <location filename="mainwindow.cpp" line="411"/>
         <source>Play/Pause</source>
         <translation>Αναπαραγωγή/Πάυση</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="350"/>
+        <location filename="mainwindow.cpp" line="412"/>
         <source>Ctrl+3</source>
         <translation>Ctrl+3</translation>
     </message>
@@ -504,43 +600,43 @@ Icons: Gartoon Redux 1.11 </translation>
         <translation type="vanished">Ctrl+7</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="353"/>
+        <location filename="mainwindow.cpp" line="415"/>
         <source>Decrease rate</source>
         <translation>Μείωση ταχύτητας</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="354"/>
+        <location filename="mainwindow.cpp" line="416"/>
         <source>Ctrl+8</source>
         <translation>Ctrl+8</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="356"/>
+        <location filename="mainwindow.cpp" line="418"/>
         <source>Increase rate</source>
         <translation>Αύξηση ταχύτητας</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="357"/>
+        <location filename="mainwindow.cpp" line="419"/>
         <source>Ctrl+9</source>
         <translation>Ctrl+9</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="359"/>
+        <location filename="mainwindow.cpp" line="421"/>
         <source>Flite settings...</source>
         <translation>Ρυθμίσεις Flite...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="360"/>
+        <location filename="mainwindow.cpp" line="314"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
     <message>
+        <location filename="mainwindow.cpp" line="422"/>
         <source>F6</source>
-        <translation type="vanished">F6</translation>
+        <translation>F6</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1085"/>
         <source>About Omilo-Qt5</source>
-        <translation>Περί Omilo-Qt5</translation>
+        <translation type="vanished">Περί Omilo-Qt5</translation>
     </message>
     <message>
         <source>Omilo - Text To Speech
@@ -557,7 +653,7 @@ Developer : nstrikos@yahoo.gr
         <translation type="vanished">Εμφάνιση/Απόκρυψη εργαλειοθήκης</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="296"/>
+        <location filename="mainwindow.cpp" line="358"/>
         <source>F7</source>
         <translation>F7</translation>
     </message>
@@ -566,17 +662,17 @@ Developer : nstrikos@yahoo.gr
         <translation type="vanished">Απόκρυψη</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="386"/>
+        <location filename="mainwindow.cpp" line="453"/>
         <source>&amp;File</source>
         <translation>&amp;Αρχείο</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="399"/>
+        <location filename="mainwindow.cpp" line="467"/>
         <source>&amp;Edit</source>
         <translation>Επε&amp;ξεργασία</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="428"/>
+        <location filename="mainwindow.cpp" line="498"/>
         <source>&amp;View</source>
         <translation>&amp;Προβολή</translation>
     </message>
@@ -585,9 +681,8 @@ Developer : nstrikos@yahoo.gr
         <translation type="vanished">Ενεργοποίηση συντομεύσεων</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1154"/>
         <source>Warning</source>
-        <translation>Ειδοποίηση</translation>
+        <translation type="vanished">Ειδοποίηση</translation>
     </message>
     <message>
         <source>You need to restart the application
@@ -596,17 +691,16 @@ for the changes to take effect</source>
 για να εφαρμοστούν οι αλλαγές</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1155"/>
         <source>Loading takes too long
 Mary voices may not be available
 </source>
-        <translation>Η φόρτωση αργεί.
+        <translation type="vanished">Η φόρτωση αργεί.
 Οι φωνές Mary μπορεί να μην είναι διαθέσιμες.
 </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="288"/>
-        <location filename="mainwindow.cpp" line="410"/>
+        <location filename="mainwindow.cpp" line="350"/>
+        <location filename="mainwindow.cpp" line="478"/>
         <source>&amp;Speak</source>
         <translation>&amp;Μίλα</translation>
     </message>
@@ -616,82 +710,149 @@ Mary voices may not be available
         <translation type="vanished">Απενεργοποίηση συντομεύσεων</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="424"/>
+        <location filename="mainwindow.cpp" line="427"/>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="493"/>
         <source>&amp;Options</source>
         <translation>Επι&amp;λογές</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="435"/>
+        <location filename="mainwindow.cpp" line="504"/>
         <source>&amp;Help</source>
         <translation>&amp;Βοήθεια</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="580"/>
-        <location filename="mainwindow.cpp" line="605"/>
-        <location filename="mainwindow.cpp" line="702"/>
+        <location filename="mainwindow.cpp" line="610"/>
+        <location filename="mainwindow.cpp" line="639"/>
+        <location filename="mainwindow.cpp" line="745"/>
         <source>Omilo</source>
         <translation>Ομιλό</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="581"/>
+        <location filename="mainwindow.cpp" line="611"/>
         <source>The document has been modified.
 Do you want to save your changes?</source>
         <translation>Το έγγραφο έχει μεταβληθεί.
 Θέλετε να αποθηκεύσετε τις αλλαγές σας;</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="606"/>
+        <location filename="mainwindow.cpp" line="640"/>
         <source>Cannot write file %1:
 %2.</source>
         <translation>Δεν μπορώ να διαβάσω το αρχείο %1:
 %2.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="638"/>
+        <location filename="mainwindow.cpp" line="676"/>
         <source>Untitled</source>
         <translation>Ανώνυμο</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="647"/>
+        <location filename="mainwindow.cpp" line="685"/>
         <source>%1[*]</source>
         <translation>%1[*]</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="664"/>
+        <location filename="mainwindow.cpp" line="703"/>
         <source>&amp;%1 %2</source>
         <translation>&amp;%1 %2</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="703"/>
+        <location filename="mainwindow.cpp" line="746"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation>Δεν μπορώ να διαβάσω το αρχείο %1:
 %2.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="777"/>
+        <location filename="mainwindow.cpp" line="799"/>
         <source>Speech engine is processing...</source>
         <translation>Γίνεται επεξεργασία...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="957"/>
+        <location filename="mainwindow.cpp" line="903"/>
+        <source>Not a wav file.
+ .wav will be added.</source>
+        <translation>Το αρχείο δεν είναι wav.
+Η επέκταση wav θα προσθεθεί.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="919"/>
+        <source>Exporting...</source>
+        <translation>Εξαγωγή...</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1072"/>
         <source>Loading...</source>
         <translation>Φόρτωση...</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="960"/>
+        <location filename="mainwindow.cpp" line="1075"/>
         <source>Media Stalled</source>
         <translation>Πρόβλημα μέσων</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="985"/>
+        <location filename="mainwindow.cpp" line="1102"/>
         <source>Buffering %4%</source>
         <translation>Αποθήκευση %4%</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1023"/>
+        <location filename="mainwindow.cpp" line="1145"/>
         <source>Voice: </source>
         <translation>Φωνή: </translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1176"/>
+        <source>Omilo - Text To Speech
+Version 0.3
+Developer : nstrikos@yahoo.gr
+Webpage : http://anoikto.webs.com/omilo
+German translation : Heinrich Schwietering
+heinrich.schwietering@gmx.de
+Icons: Gartoon Redux 1.11 </source>
+        <translation>Omilo - Text To Speech
+Έκδοση 0.3
+Ανάπτυξη : nstrikos@yahoo.gr
+Ιστοσελίδα : http://anoikto.webs.com/omilo
+Μετάφραση στα Γερμανικά : Heinrich Schwietering
+heinrich.schwietering@gmx.de
+Εικονίδια : Gartoon Redux 1.11 </translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1240"/>
+        <source>Loading takes too long
+Mary voices may not be available.</source>
+        <translation>Η φόρτωση αργεί.
+Οι φωνές Mary μπορεί να μην είναι διαθέσιμες.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1497"/>
+        <source>Processed </source>
+        <translation>Επεξεργάστηκαν </translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1497"/>
+        <location filename="mainwindow.cpp" line="1521"/>
+        <source> of </source>
+        <translation> από </translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1512"/>
+        <source>File created successfully.</source>
+        <translation>Το αρχείο δημιουργήθηκε επιτυχώς.</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1521"/>
+        <source>Merged </source>
+        <translation>Ενώθηκαν </translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="1524"/>
+        <source>Merging...</source>
+        <translation>Γίνεται ένωση...</translation>
     </message>
     <message>
         <source>About Omilo</source>
@@ -724,6 +885,14 @@ Developer : nstrikos@yahoo.gr
         <location filename="main.cpp" line="56"/>
         <source>I couldn&apos;t detect any system tray on this system.</source>
         <translation>Δεν βρέθηκε μπάρα εικονιδίων</translation>
+    </message>
+</context>
+<context>
+    <name>SoundFilesMerger</name>
+    <message>
+        <location filename="soundfilesmerger.cpp" line="129"/>
+        <source>Creating file...</source>
+        <translation>Δημιουργία αρχείου...</translation>
     </message>
 </context>
 <context>
