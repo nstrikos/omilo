@@ -6,27 +6,27 @@
     <message>
         <location filename="customfestivaldialog.ui" line="14"/>
         <source>Custom festival command</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutzerdefinierter Festival-Befehl</translation>
     </message>
     <message>
         <location filename="customfestivaldialog.ui" line="25"/>
         <source>Custom festival command:</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutzerdefinierter Festival-Befehl:</translation>
     </message>
     <message>
         <location filename="customfestivaldialog.ui" line="35"/>
         <source>Custom festival command arguments:</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutzerdefinierte Festival-Befehlsoptionen:</translation>
     </message>
     <message>
         <location filename="customfestivaldialog.ui" line="75"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Abbruch</translation>
     </message>
     <message>
         <location filename="customfestivaldialog.ui" line="85"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -34,12 +34,12 @@
     <message>
         <location filename="displaymessagedialog.ui" line="14"/>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation>Information</translation>
     </message>
     <message>
         <location filename="displaymessagedialog.ui" line="38"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -70,17 +70,17 @@
     <message>
         <location filename="exportprogressdialog.ui" line="17"/>
         <source>Export progress</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportfortschritt</translation>
     </message>
     <message>
         <location filename="exportprogressdialog.ui" line="38"/>
         <source>Hide</source>
-        <translation type="unfinished">Verbergen</translation>
+        <translation>Verbergen</translation>
     </message>
     <message>
         <location filename="exportprogressdialog.ui" line="73"/>
         <source>TextLabel</source>
-        <translation type="unfinished"></translation>
+        <translation>TextLabel</translation>
     </message>
 </context>
 <context>
@@ -118,17 +118,17 @@
     <message>
         <location filename="fontsettingsdialog.ui" line="14"/>
         <source>Font settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Schriftart-Einstellungen</translation>
     </message>
     <message>
         <location filename="fontsettingsdialog.ui" line="47"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Abbruch</translation>
     </message>
     <message>
         <location filename="fontsettingsdialog.ui" line="54"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -273,27 +273,27 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="286"/>
         <source>&amp;New</source>
-        <translation>Neu</translation>
+        <translation>&amp;Neu</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="290"/>
         <source>&amp;Open...</source>
-        <translation>Öffnen...</translation>
+        <translation>&amp;Öffnen...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="294"/>
         <source>&amp;Save</source>
-        <translation>Speichern</translation>
+        <translation>&amp;Speichern</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="298"/>
         <source>Save &amp;As...</source>
-        <translation>Speichern als...</translation>
+        <translation>Speichern &amp;als...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="309"/>
         <source>Select &amp;voice...</source>
-        <translation>Stimme auswählen</translation>
+        <translation>Sti&amp;mme auswählen...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="362"/>
@@ -303,12 +303,12 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="313"/>
         <source>Instal&amp;l voices...</source>
-        <translation>Installiere Stimmen...</translation>
+        <translation>&amp;Installiere Stimmen...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="83"/>
         <source>Removing temporary files...</source>
-        <translation type="unfinished"></translation>
+        <translation>Entferne temporäre Dateien...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="310"/>
@@ -318,7 +318,7 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="317"/>
         <source>&amp;Export to wav...</source>
-        <translation>Als Wave-Datei exportieren...</translation>
+        <translation>Als Wave-Datei &amp;exportieren...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="318"/>
@@ -332,32 +332,32 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="322"/>
         <source>&amp;Undo</source>
-        <translation>Rückgängig</translation>
+        <translation>R&amp;ückgängig</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="326"/>
         <source>&amp;Redo</source>
-        <translation>Wiederholen</translation>
+        <translation>&amp;Wiederholen</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="330"/>
         <source>Cu&amp;t</source>
-        <translation>Ausschneiden</translation>
+        <translation>A&amp;usschneiden</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="334"/>
         <source>&amp;Copy</source>
-        <translation>Kopieren</translation>
+        <translation>&amp;Kopieren</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="338"/>
         <source>&amp;Paste</source>
-        <translation>Einfügen</translation>
+        <translation>Ein&amp;fügen</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="342"/>
         <source>C&amp;lear</source>
-        <translation>Löschen</translation>
+        <translation>&amp;Löschen</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="343"/>
@@ -367,13 +367,13 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="346"/>
         <source>Select &amp;All</source>
-        <translation>Alles auswählen</translation>
+        <translation>&amp;Alles auswählen</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="350"/>
         <location filename="mainwindow.cpp" line="478"/>
         <source>&amp;Speak</source>
-        <translation>Sprechen</translation>
+        <translation>&amp;Sprechen</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="353"/>
@@ -383,12 +383,12 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="357"/>
         <source>&amp;Speak (selected text)</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Markierten Text wiedergeben</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="361"/>
         <source>Cance&amp;l</source>
-        <translation>Abbruch</translation>
+        <translation>Abbruc&amp;h</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="427"/>
@@ -407,7 +407,7 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="371"/>
         <source>Help</source>
-        <translation type="unfinished">Hilfe</translation>
+        <translation>Hilfe</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="372"/>
@@ -417,12 +417,12 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="375"/>
         <source>Font settings...</source>
-        <translation type="unfinished"></translation>
+        <translation>Schriftart-Einstellungen...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="383"/>
         <source>Bold</source>
-        <translation type="unfinished"></translation>
+        <translation>Fett(druck)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="384"/>
@@ -432,7 +432,7 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="388"/>
         <source>Invert Colors</source>
-        <translation></translation>
+        <translation>Invertiere Farben</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="389"/>
@@ -455,7 +455,7 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="379"/>
         <source>Custom festival command settings...</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutzerdefinierte Festival-Befehlseinstellungen...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="380"/>
@@ -465,7 +465,7 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="393"/>
         <source>Enable split mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeileneweise Wiedergabe aktivieren</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="394"/>
@@ -476,12 +476,12 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="398"/>
         <source>Show icon in system tray</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige Icon im Panel</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="403"/>
         <source>Speak from current position</source>
-        <translation type="unfinished"></translation>
+        <translation>Ab Cursor-Position wiedergeben</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="404"/>
@@ -501,7 +501,7 @@ Ihr Passwort wird benötigt.</translation>
     <message>
         <location filename="mainwindow.cpp" line="424"/>
         <source>&amp;Restore</source>
-        <translation type="unfinished"></translation>
+        <translation>Wiederhe&amp;rstellen</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="426"/>
@@ -573,7 +573,7 @@ Icons: Gartoon Redux 1.11 </translation>
     <message>
         <location filename="mainwindow.cpp" line="415"/>
         <source>Decrease rate</source>
-        <translation>Absenkungsrate</translation>
+        <translation>Langsamer wiedergeben</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="416"/>
@@ -583,7 +583,7 @@ Icons: Gartoon Redux 1.11 </translation>
     <message>
         <location filename="mainwindow.cpp" line="418"/>
         <source>Increase rate</source>
-        <translation>Erhöhungsrate</translation>
+        <translation>Schneller wiedergeben</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="419"/>
@@ -635,27 +635,27 @@ Webpage : http://anoikto.webs.com/omilo</translation>
     <message>
         <location filename="mainwindow.cpp" line="453"/>
         <source>&amp;File</source>
-        <translation>Datei</translation>
+        <translation>&amp;Datei</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="467"/>
         <source>&amp;Edit</source>
-        <translation>Bearbeiten</translation>
+        <translation>&amp;Bearbeiten</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="493"/>
         <source>&amp;Options</source>
-        <translation>Optionen</translation>
+        <translation>O&amp;ptionen</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="498"/>
         <source>&amp;View</source>
-        <translation>Ansicht</translation>
+        <translation>Ansich&amp;t</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="504"/>
         <source>&amp;Help</source>
-        <translation>Hilfe</translation>
+        <translation>&amp;Hilfe</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="540"/>
@@ -718,12 +718,13 @@ Sollen ihre Veränderungen gespeichert werden?</translation>
         <location filename="mainwindow.cpp" line="903"/>
         <source>Not a wav file.
  .wav will be added.</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Wave-Datei.
+ .wav wird angehängt.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="919"/>
         <source>Exporting...</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportiere...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1072"/>
@@ -754,39 +755,46 @@ Webpage : http://anoikto.webs.com/omilo
 German translation : Heinrich Schwietering
 heinrich.schwietering@gmx.de
 Icons: Gartoon Redux 1.11 </source>
-        <translation type="unfinished"></translation>
+        <translation>Omilo - Text To Speech
+Version 0.3
+Entwickler : nstrikos@yahoo.gr
+Webseite : http://anoikto.webs.com/omilo
+Deutsche Übersetzung : Heinrich Schwietering
+heinrich.schwietering@gmx.de
+Icons: Gartoon Redux 1.11 </translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1240"/>
         <source>Loading takes too long
 Mary voices may not be available.</source>
-        <translation type="unfinished"></translation>
+        <translation>Laden dauert zu lange
+Mary-Stimmen sind eventuell nicht verfügbar.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1497"/>
         <source>Processed </source>
-        <translation type="unfinished"></translation>
+        <translation>Verarbeitet </translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1497"/>
         <location filename="mainwindow.cpp" line="1521"/>
         <source> of </source>
-        <translation type="unfinished"></translation>
+        <translation> von </translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1512"/>
         <source>File created successfully.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dati erfolgreich erstellt.</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1521"/>
         <source>Merged </source>
-        <translation type="unfinished"></translation>
+        <translation>Zusammengeführt </translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="1524"/>
         <source>Merging...</source>
-        <translation type="unfinished"></translation>
+        <translation>Führe zusammen...</translation>
     </message>
     <message>
         <source>About Omilo</source>
@@ -825,12 +833,12 @@ Die Mary-Stimmen stehen ggf. nicht zur Verfügung
     <message>
         <location filename="main.cpp" line="55"/>
         <source>Systray</source>
-        <translation type="unfinished"></translation>
+        <translation>Panel</translation>
     </message>
     <message>
         <location filename="main.cpp" line="56"/>
         <source>I couldn&apos;t detect any system tray on this system.</source>
-        <translation type="unfinished"></translation>
+        <translation>Konnte kein Panel finden.</translation>
     </message>
 </context>
 <context>
@@ -838,7 +846,7 @@ Die Mary-Stimmen stehen ggf. nicht zur Verfügung
     <message>
         <location filename="soundfilesmerger.cpp" line="129"/>
         <source>Creating file...</source>
-        <translation type="unfinished"></translation>
+        <translation>Erstelle Datei...</translation>
     </message>
 </context>
 <context>

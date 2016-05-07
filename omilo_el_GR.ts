@@ -405,7 +405,7 @@ Your password will be required.</source>
     <message>
         <location filename="mainwindow.cpp" line="357"/>
         <source>&amp;Speak (selected text)</source>
-        <translation>Μίλα (επιλεγμένο κείμενο)</translation>
+        <translation>&amp;Μίλα (επιλεγμένο κείμενο)</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="361"/>
@@ -419,7 +419,7 @@ Your password will be required.</source>
     <message>
         <location filename="mainwindow.cpp" line="368"/>
         <source>About</source>
-        <translation>Σ&amp;χετικά</translation>
+        <translation>Σχετικά</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="371"/>
@@ -434,7 +434,7 @@ Your password will be required.</source>
     <message>
         <location filename="mainwindow.cpp" line="375"/>
         <source>Font settings...</source>
-        <translation>Ρυθμίσεις γραμματοσειράς</translation>
+        <translation>Ρυθμίσεις γραμματοσειράς...</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="383"/>
@@ -884,7 +884,7 @@ Developer : nstrikos@yahoo.gr
     <message>
         <location filename="main.cpp" line="56"/>
         <source>I couldn&apos;t detect any system tray on this system.</source>
-        <translation>Δεν βρέθηκε μπάρα εικονιδίων</translation>
+        <translation>Δεν βρέθηκε μπάρα εικονιδίων.</translation>
     </message>
 </context>
 <context>
