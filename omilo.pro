@@ -26,7 +26,6 @@ SOURCES += main.cpp\
     playercontrols.cpp \
     playlistmodel.cpp \
     flitesettingsdialog.cpp \
-    hotkeythread.cpp \
     textprocess.cpp \
     fontsettingsdialog.cpp \
     soundfilesmerger.cpp \
@@ -36,7 +35,8 @@ SOURCES += main.cpp\
     exportprogressdialog.cpp \
     displaymessagedialog.cpp \
     customfestivaldialog.cpp \
-    customfestivalvoice.cpp
+    customfestivalvoice.cpp \
+    maryserverforwindows.cpp
 
 HEADERS  += mainwindow.h \
     installvoicesdialog.h \
@@ -55,7 +55,6 @@ HEADERS  += mainwindow.h \
     playercontrols.h \
     playlistmodel.h \
     flitesettingsdialog.h \
-    hotkeythread.h \
     textprocess.h \
     fontsettingsdialog.h \
     soundfilesmerger.h \
@@ -65,7 +64,8 @@ HEADERS  += mainwindow.h \
     exportprogressdialog.h \
     displaymessagedialog.h \
     customfestivaldialog.h \
-    customfestivalvoice.h
+    customfestivalvoice.h \
+    maryserverforwindows.h
 
 FORMS    += mainwindow.ui \
     installvoicesdialog.ui \
@@ -89,4 +89,8 @@ TRANSLATIONS = omilo_el_GR.ts \
 DISTFILES += \
     images/toggle-toolbars.png
 
-LIBS += -lX11
+unix: {
+    SOURCES += hotkeythread.cpp
+    HEADERS += hotkeythread.h
+    LIBS += -lX11
+}

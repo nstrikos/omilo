@@ -1,4 +1,7 @@
 #include "hotkeythread.h"
+
+#ifndef Q_OS_WIN
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
@@ -94,3 +97,5 @@ void HotKeyThread::run()
     stopped = true;
     XCloseDisplay(dpy);
 }
+
+#endif //Q_OS_WIN

@@ -1,6 +1,8 @@
 #ifndef HOTKEYTHREAD_H
 #define HOTKEYTHREAD_H
 
+#ifndef Q_OS_WIN
+
 #include <QThread>
 #include <QDebug>
 
@@ -24,5 +26,7 @@ signals:
     void showWindowPressed();
     void pausePressed();
 };
+
+#endif //Q_OS_WIN
 
 #endif // HOTKEYTHREAD_H

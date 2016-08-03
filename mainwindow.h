@@ -16,7 +16,11 @@
 #include "playercontrols.h"
 #include "playlistmodel.h"
 #include "startupthread.h"
+
+#ifndef Q_OS_WIN
 #include "hotkeythread.h"
+#endif
+
 #include "tempfilesremover.h"
 #include "settingswriter.h"
 #include "exportprogressdialog.h"
@@ -195,7 +199,10 @@ private:
     //Various classes
     TempFilesRemover tempFilesRemover;
     SettingsWriter settingsWriter;
+
+#ifndef Q_OS_WIN
     HotKeyThread hotKeyThread;
+#endif
     QTimer *maryStartupTimer;
     QClipboard *clipboard;
 

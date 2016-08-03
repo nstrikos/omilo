@@ -33,6 +33,7 @@ SpeechEngine::~SpeechEngine()
         delete this->testVoice;
         testVoice = NULL;
     }
+
     maryServerProcess->close();
     delete maryServerProcess;
 
@@ -162,7 +163,7 @@ void SpeechEngine::createVoice(SpeechVoice *sVoice)
         delete this->speechVoice;
         speechVoice = NULL;
     }
-    this->speechVoice = sVoice;    
+    this->speechVoice = sVoice;
     connect(speechVoice, SIGNAL(fileCreated(QString)), this, SLOT(voiceFileCreated(QString)));
 
     if (maryServerProcess->pid()  == 0)
@@ -279,9 +280,15 @@ SpeechVoice* SpeechEngine::getSpeechVoice()
 
 void SpeechEngine::startMaryProcess()
 {
+#ifndef Q_OS_WIN
+    qDebug() << "Starting maryserver for Linux...";
     QString command = "java -showversion -ea -Xms40m -Xmx" + QString::number(maxMaryMemory) + "m -cp \"/usr/share/omilo-qt5/marytts-5.0/lib/*\" -Dmary.base=\"/usr/share/omilo-qt5/marytts-5.0\" marytts.server.Mary" ;
     maryServerProcess->start(command);
     qDebug() << "Start mary server : " << command;
+#else
+    qDebug() << "Starting Mary server for Windows...";
+    maryServerForWindows.startMaryServer(maryServerProcess);
+#endif
 }
 
 void SpeechEngine::testMaryServer()

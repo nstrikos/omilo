@@ -59,7 +59,9 @@ int main(int argc, char *argv[])
     }
 
     signal(SIGSEGV, signalhandler);
+#ifndef Q_OS_WIN
     signal(SIGKILL, signalhandler);
+#endif
     signal(SIGTERM, signalhandler);
     MainWindow w;
 

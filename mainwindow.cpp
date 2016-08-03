@@ -19,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //Is it necessary to set fonts?
-    QFont font("Liberation Sans", 12);
-    QApplication::setFont(font);
+    //QFont font("Liberation Sans", 12);
+    //QApplication::setFont(font);
 
     initFunctions();
 }
@@ -30,7 +30,10 @@ MainWindow::~MainWindow()
     qDebug() << "Closing application...";
 
     qDebug() << "Terminate hot keys.";
+
+#ifndef Q_OS_WIN
     hotKeyThread.terminate();
+#endif
 
     settingsWriter.write(pos(), size(), recentFiles, engineVoice, useTrayIcon, splitMode, customFestivalCommand, customFestivalCommandArguments);
 
@@ -168,7 +171,9 @@ void MainWindow::initVariables()
     //Check if current voice is installed, in case it's been deleted
     checkInstalledVoice();
 
+#ifndef Q_OS_WIN
     hotKeyThread.start();
+#endif
 
     qDebug() << "Setup clipboad handler...";
     clipboard = QApplication::clipboard();
@@ -270,10 +275,12 @@ void MainWindow::connectSignalsToSlots()
     connect(engine, SIGNAL(mergeId(int,int)), this, SLOT(setMergeId(int,int)));
     connect(engine, SIGNAL(mergeInfo(QString)), this, SLOT(setMergeInfo(QString)));
     connect(startUpThread, SIGNAL(maryServerIsUp()), this, SLOT(updateMaryStatus()));
+#ifndef Q_OS_WIN
     connect(&hotKeyThread, SIGNAL(playPressed()), this, SLOT(hotKeyPlayPressed()));
     connect(&hotKeyThread, SIGNAL(stopPressed()), this, SLOT(hotKeyStopPressed()));
     connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(showNormalAndRaise()));
     connect(&hotKeyThread, SIGNAL(pausePressed()), this, SLOT(play()));
+#endif
     connect(playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(highlightSelection()));
     qDebug() << "All Qt signals are connected.";
 }
