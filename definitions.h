@@ -2,6 +2,7 @@
 #define DEFINITIONS_H
 
 #include <QString>
+#include <QStandardPaths>
 
 #define KalFestival "Kal Festival"
 #define AwbCmuFestival "Awb Cmu Festival"
@@ -48,6 +49,15 @@ const unsigned int minMaryMemory = 350;
 
 const QString defaultFestivalCommand = "/usr/bin/text2wave";
 const QString defaultFestivalCommandArguments = "-eval '(voice_kal_diphone)'";
+
+const QString tempPath = QStandardPaths::locate(QStandardPaths::TempLocation, QString(), QStandardPaths::LocateDirectory);
+const QString testFile = tempPath + "omilo-test.wav";
+
+#ifdef Q_OS_WIN
+const QString maryHttpAddress = "http://localhost:59125/process?INPUT_TEXT=";
+#else
+const QString maryHttpAddress = "http://localhost:59127/process?INPUT_TEXT=";
+#endif
 
 #define maximumNumberOfFiles 1000000
 

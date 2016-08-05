@@ -293,7 +293,7 @@ void SpeechEngine::startMaryProcess()
 
 void SpeechEngine::testMaryServer()
 {
-    testVoice->performSpeak("/tmp/omilo-test.wav", "Welcome to omilo");
+    testVoice->performSpeak(testFile, "Welcome to omilo");
 }
 
 void SpeechEngine::stopTestingMaryServer()

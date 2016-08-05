@@ -18,9 +18,9 @@ void StartupThread::checkMaryServer()
 {
     //It has to be omilo-test.wav
     //So orca does not replace this file
-    QString filename = "/tmp/omilo-test.wav";
+    //QString filename = "/tmp/omilo-test.wav";
     int size = 0;
-    QFile myFile(filename);
+    QFile myFile(testFile);
     if (myFile.open(QIODevice::ReadOnly)){
         size = myFile.size();
         myFile.close();
@@ -33,7 +33,7 @@ void StartupThread::checkMaryServer()
     {
         qDebug() << "Mary server is up...";
         timer.stop();
-        QFile::remove(filename);
+        QFile::remove(testFile);
         engine->stopTestingMaryServer();
         emit maryServerIsUp();
     }

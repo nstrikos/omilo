@@ -72,11 +72,11 @@ void DownloadManager::performSpeak(QString filename, QString text, QString voice
     if (downloading == false)
     {
         downloading = true;
-        finalCommand = "http://localhost:59127/process?INPUT_TEXT=";
+        //finalCommand = "http://localhost:59127/process?INPUT_TEXT=";
         command1 = "&INPUT_TYPE=TEXT&OUTPUT_TYPE=AUDIO&AUDIO=WAVE_FILE&";
         //command1 = "&INPUT_TYPE=SSML&OUTPUT_TYPE=AUDIO&AUDIO=WAVE_FILE&";
         command2 = voiceCommand;
-        finalCommand = finalCommand + text + command1 + command2;
+        finalCommand = maryHttpAddress + text + command1 + command2;
 
         file = new QFile(filename);
         if (!this->file->open(QIODevice::WriteOnly))
