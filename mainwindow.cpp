@@ -1317,7 +1317,7 @@ void MainWindow::showMainWindow()
         startUpThread = NULL;
     }
 
-    qDebug() << "Show main window.";
+    qDebug() << "Show main window...";
     this->show();
 }
 
