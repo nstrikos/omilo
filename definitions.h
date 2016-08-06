@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QStandardPaths>
+#include <QDir>
 
 #define KalFestival "Kal Festival"
 #define AwbCmuFestival "Awb Cmu Festival"
@@ -52,12 +53,21 @@ const QString defaultFestivalCommandArguments = "-eval '(voice_kal_diphone)'";
 
 const QString tempPath = QStandardPaths::locate(QStandardPaths::TempLocation, QString(), QStandardPaths::LocateDirectory);
 const QString testFile = tempPath + "omilo-test.wav";
+const QString wavPrefix = tempPath + "omilo-";
 
 #ifdef Q_OS_WIN
 const QString maryHttpAddress = "http://localhost:59125/process?INPUT_TEXT=";
 #else
 const QString maryHttpAddress = "http://localhost:59127/process?INPUT_TEXT=";
 #endif
+
+#ifdef Q_OS_WIN
+const QString maryInstallationDir = QDir::currentPath() + "\\marytts\\lib\\";
+;
+#else
+const QString maryInstallationDir = "/usr/share/omilo-qt5/marytts-5.0";
+#endif
+
 
 #define maximumNumberOfFiles 1000000
 

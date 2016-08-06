@@ -60,7 +60,7 @@ void SpeechEngine::speak(QString text)
 
     if (splitMode == false)
     {
-        filename = "/tmp/omilo-" + QString::number(0) + ".wav";
+        filename = wavPrefix + QString::number(0) + ".wav";
         //if ( count > maximumNumberOfFiles )
         //    count = 1;
         this->text = text;
@@ -85,7 +85,7 @@ void SpeechEngine::speakWithoutSplitting(QString text)
     if (isProcessing == true)
         cancel();
 
-    filename = "/tmp/omilo-" + QString::number(0) + ".wav";
+    filename = wavPrefix + QString::number(0) + ".wav";
     this->text = text;
     isProcessing = true;
     speechVoice->performSpeak(filename, text);
