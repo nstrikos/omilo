@@ -54,11 +54,14 @@ const QString defaultFestivalCommandArguments = "-eval '(voice_kal_diphone)'";
 const QString tempPath = QStandardPaths::locate(QStandardPaths::TempLocation, QString(), QStandardPaths::LocateDirectory);
 const QString testFile = tempPath + "omilo-test.wav";
 const QString wavPrefix = tempPath + "omilo-";
+const QString tempFile = tempPath + "omilo-tmp.wav";
 
 #ifdef Q_OS_WIN
 const QString maryHttpAddress = "http://localhost:59125/process?INPUT_TEXT=";
+const QString soxCommand = QDir::currentPath() + "\\sox\\sox.exe";
 #else
 const QString maryHttpAddress = "http://localhost:59127/process?INPUT_TEXT=";
+const QString soxCommand = "sox ";
 #endif
 
 #ifdef Q_OS_WIN

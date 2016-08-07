@@ -178,9 +178,11 @@ void SpeechEngine::voiceFileCreated(QString filename)
 
         if (rate != 1)
         {
-            QFile::remove("/tmp/omilo-tmp.wav");
-            QFile::rename(filename, "/tmp/omilo-tmp.wav");
-            QString command = "sox /tmp/omilo-tmp.wav " + filename + " tempo " + QString::number(rate);
+            QFile::remove(tempFile);
+            QFile::rename(filename, tempFile);
+            //QString command = "sox /tmp/omilo-tmp.wav " + filename + " tempo " + QString::number(rate);
+            QString command = soxCommand +  " " + tempFile + " " + filename + " tempo " + QString::number(rate);
+            qDebug() << command;
             soxProcess.start(command);
             soxProcess.waitForFinished();
         }
