@@ -91,6 +91,8 @@ DISTFILES += \
 
 unix: {
     SOURCES += hotkeythread.cpp
+    SOURCES -= maryserverforwindows.cpp
     HEADERS += hotkeythread.h
+    HEADERS -= maryserverforwindows.h
     LIBS += -lX11
 }
