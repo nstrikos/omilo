@@ -31,9 +31,7 @@ MainWindow::~MainWindow()
 
     qDebug() << "Terminate hot keys.";
 
-#ifndef Q_OS_WIN
     hotKeyThread.terminate();
-#endif
 
     settingsWriter.write(pos(), size(), recentFiles, engineVoice, useTrayIcon, splitMode, customFestivalCommand, customFestivalCommandArguments);
 
@@ -171,9 +169,7 @@ void MainWindow::initVariables()
     //Check if current voice is installed, in case it's been deleted
     checkInstalledVoice();
 
-#ifndef Q_OS_WIN
     hotKeyThread.start();
-#endif
 
     qDebug() << "Setup clipboad handler...";
     clipboard = QApplication::clipboard();
@@ -275,12 +271,10 @@ void MainWindow::connectSignalsToSlots()
     connect(engine, SIGNAL(mergeId(int,int)), this, SLOT(setMergeId(int,int)));
     connect(engine, SIGNAL(mergeInfo(QString)), this, SLOT(setMergeInfo(QString)));
     connect(startUpThread, SIGNAL(maryServerIsUp()), this, SLOT(updateMaryStatus()));
-#ifndef Q_OS_WIN
     connect(&hotKeyThread, SIGNAL(playPressed()), this, SLOT(hotKeyPlayPressed()));
     connect(&hotKeyThread, SIGNAL(stopPressed()), this, SLOT(hotKeyStopPressed()));
     connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(showNormalAndRaise()));
     connect(&hotKeyThread, SIGNAL(pausePressed()), this, SLOT(play()));
-#endif
     connect(playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(highlightSelection()));
     qDebug() << "All Qt signals are connected.";
 }
@@ -497,10 +491,12 @@ void MainWindow::createMenus()
     speakMenu->addAction(speakFromCurrentPositionAction);
     speakMenu->addAction(enableSplitModeAction);
 
+#ifndef Q_OS_WIN
     optionsMenu = menuBar()->addMenu(tr("&Options"));
     optionsMenu->addAction(installVoicesAction);
     optionsMenu->addAction(showFliteSettingsAction);
     optionsMenu->addAction(customFestivalAction);
+#endif
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showFontSettingsDialogAction);
@@ -785,7 +781,8 @@ void MainWindow::readSettings()
     updateRecentFileActions();
     engineVoice = settings.value("MainWindowVoice").toString();
     if (engineVoice == "" )
-        engineVoice = KalFestival;
+        engineVoice = defaultVoice;
+
     useTrayIcon = settings.value("useTrayIcon").toBool();
     toggleUseTrayIconAction->setChecked(useTrayIcon);
     splitMode = settings.value("SplitMode").toBool();
@@ -969,7 +966,12 @@ void MainWindow::setVariablesBeforeSpeaking()
 void MainWindow::hotKeyPlayPressed()
 {
     ui->textEdit->clear();
+#ifdef Q_OS_WIN
+    QString text = clipboard->text();
+#else
     QString text = clipboard->text(QClipboard::Selection);
+#endif
+    text = clipboard->text();
     ui->textEdit->append(text);
     cursorPosition = 0;
     speakText(text);

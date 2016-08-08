@@ -17,7 +17,9 @@
 #include "playlistmodel.h"
 #include "startupthread.h"
 
-#ifndef Q_OS_WIN
+#ifdef Q_OS_WIN
+#include "hotkeythreadforwindows.h"
+#else
 #include "hotkeythread.h"
 #endif
 
@@ -200,9 +202,8 @@ private:
     TempFilesRemover tempFilesRemover;
     SettingsWriter settingsWriter;
 
-#ifndef Q_OS_WIN
-    HotKeyThread hotKeyThread;
-#endif
+    HotkeyThread hotKeyThread;
+
     QTimer *maryStartupTimer;
     QClipboard *clipboard;
 

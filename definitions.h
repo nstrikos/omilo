@@ -55,22 +55,23 @@ const QString tempPath = QStandardPaths::locate(QStandardPaths::TempLocation, QS
 const QString testFile = tempPath + "omilo-test.wav";
 const QString wavPrefix = tempPath + "omilo-";
 const QString tempFile = tempPath + "omilo-tmp.wav";
+const QString expPrefix = tempPath + "omilo-exp-";
+const QString expTempFile = tempPath + "omilo-exp-tmp.wav";
 
 #ifdef Q_OS_WIN
 const QString maryHttpAddress = "http://localhost:59125/process?INPUT_TEXT=";
 const QString soxCommand = QDir::currentPath() + "\\sox\\sox.exe";
+const QString dummyCommand = soxCommand;
+const QString maryInstallationDir = QDir::currentPath() + "\\marytts\\lib\\";
+#define defaultVoice SpikeMary;
+
 #else
 const QString maryHttpAddress = "http://localhost:59127/process?INPUT_TEXT=";
 const QString soxCommand = "sox ";
-#endif
-
-#ifdef Q_OS_WIN
-const QString maryInstallationDir = QDir::currentPath() + "\\marytts\\lib\\";
-;
-#else
+const QString dummyCommand = "echo foo";
 const QString maryInstallationDir = "/usr/share/omilo-qt5/marytts-5.0";
+#define defaultVoice KalFestival;
 #endif
-
 
 #define maximumNumberOfFiles 1000000
 

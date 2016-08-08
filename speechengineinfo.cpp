@@ -78,8 +78,10 @@ void SpeechEngineInfo::update()
     else
         availableVoices.push_back(voiceToAdd);
 
+ #ifndef Q_OS_WIN
     voiceToAdd.name = CustomFestival;
     installedVoices.push_back(voiceToAdd);
+#endif
 
     voiceToAdd.mode = flite;
     voiceToAdd.language = QLocale::languageToString(QLocale::English);
