@@ -33,6 +33,7 @@ SpeechEngine::~SpeechEngine()
         delete this->testVoice;
         testVoice = NULL;
     }
+
     maryServerProcess->close();
     delete maryServerProcess;
 
@@ -59,7 +60,7 @@ void SpeechEngine::speak(QString text)
 
     if (splitMode == false)
     {
-        filename = "/tmp/omilo-" + QString::number(0) + ".wav";
+        filename = wavPrefix + QString::number(0) + ".wav";
         //if ( count > maximumNumberOfFiles )
         //    count = 1;
         this->text = text;
@@ -84,7 +85,7 @@ void SpeechEngine::speakWithoutSplitting(QString text)
     if (isProcessing == true)
         cancel();
 
-    filename = "/tmp/omilo-" + QString::number(0) + ".wav";
+    filename = wavPrefix + QString::number(0) + ".wav";
     this->text = text;
     isProcessing = true;
     speechVoice->performSpeak(filename, text);
@@ -162,7 +163,7 @@ void SpeechEngine::createVoice(SpeechVoice *sVoice)
         delete this->speechVoice;
         speechVoice = NULL;
     }
-    this->speechVoice = sVoice;    
+    this->speechVoice = sVoice;
     connect(speechVoice, SIGNAL(fileCreated(QString)), this, SLOT(voiceFileCreated(QString)));
 
     if (maryServerProcess->pid()  == 0)
@@ -177,9 +178,11 @@ void SpeechEngine::voiceFileCreated(QString filename)
 
         if (rate != 1)
         {
-            QFile::remove("/tmp/omilo-tmp.wav");
-            QFile::rename(filename, "/tmp/omilo-tmp.wav");
-            QString command = "sox /tmp/omilo-tmp.wav " + filename + " tempo " + QString::number(rate);
+            QFile::remove(tempFile);
+            QFile::rename(filename, tempFile);
+            //QString command = "sox /tmp/omilo-tmp.wav " + filename + " tempo " + QString::number(rate);
+            QString command = soxCommand +  " " + tempFile + " " + filename + " tempo " + QString::number(rate);
+            qDebug() << command;
             soxProcess.start(command);
             soxProcess.waitForFinished();
         }
@@ -279,14 +282,20 @@ SpeechVoice* SpeechEngine::getSpeechVoice()
 
 void SpeechEngine::startMaryProcess()
 {
+#ifndef Q_OS_WIN
+    qDebug() << "Starting maryserver for Linux...";
     QString command = "java -showversion -ea -Xms40m -Xmx" + QString::number(maxMaryMemory) + "m -cp \"/usr/share/omilo-qt5/marytts-5.0/lib/*\" -Dmary.base=\"/usr/share/omilo-qt5/marytts-5.0\" marytts.server.Mary" ;
     maryServerProcess->start(command);
     qDebug() << "Start mary server : " << command;
+#else
+    qDebug() << "Starting Mary server for Windows...";
+    maryServerForWindows.startMaryServer(maryServerProcess);
+#endif
 }
 
 void SpeechEngine::testMaryServer()
 {
-    testVoice->performSpeak("/tmp/omilo-test.wav", "Welcome to omilo");
+    testVoice->performSpeak(testFile, "Welcome to omilo");
 }
 
 void SpeechEngine::stopTestingMaryServer()

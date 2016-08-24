@@ -15,6 +15,10 @@
 #include <QTimer>
 #include <QQueue>
 
+#ifdef Q_OS_WIN
+#include "maryserverforwindows.h"
+#endif
+
 class SpeechEngine : public QObject
 {
     Q_OBJECT
@@ -66,6 +70,9 @@ private:
     bool exportToWav;
     SoundFilesMerger *soundFilesMerger;
     double rate;
+#ifdef Q_OS_WIN
+    MaryServerForWindows maryServerForWindows;
+#endif
 
 private slots:
     void voiceFileCreated(QString filename);

@@ -127,7 +127,7 @@ void TextProcess::processText()
         item.begin = m;
         item.end = n;
         QString number = QString("%1").arg(counter, 6, 10, QLatin1Char('0'));
-        item.filename = "/tmp/omilo-" + number + ".wav";        
+        item.filename = wavPrefix + number + ".wav";
         list.append(item);
         counter++;
         m = n + 1;

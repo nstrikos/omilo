@@ -1,4 +1,5 @@
 #include "soundfilesmerger.h"
+#include "definitions.h"
 #include <QDebug>
 #include <QFile>
 
@@ -48,10 +49,9 @@ void SoundFilesMerger::startMerging()
     limit = 1000;
     QString filename = list->at(0).filename;
     overlap = false;
-    QString command = "sox " + filename + " " + "/tmp/omilo-exp-" + QString::number(limit)  + ".wav";
+    QString command = soxCommand + " " + filename + " " + expPrefix + QString::number(limit)  + ".wav";
     mergeProcess->start(command);
     qDebug() << "Merging started...";
-    qDebug() << command;
 }
 
 void SoundFilesMerger::continueMerging()
@@ -67,36 +67,35 @@ void SoundFilesMerger::continueMerging()
             }
             if (mergeCounter % 100 == 0)
             {
-                QFile::remove("/tmp/omilo-exp-tmp.wav");
-                QFile::rename("/tmp/omilo-exp-" + QString::number(limit)  + ".wav", "/tmp/omilo-exp-tmp.wav");
-                QString command = "sox /tmp/omilo-exp-tmp.wav " + mergeCommand + " " + "/tmp/omilo-exp-" + QString::number(limit)  + ".wav";
+                QFile::remove(expTempFile);
+                QFile::rename(expPrefix + QString::number(limit)  + ".wav", expTempFile);
+                //QString command = "sox /tmp/omilo-exp-tmp.wav " + mergeCommand + " " + "/tmp/omilo-exp-" + QString::number(limit)  + ".wav";
+                QString command = soxCommand + " " + expTempFile + " " + mergeCommand + " " + expPrefix + QString::number(limit) + ".wav";
                 mergeProcess->start(command);
                 emit mergeId(mergeCounter, list->size());
                 mergeCommand = "";
-                qDebug() << command;
             }
             else
                 //Dummy process just to return to this function again
                 //Because mergeProcess finished signal is connect to continueMerging function
-                mergeProcess->start("echo foo");
+                mergeProcess->start(dummyCommand);
         }
         else if (mergeCounter == limit || mergeCounter == list->size()  )
         {
-            QFile::remove("/tmp/omilo-exp-tmp.wav");
-            QFile::rename("/tmp/omilo-exp-" + QString::number(limit)  + ".wav", "/tmp/omilo-exp-tmp.wav");
-            QString command = "sox /tmp/omilo-exp-tmp.wav " + mergeCommand + " " + "/tmp/omilo-exp-" + QString::number(limit)  + ".wav";
-            soxFiles.enqueue("/tmp/omilo-exp-" + QString::number(limit)  + ".wav");
+            QFile::remove(expTempFile);
+            QFile::rename(expPrefix + QString::number(limit)  + ".wav", expTempFile);
+            QString command = soxCommand + " " + expTempFile + " " + mergeCommand + " " + expPrefix + QString::number(limit)  + ".wav";
+            soxFiles.enqueue(expPrefix + QString::number(limit)  + ".wav");
             overlap = true;
             mergeProcess->start(command);
             emit mergeId(mergeCounter, list->size());
-            qDebug() << command;
         }
     }
     else
     {
         if (mergeCounter >= list->size())
         {
-            QFile::remove("/tmp/omilo-exp-tmp.wav");
+            QFile::remove(expTempFile);
             emit soxFinished();
         }
         else
@@ -112,7 +111,7 @@ void SoundFilesMerger::continueMerging()
                 else
                     mergeCounter++;
             }
-            mergeProcess->start("sox " + list->at(mergeCounter).filename + " " + "/tmp/omilo-exp-" + QString::number(limit)  + ".wav");
+            mergeProcess->start(soxCommand + " " + list->at(mergeCounter).filename + " " + expPrefix + QString::number(limit)  + ".wav");
         }
     }
 }
@@ -124,10 +123,9 @@ void SoundFilesMerger::finalMerge()
     {
         mergeCommand += " " + soxFiles.at(i);
     }
-    QString command = "sox " + mergeCommand + " " + filename;
+    QString command = soxCommand + " " + mergeCommand + " " + filename;
     finalSoxProcess.start(command);
     emit mergeInfo(tr("Creating file..."));
-    qDebug() << command;
 }
 
 void SoundFilesMerger::handleMergeProcessError()

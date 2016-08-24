@@ -19,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //Is it necessary to set fonts?
-    QFont font("Liberation Sans", 12);
-    QApplication::setFont(font);
+    //QFont font("Liberation Sans", 12);
+    //QApplication::setFont(font);
 
     initFunctions();
 }
@@ -30,6 +30,7 @@ MainWindow::~MainWindow()
     qDebug() << "Closing application...";
 
     qDebug() << "Terminate hot keys.";
+
     hotKeyThread.terminate();
 
     settingsWriter.write(pos(), size(), recentFiles, engineVoice, useTrayIcon, splitMode, customFestivalCommand, customFestivalCommandArguments);
@@ -493,10 +494,12 @@ void MainWindow::createMenus()
     speakMenu->addAction(speakFromCurrentPositionAction);
     speakMenu->addAction(enableSplitModeAction);
 
+#ifndef Q_OS_WIN
     optionsMenu = menuBar()->addMenu(tr("&Options"));
     optionsMenu->addAction(installVoicesAction);
     optionsMenu->addAction(showFliteSettingsAction);
     optionsMenu->addAction(customFestivalAction);
+#endif
 
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showFontSettingsDialogAction);
@@ -782,7 +785,8 @@ void MainWindow::readSettings()
     updateRecentFileActions();
     engineVoice = settings.value("MainWindowVoice").toString();
     if (engineVoice == "" )
-        engineVoice = KalFestival;
+        engineVoice = defaultVoice;
+
     useTrayIcon = settings.value("useTrayIcon").toBool();
     toggleUseTrayIconAction->setChecked(useTrayIcon);
     splitMode = settings.value("SplitMode").toBool();
@@ -966,7 +970,12 @@ void MainWindow::setVariablesBeforeSpeaking()
 void MainWindow::hotKeyPlayPressed()
 {
     ui->textEdit->clear();
+#ifdef Q_OS_WIN
+    QString text = clipboard->text();
+#else
     QString text = clipboard->text(QClipboard::Selection);
+#endif
+    text = clipboard->text();
     ui->textEdit->append(text);
     cursorPosition = 0;
     speakText(text);
@@ -1314,7 +1323,7 @@ void MainWindow::showMainWindow()
         startUpThread = NULL;
     }
 
-    qDebug() << "Show main window.";
+    qDebug() << "Show main window...";
     this->show();
 }
 

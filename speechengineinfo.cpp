@@ -78,8 +78,10 @@ void SpeechEngineInfo::update()
     else
         availableVoices.push_back(voiceToAdd);
 
+ #ifndef Q_OS_WIN
     voiceToAdd.name = CustomFestival;
     installedVoices.push_back(voiceToAdd);
+#endif
 
     voiceToAdd.mode = flite;
     voiceToAdd.language = QLocale::languageToString(QLocale::English);
@@ -119,7 +121,7 @@ void SpeechEngineInfo::update()
         availableVoices.push_back(voiceToAdd);
 
     voiceToAdd.mode = marytts;
-    if (QDir("/usr/share/omilo-qt5/marytts-5.0").exists())
+    if (QDir(maryInstallationDir).exists())
     {
         voiceToAdd.name = ItalianMary;
         voiceToAdd.language = QLocale::languageToString(QLocale::Italian);

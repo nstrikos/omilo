@@ -8,12 +8,12 @@ void TempFilesRemover::remove()
 {
     qDebug() << "Removing all temp files...";
     QStringList nameFilter("omilo-*");
-    QDir directory("/tmp/");
+    QDir directory(tempPath);
     QStringList txtFilesAndDirectories = directory.entryList(nameFilter);
     for (int i = 0; i < txtFilesAndDirectories.size(); i++)
     {
         QString filename = txtFilesAndDirectories.at(i);
-        QString command = "/tmp/" + filename;
+        QString command = tempPath + filename;
         QFile::remove(command);
     }
     if(QFile::exists(textFile))
