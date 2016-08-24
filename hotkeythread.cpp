@@ -26,11 +26,11 @@ void HotKeyThread::run()
     KeySym key;
     char text[255];
 
-    //unsigned int    modifiers       = Mod2Mask;
     unsigned int    modifiers = 0;
+    unsigned int    modifiers2 = ControlMask;
     int             keycode         = XKeysymToKeycode(dpy, XK_F10);
     int             keycode2        = XKeysymToKeycode(dpy, XK_F11);
-    int             keycode3        = XKeysymToKeycode(dpy, XK_F12);
+    int             keycode3        = XKeysymToKeycode(dpy, XK_space);
     int             keycode4         = XKeysymToKeycode(dpy, XK_F9);
     Window          grab_window     = root;
     Bool            owner_events    = False;
@@ -44,7 +44,7 @@ void HotKeyThread::run()
     XGrabKey(dpy, keycode2, modifiers, grab_window, owner_events,
              pointer_mode,
              keyboard_mode);
-    XGrabKey(dpy, keycode3, modifiers, grab_window, owner_events,
+    XGrabKey(dpy, keycode3, modifiers2, grab_window, owner_events,
              pointer_mode,
              keyboard_mode);
     XGrabKey(dpy, keycode4, modifiers, grab_window, owner_events,
@@ -59,6 +59,7 @@ void HotKeyThread::run()
         {
         case KeyPress:
             XLookupString(&ev.xkey,text,255,&key,0);
+            qDebug() << key;
             if (key == 65479)
             {
                 //F10 pressed
@@ -71,10 +72,10 @@ void HotKeyThread::run()
                 qDebug() << "F11 pressed...";
                 emit stopPressed();
             }
-            else if (key == 65481)
+            //else if (key == 65481)
+            else if (key == 32)
             {
-                //F12 pressed
-                qDebug() << "F12 pressed...";
+                qDebug() << "Ctrl+Space pressed...";
                 emit showWindowPressed();
             }
             else if (key == 65478)

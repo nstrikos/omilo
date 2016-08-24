@@ -163,6 +163,7 @@ private:
     QAction *minimizeAction;
     QAction *maximizeAction;
     QAction *restoreAction;
+    QAction *showWindowAction;
     QAction *quitAction;
 
     //GUI Menus

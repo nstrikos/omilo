@@ -422,7 +422,10 @@ void MainWindow::createActions()
     showFliteSettingsAction->setShortcut(tr("F6"));
     connect(showFliteSettingsAction, SIGNAL(triggered()), this, SLOT(showFliteDialog()));
     restoreAction = new QAction(tr("&Restore"), this);
-    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormalAndRaise()));
+    showWindowAction = new QAction(tr("&Show window"), this);
+    connect(showWindowAction, SIGNAL(triggered()), this, SLOT(showNormalAndRaise()));
+    showWindowAction->setShortcut(tr("F12"));
     quitAction = new QAction(tr("&Quit"), this);
     quitAction->setShortcut(tr("Ctrl+Q"));
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -500,6 +503,7 @@ void MainWindow::createMenus()
     viewMenu->addAction(boldAction);
     viewMenu->addAction(invertColorsAction);
     viewMenu->addAction(toggleUseTrayIconAction);
+    viewMenu->addAction(showWindowAction);
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(helpAction);
@@ -1551,7 +1555,12 @@ void MainWindow::showCustomFestivalDialog()
 
 void MainWindow::showNormalAndRaise()
 {
-    this->showNormal();
-    this->raise();
-    QApplication::setActiveWindow(this);
+    Qt::WindowFlags eFlags = this->windowFlags();
+    eFlags |= Qt::WindowStaysOnTopHint;
+    this->setWindowFlags(eFlags);
+    this->show();
+    eFlags &= ~Qt::WindowStaysOnTopHint;
+    this->setWindowFlags(eFlags);
+    this->show();
+    this->activateWindow();
 }
