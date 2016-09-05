@@ -37,7 +37,7 @@ SOURCES += main.cpp\
     customfestivaldialog.cpp \
     customfestivalvoice.cpp \
     maryserverforwindows.cpp \
-    hotkeythreadforwindows.cpp
+    hotkeythreadforwindows.cpp \
 
 HEADERS  += mainwindow.h \
     installvoicesdialog.h \
@@ -67,7 +67,7 @@ HEADERS  += mainwindow.h \
     customfestivaldialog.h \
     customfestivalvoice.h \
     maryserverforwindows.h \
-    hotkeythreadforwindows.h
+    hotkeythreadforwindows.h \
 
 FORMS    += mainwindow.ui \
     installvoicesdialog.ui \

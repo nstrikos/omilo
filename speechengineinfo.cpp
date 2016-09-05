@@ -96,8 +96,145 @@ void SpeechEngineInfo::update()
         voiceToAdd.name = Kal16Flite;
         installedVoices.push_back(voiceToAdd);
     }
+
+    voiceToAdd.name = IndicAupMrFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_indic_aup_mr.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = IndicAxbGuFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_indic_axb_gu.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = IndicAxbHiFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_indic_axb_hi.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = IndicKnrTeFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_indic_knr_te.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = IndicSksTaFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_indic_sks_ta.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = IndicSlpMrFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_indic_slp_mr.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = IndicSxsHiFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_indic_sxs_hi.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = IndicSxvTaFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_indic_sxv_ta.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = AewFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_aew.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = AhwFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_ahw.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = AupFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_aup.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = AwbFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_awb.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = AxbFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_axb.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = BdlFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_bdl.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = ClbFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_clb.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = EeyFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_eey.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
     voiceToAdd.name = FemFlite;
-    if (QFile::exists("/usr/share/omilo-qt5/flite/cmu_us_fem.flitevox"))
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_fem.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = GkaFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_gka.flitevox"))
     {
         installedVoices.push_back(voiceToAdd);
     }
@@ -105,7 +242,31 @@ void SpeechEngineInfo::update()
         availableVoices.push_back(voiceToAdd);
 
     voiceToAdd.name = JmkFlite;
-    if (QFile::exists("/usr/share/omilo-qt5/flite/cmu_us_jmk.flitevox"))
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_jmk.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = KspFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_ksp.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = LjmFlite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_ljm.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = Rms2Flite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_rms.flitevox"))
     {
         installedVoices.push_back(voiceToAdd);
     }
@@ -113,7 +274,15 @@ void SpeechEngineInfo::update()
         availableVoices.push_back(voiceToAdd);
 
     voiceToAdd.name = RxrFlite;
-    if (QFile::exists("/usr/share/omilo-qt5/flite/cmu_us_rxr.flitevox"))
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_rxr.flitevox"))
+    {
+        installedVoices.push_back(voiceToAdd);
+    }
+    else
+        availableVoices.push_back(voiceToAdd);
+
+    voiceToAdd.name = Slt2Flite;
+    if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_slt.flitevox"))
     {
         installedVoices.push_back(voiceToAdd);
     }

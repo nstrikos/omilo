@@ -20,7 +20,7 @@ void FliteVoice::performSpeak(QString filename, QString text)
     command +=target;
     //qDebug() << "Target mean is " << target;
 
-    //qDebug() << "Processing command: " << command;
+    qDebug() << "Processing command: " << command;
     createWavProcess->start(command);
 }
 

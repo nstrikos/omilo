@@ -236,12 +236,54 @@ void SpeechEngine::setSpeechVoice(QString sVoice)
         createVoice(new AwbFliteVoice());
     else if (sVoice == Kal16Flite)
         createVoice(new Kal16FliteVoice());
+    else if (sVoice == IndicAupMrFlite)
+        createVoice(new IndicAupMrFliteVoice());
+    else if (sVoice == IndicAxbGuFlite)
+        createVoice(new IndicAxbGuFliteVoice());
+    else if (sVoice == IndicAxbHiFlite)
+        createVoice(new IndicAxbHiFliteVoice());
+    else if (sVoice == IndicKnrTeFlite)
+        createVoice(new IndicKnrTeFliteVoice());
+    else if (sVoice == IndicSksTaFlite)
+        createVoice(new IndicSksTaFliteVoice());
+    else if (sVoice == IndicSlpMrFlite)
+        createVoice(new IndicSlpMrFliteVoice());
+    else if (sVoice == IndicSxsHiFlite)
+        createVoice(new IndicSxsHiFliteVoice());
+    else if (sVoice == IndicSxvTaFlite)
+        createVoice(new IndicSxvTaFliteVoice());
+    else if (sVoice == AewFlite)
+        createVoice(new AewFliteVoice());
+    else if (sVoice == AhwFlite)
+        createVoice(new AhwFliteVoice());
+    else if (sVoice == AupFlite)
+        createVoice(new AupFliteVoice());
+    else if (sVoice == Awb2Flite)
+        createVoice(new Awb2FliteVoice());
+    else if (sVoice == AxbFlite)
+        createVoice(new AxbFliteVoice());
+    else if (sVoice == BdlFlite)
+        createVoice(new BdlFliteVoice());
+    else if (sVoice == ClbFlite)
+        createVoice(new ClbFliteVoice());
+    else if (sVoice == EeyFlite)
+        createVoice(new EeyFliteVoice());
     else if (sVoice == FemFlite)
         createVoice(new FemFliteVoice());
+    else if (sVoice == GkaFlite)
+        createVoice(new GkaFliteVoice());
     else if (sVoice == JmkFlite)
         createVoice(new JmkFliteVoice());
+    else if (sVoice == KspFlite)
+        createVoice(new KspFliteVoice());
+    else if (sVoice == LjmFlite)
+        createVoice(new LjmFliteVoice());
+    else if (sVoice == Rms2Flite)
+        createVoice(new Rms2FliteVoice());
     else if (sVoice == RxrFlite)
         createVoice(new RxrFliteVoice());
+    else if (sVoice == Slt2Flite)
+        createVoice(new Slt2FliteVoice());
     else if (sVoice == ItalianMary)
         createVoice(new ItalianMaryVoice());
     else if (sVoice == GermanMary)

@@ -203,7 +203,7 @@ private:
     TempFilesRemover tempFilesRemover;
     SettingsWriter settingsWriter;
 
-    HotkeyThread hotKeyThread;
+    HotKeyThread hotKeyThread;
 
     QTimer *maryStartupTimer;
     QClipboard *clipboard;
