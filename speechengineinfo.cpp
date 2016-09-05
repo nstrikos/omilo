@@ -185,7 +185,7 @@ void SpeechEngineInfo::update()
     else
         availableVoices.push_back(voiceToAdd);
 
-    voiceToAdd.name = AwbFlite;
+    voiceToAdd.name = Awb2Flite;
     if (QFile::exists("/usr/share/omilo-qt5/flite/voices/cmu_us_awb.flitevox"))
     {
         installedVoices.push_back(voiceToAdd);

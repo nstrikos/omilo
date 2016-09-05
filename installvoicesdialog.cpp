@@ -50,8 +50,8 @@ void InstallVoicesDialog::updateAvailableVoices()
 
     for (i = 0; i < engineInfo->installedVoices.size(); i++)
     {
-        if (engineInfo->installedVoices[i].mode == festivalCmu)
-        {
+        //if (engineInfo->installedVoices[i].mode == festivalCmu)
+        //{
             if (engineInfo->installedVoices[i].name == AwbCmuFestival)
             {
                 awbInstallButton->setEnabled(false);
@@ -82,12 +82,132 @@ void InstallVoicesDialog::updateAvailableVoices()
                 rmsInstallButton->setEnabled(false);
                 rmsRemoveButton->setEnabled(true);
             }
+            else if (engineInfo->installedVoices[i].name == AewFlite)
+            {
+                aewFliteInstallButton->setEnabled(false);
+                aewFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == AhwFlite)
+            {
+                ahwFliteInstallButton->setEnabled(false);
+                ahwFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == AupFlite)
+            {
+                aupFliteInstallButton->setEnabled(false);
+                aupFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == Awb2Flite)
+            {
+                awb2FliteInstallButton->setEnabled(false);
+                awb2FliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == AxbFlite)
+            {
+                axbFliteInstallButton->setEnabled(false);
+                axbFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == BdlFlite)
+            {
+                bdlFliteInstallButton->setEnabled(false);
+                bdlFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == ClbFlite)
+            {
+                clbFliteInstallButton->setEnabled(false);
+                clbFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == EeyFlite)
+            {
+                eeyFliteInstallButton->setEnabled(false);
+                eeyFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == FemFlite)
+            {
+                femFliteInstallButton->setEnabled(false);
+                femFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == GkaFlite)
+            {
+                gkaFliteInstallButton->setEnabled(false);
+                gkaFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == JmkFlite)
+            {
+                jmkFliteInstallButton->setEnabled(false);
+                jmkFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == KspFlite)
+            {
+                kspFliteInstallButton->setEnabled(false);
+                kspFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == LjmFlite)
+            {
+                ljmFliteInstallButton->setEnabled(false);
+                ljmFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == Rms2Flite)
+            {
+                rms2FliteInstallButton->setEnabled(false);
+                rms2FliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == RxrFlite)
+            {
+                rxrFliteInstallButton->setEnabled(false);
+                rxrFliteRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == Slt2Flite)
+            {
+                slt2FliteInstallButton->setEnabled(false);
+                slt2FliteRemoveButton->setEnabled(true);
+            }
             else if (engineInfo->installedVoices[i].name == SltCmuFestival)
             {
                 sltInstallButton->setEnabled(false);
                 sltRemoveButton->setEnabled(true);
             }
-        }
+            else if (engineInfo->installedVoices[i].name == SltCmuFestival)
+            {
+                sltInstallButton->setEnabled(false);
+                sltRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == SltCmuFestival)
+            {
+                sltInstallButton->setEnabled(false);
+                sltRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == SltCmuFestival)
+            {
+                sltInstallButton->setEnabled(false);
+                sltRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == SltCmuFestival)
+            {
+                sltInstallButton->setEnabled(false);
+                sltRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == SltCmuFestival)
+            {
+                sltInstallButton->setEnabled(false);
+                sltRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == SltCmuFestival)
+            {
+                sltInstallButton->setEnabled(false);
+                sltRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == SltCmuFestival)
+            {
+                sltInstallButton->setEnabled(false);
+                sltRemoveButton->setEnabled(true);
+            }
+            else if (engineInfo->installedVoices[i].name == SltCmuFestival)
+            {
+                sltInstallButton->setEnabled(false);
+                sltRemoveButton->setEnabled(true);
+            }
+        //}
     }
 
     for (i = 0; i < engineInfo->availableVoices.size(); i++)
@@ -145,7 +265,7 @@ void InstallVoicesDialog::downloadFinished()
         QString c = "-c";
         QStringList list;
         list << c << sudoCommand + installationCommandPart2;
-        installationProcess->start(command, list);        
+        installationProcess->start(command, list);
     }
     else
         myProgressDialog->hide();

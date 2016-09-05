@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>518</width>
-    <height>390</height>
+    <width>585</width>
+    <height>517</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,9 +27,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-798</y>
-        <width>480</width>
-        <height>1132</height>
+        <y>-289</y>
+        <width>552</width>
+        <height>1161</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -310,7 +310,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_6">
+            <widget class="QPushButton" name="aewFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -320,7 +320,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_7">
+            <widget class="QPushButton" name="aewFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -347,7 +347,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_8">
+            <widget class="QPushButton" name="ahwFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -357,7 +357,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_8">
+            <widget class="QPushButton" name="ahwFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -384,7 +384,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_9">
+            <widget class="QPushButton" name="aupFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -394,7 +394,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_9">
+            <widget class="QPushButton" name="aupFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -421,7 +421,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_10">
+            <widget class="QPushButton" name="awb2FliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -431,7 +431,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_10">
+            <widget class="QPushButton" name="awb2FliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -458,7 +458,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_11">
+            <widget class="QPushButton" name="axbFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -468,7 +468,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_11">
+            <widget class="QPushButton" name="axbFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -495,7 +495,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_27">
+            <widget class="QPushButton" name="bdlFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -505,7 +505,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_27">
+            <widget class="QPushButton" name="bdlFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -532,7 +532,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_16">
+            <widget class="QPushButton" name="clbFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -542,7 +542,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_16">
+            <widget class="QPushButton" name="clbFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -569,7 +569,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_19">
+            <widget class="QPushButton" name="eeyFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -579,7 +579,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_19">
+            <widget class="QPushButton" name="eeyFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -606,7 +606,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_22">
+            <widget class="QPushButton" name="femFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -616,7 +616,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_22">
+            <widget class="QPushButton" name="femFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -643,7 +643,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_30">
+            <widget class="QPushButton" name="gkaFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -653,7 +653,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_30">
+            <widget class="QPushButton" name="gkaFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -680,7 +680,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_24">
+            <widget class="QPushButton" name="jmkFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -690,7 +690,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_24">
+            <widget class="QPushButton" name="jmkFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -717,7 +717,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_25">
+            <widget class="QPushButton" name="kspFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -727,7 +727,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_25">
+            <widget class="QPushButton" name="kspFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -754,7 +754,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_26">
+            <widget class="QPushButton" name="ljmFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -764,7 +764,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_26">
+            <widget class="QPushButton" name="ljmFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -791,7 +791,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_23">
+            <widget class="QPushButton" name="rms2FliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -801,7 +801,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_23">
+            <widget class="QPushButton" name="rms2FliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -828,7 +828,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_17">
+            <widget class="QPushButton" name="rxrFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -838,7 +838,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_17">
+            <widget class="QPushButton" name="rxrFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -850,7 +850,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_26">
+          <layout class="QHBoxLayout" name="horizontalLayout_37">
            <item>
             <widget class="QLineEdit" name="Slt2FliteLineEdit">
              <property name="enabled">
@@ -865,7 +865,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_20">
+            <widget class="QPushButton" name="slt2FliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -875,7 +875,44 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_20">
+            <widget class="QPushButton" name="slt2FliteRemoveButton">
+             <property name="text">
+              <string>Remove</string>
+             </property>
+             <property name="autoDefault">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_26">
+           <item>
+            <widget class="QLineEdit" name="IndicAupMrFliteLineEdit">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="text">
+              <string>Indic Aup Mr Flite</string>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="indicAupMrFliteInstallButton">
+             <property name="text">
+              <string>Install</string>
+             </property>
+             <property name="autoDefault">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="indicAupMrFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -889,12 +926,12 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_24">
            <item>
-            <widget class="QLineEdit" name="SltLineEdit_18">
+            <widget class="QLineEdit" name="IndicAupMrFliteLineEdit_2">
              <property name="enabled">
               <bool>true</bool>
              </property>
              <property name="text">
-              <string>Slt Cmu Festival</string>
+              <string>Indic Axb Gu Flite</string>
              </property>
              <property name="readOnly">
               <bool>true</bool>
@@ -902,7 +939,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_18">
+            <widget class="QPushButton" name="IndicAxbGuFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -912,7 +949,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_18">
+            <widget class="QPushButton" name="IndicAxbGuFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -926,12 +963,12 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_34">
            <item>
-            <widget class="QLineEdit" name="SltLineEdit_28">
+            <widget class="QLineEdit" name="IndicAxbHiFliteLineEdit">
              <property name="enabled">
               <bool>true</bool>
              </property>
              <property name="text">
-              <string>Slt Cmu Festival</string>
+              <string>Indic Axb Hi Flite</string>
              </property>
              <property name="readOnly">
               <bool>true</bool>
@@ -939,7 +976,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_28">
+            <widget class="QPushButton" name="IndicAxbHiFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -949,7 +986,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_28">
+            <widget class="QPushButton" name="IndicAxbHiFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -963,12 +1000,12 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_27">
            <item>
-            <widget class="QLineEdit" name="SltLineEdit_21">
+            <widget class="QLineEdit" name="IndicKnrTeFliteLineEdit">
              <property name="enabled">
               <bool>true</bool>
              </property>
              <property name="text">
-              <string>Slt Cmu Festival</string>
+              <string>Indic Knr Te Flite</string>
              </property>
              <property name="readOnly">
               <bool>true</bool>
@@ -976,7 +1013,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_21">
+            <widget class="QPushButton" name="IndicKnrTeFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -986,7 +1023,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_21">
+            <widget class="QPushButton" name="IndicKnrTeFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -1000,12 +1037,12 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_35">
            <item>
-            <widget class="QLineEdit" name="SltLineEdit_29">
+            <widget class="QLineEdit" name="IndicSksTaFliteLineEdit">
              <property name="enabled">
               <bool>true</bool>
              </property>
              <property name="text">
-              <string>Slt Cmu Festival</string>
+              <string>Indic Sks Ta Flite</string>
              </property>
              <property name="readOnly">
               <bool>true</bool>
@@ -1013,7 +1050,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_29">
+            <widget class="QPushButton" name="IndicSksTaFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -1023,7 +1060,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_29">
+            <widget class="QPushButton" name="IndicSksTaFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -1037,12 +1074,12 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_21">
            <item>
-            <widget class="QLineEdit" name="SltLineEdit_15">
+            <widget class="QLineEdit" name="IndicSlpMrFliteLineEdit">
              <property name="enabled">
               <bool>true</bool>
              </property>
              <property name="text">
-              <string>Slt Cmu Festival</string>
+              <string>Indic Slp Mr Flite</string>
              </property>
              <property name="readOnly">
               <bool>true</bool>
@@ -1050,7 +1087,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_15">
+            <widget class="QPushButton" name="IndicSlpMrFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -1060,7 +1097,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_15">
+            <widget class="QPushButton" name="IndicSlpMrFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -1074,12 +1111,12 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_18">
            <item>
-            <widget class="QLineEdit" name="SltLineEdit_12">
+            <widget class="QLineEdit" name="IndicSxsHiFliteLineEdit">
              <property name="enabled">
               <bool>true</bool>
              </property>
              <property name="text">
-              <string>Slt Cmu Festival</string>
+              <string>Indic Sxs Hi Flite</string>
              </property>
              <property name="readOnly">
               <bool>true</bool>
@@ -1087,7 +1124,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_12">
+            <widget class="QPushButton" name="IndicSxsHiFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -1097,7 +1134,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_12">
+            <widget class="QPushButton" name="IndicSxsHiFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
@@ -1111,12 +1148,12 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_20">
            <item>
-            <widget class="QLineEdit" name="SltLineEdit_14">
+            <widget class="QLineEdit" name="IndicSxvTaFliteLineEdit">
              <property name="enabled">
               <bool>true</bool>
              </property>
              <property name="text">
-              <string>Slt Cmu Festival</string>
+              <string>Indic Sxv Ta Flite</string>
              </property>
              <property name="readOnly">
               <bool>true</bool>
@@ -1124,7 +1161,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltInstallButton_14">
+            <widget class="QPushButton" name="IndicSxvTaFliteInstallButton">
              <property name="text">
               <string>Install</string>
              </property>
@@ -1134,44 +1171,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="sltRemoveButton_14">
-             <property name="text">
-              <string>Remove</string>
-             </property>
-             <property name="autoDefault">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_19">
-           <item>
-            <widget class="QLineEdit" name="SltLineEdit_13">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="text">
-              <string>Slt Cmu Festival</string>
-             </property>
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="sltInstallButton_13">
-             <property name="text">
-              <string>Install</string>
-             </property>
-             <property name="autoDefault">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="sltRemoveButton_13">
+            <widget class="QPushButton" name="IndicSxvTaFliteRemoveButton">
              <property name="text">
               <string>Remove</string>
              </property>
