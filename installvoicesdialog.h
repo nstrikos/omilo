@@ -39,6 +39,54 @@ private slots:
     void on_rmsRemoveButton_clicked();
     void on_sltRemoveButton_clicked();
 
+    void on_aewFliteInstallButton_clicked();
+
+    void on_ahwFliteInstallButton_clicked();
+
+    void on_aupFliteInstallButton_clicked();
+
+    void on_awb2FliteInstallButton_clicked();
+
+    void on_axbFliteInstallButton_clicked();
+
+    void on_bdlFliteInstallButton_clicked();
+
+    void on_clbFliteInstallButton_clicked();
+
+    void on_eeyFliteInstallButton_clicked();
+
+    void on_femFliteInstallButton_clicked();
+
+    void on_gkaFliteInstallButton_clicked();
+
+    void on_jmkFliteInstallButton_clicked();
+
+    void on_kspFliteInstallButton_clicked();
+
+    void on_ljmFliteInstallButton_clicked();
+
+    void on_rms2FliteInstallButton_clicked();
+
+    void on_rxrFliteInstallButton_clicked();
+
+    void on_slt2FliteInstallButton_clicked();
+
+    void on_indicAupMrFliteInstallButton_clicked();
+
+    void on_IndicAxbGuFliteInstallButton_clicked();
+
+    void on_IndicAxbHiFliteInstallButton_clicked();
+
+    void on_IndicKnrTeFliteInstallButton_clicked();
+
+    void on_IndicSksTaFliteInstallButton_clicked();
+
+    void on_IndicSlpMrFliteInstallButton_clicked();
+
+    void on_IndicSxsHiFliteInstallButton_clicked();
+
+    void on_IndicSxvTaFliteInstallButton_clicked();
+
 private:
     void updateAvailableVoices();
     SpeechEngineInfo *engineInfo;
