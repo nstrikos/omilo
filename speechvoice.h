@@ -19,6 +19,8 @@ protected:
     bool cancelled;
     unsigned int durationStretch;
     unsigned int targetMean;
+    bool useDurationStretch;
+    bool useTargetMean;
     QString customCommand;
     QString customCommandArguments;
 
@@ -35,6 +37,8 @@ public:
     virtual QString voiceCommand() = 0;
     void setDurationStretch(unsigned int duration);
     void setTargetMean(unsigned int target);
+    void setUseDurationStretch(bool useDurationStretch);
+    void setUseTargetMean(bool useTargetMean);
     void setCustomCommand(QString command);
     void setCustomCommandArguments(QString arguments);
 

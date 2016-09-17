@@ -32,6 +32,8 @@ public:
     void setSpeechVoice(QString sVoice);
     void setDurationStretch(unsigned int duration);
     void setTargetMean(unsigned int target);
+    void setUseDurationStretch(bool useDurationStretch);
+    void setUseTargetMean(bool useTargetMean);
     void setCustomFestivalCommand(QString command);
     void setCustomFestivalCommandArguments(QString arguments);
     SpeechVoice *getSpeechVoice();
@@ -54,6 +56,8 @@ private:
     QString filename;
     unsigned int durationStretch;
     unsigned int targetMean;
+    bool useDurationStretch;
+    bool useTargetMean;
     QString customFestivalCommand;
     QString customFestivalCommandArguments;
     bool isProcessing;

@@ -59,7 +59,6 @@
 
 #define defDurationStretch 100
 #define defTargetMean 100
-#define defSltTargetMean 150
 
 const QString wavFile = "/tmp/omilo.wav";
 const QString textFile = "/tmp/omilo.txt";

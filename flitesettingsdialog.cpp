@@ -7,17 +7,22 @@ FliteSettingsDialog::FliteSettingsDialog(QString voice, QWidget *parent) :
 {
     this->voice = voice;
     ui->setupUi(this);
-    ui->checkBox->setChecked(false);
+    ui->durationCheckBox->setChecked(false);
+    ui->targetMeanCheckBox->setChecked(false);
     ui->durationSlider->setEnabled(false);
     ui->durationSlider->setValue(duration);
     ui->targetSlider->setEnabled(false);
     ui->targetSlider->setValue(target);
     updateDurationLabel();
     updateTargetLabel();
-    connect(ui->checkBox, SIGNAL(clicked()), this, SLOT(checkBoxChanged()));
+    connect(ui->durationCheckBox, SIGNAL(clicked()), this, SLOT(durationCheckboxClicked()));
+    connect(ui->targetMeanCheckBox, SIGNAL(clicked(bool)), this, SLOT(targetMeanCheckboxClicked()));
     connect(ui->durationSlider, SIGNAL(valueChanged(int)), this, SLOT(updateDuration()));
     connect(ui->targetSlider, SIGNAL(valueChanged(int)), this, SLOT(updateTarget()));
-    update(voice);
+    useDurationStretch = false;
+    useTargetMean = false;
+    updateDurationStretch();
+    updateTargetMean();
     qDebug() << "Flite settings dialog created...";
 }
 
@@ -27,38 +32,55 @@ FliteSettingsDialog::~FliteSettingsDialog()
     delete ui;
 }
 
-void FliteSettingsDialog::update(QString voice)
+void FliteSettingsDialog::updateTargetMean()
 {
     //The dialog should be updated only when flite voice is active
     //Further, the whole dialog should be active only when flite voice is active
 
-    this->voice = voice;
-    qDebug() << "Updating flite dialog controls. Voice is: " << voice;
-    if (voice == SltFlite)
-        target = defSltTargetMean;
-    else
-        target = defTargetMean;
-    duration = defDurationStretch;
+    target = defTargetMean;
     qDebug() << "Target mean is: " << target;
-    qDebug() << "Duration is: " << duration;
-    ui->durationSlider->setValue(duration);
     ui->targetSlider->setValue(target);
-    updateDurationLabel();
     updateTargetLabel();
 }
 
-void FliteSettingsDialog::checkBoxChanged()
+void FliteSettingsDialog::updateDurationStretch()
 {
-    if (ui->checkBox->isChecked())
+    //The dialog should be updated only when flite voice is active
+    //Further, the whole dialog should be active only when flite voice is active
+
+    duration = defDurationStretch;
+    qDebug() << "Duration is: " << duration;
+    ui->durationSlider->setValue(duration);
+    updateDurationLabel();
+}
+
+void FliteSettingsDialog::durationCheckboxClicked()
+{
+    if (ui->durationCheckBox->isChecked())
     {
         ui->durationSlider->setEnabled(true);
-        ui->targetSlider->setEnabled(true);
+        useDurationStretch = true;
     }
     else
     {
         ui->durationSlider->setEnabled(false);
+        useDurationStretch = false;
+        updateDurationStretch();
+    }
+}
+
+void FliteSettingsDialog::targetMeanCheckboxClicked()
+{
+    if (ui->targetMeanCheckBox->isChecked())
+    {
+        ui->targetSlider->setEnabled(true);
+        useTargetMean = true;
+    }
+    else
+    {
         ui->targetSlider->setEnabled(false);
-        update(voice);
+        useTargetMean = false;
+        updateTargetMean();
     }
 }
 
@@ -70,6 +92,16 @@ unsigned int FliteSettingsDialog::getDuration()
 unsigned int FliteSettingsDialog::getTarget()
 {
     return target;
+}
+
+bool FliteSettingsDialog::getUseDurationStretch()
+{
+    return useDurationStretch;
+}
+
+bool FliteSettingsDialog::getUseTargetMean()
+{
+    return useTargetMean;
 }
 
 void FliteSettingsDialog::updateDuration()

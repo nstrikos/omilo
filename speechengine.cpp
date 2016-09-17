@@ -359,6 +359,18 @@ void SpeechEngine::setTargetMean(unsigned int target)
     speechVoice->setTargetMean(targetMean);
 }
 
+void SpeechEngine::setUseDurationStretch(bool useDurationStretch)
+{
+    this->useDurationStretch = useDurationStretch;
+    speechVoice->setUseDurationStretch(useDurationStretch);
+}
+
+void SpeechEngine::setUseTargetMean(bool useTargetMean)
+{
+    this->useTargetMean = useTargetMean;
+    speechVoice->setUseTargetMean(useTargetMean);
+}
+
 void SpeechEngine::setCustomFestivalCommand(QString command)
 {
     this->customFestivalCommand = command;

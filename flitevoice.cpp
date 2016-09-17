@@ -10,15 +10,21 @@ void FliteVoice::performSpeak(QString filename, QString text)
     //create wav file
     QString command = "/usr/share/omilo-qt5/flite/flite " + voiceCommand() + " -f " + textFile + " -o " + filename;
 
-    QString duration = QString::number(durationStretch/100.0);
-    command += " --setf duration_stretch=";
-    command += duration;
-    //qDebug() << "Duration is " << duration;
+    if ( useDurationStretch )
+    {
+        QString duration = QString::number(durationStretch/100.0);
+        command += " --setf duration_stretch=";
+        command += duration;
+        qDebug() << "Duration is " << duration;
+    }
 
-    QString target = QString::number(targetMean);
-    command += " --setf int_f0_target_mean=";
-    command +=target;
-    //qDebug() << "Target mean is " << target;
+    if ( useTargetMean )
+    {
+        QString target = QString::number(targetMean);
+        command += " --setf int_f0_target_mean=";
+        command +=target;
+        qDebug() << "Target mean is " << target;
+    }
 
     qDebug() << "Processing command: " << command;
     createWavProcess->start(command);

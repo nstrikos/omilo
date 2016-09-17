@@ -954,6 +954,8 @@ void MainWindow::setVariablesBeforeSpeaking()
     qDebug() << "Set split mode: " << splitMode;
     if (fliteSettingsDialog != NULL)
     {
+        engine->setUseDurationStretch(fliteSettingsDialog->getUseDurationStretch());
+        engine->setUseTargetMean(fliteSettingsDialog->getUseTargetMean());
         engine->setDurationStretch(fliteSettingsDialog->getDuration());
         engine->setTargetMean(fliteSettingsDialog->getTarget());
     }
@@ -1003,17 +1005,9 @@ void MainWindow::selectVoice()
 void MainWindow::setFliteControls()
 {
     if (engineInfo->getVoiceMode(engineVoice) == flite)
-    {
-        if (fliteSettingsDialog != NULL)
-        {
-            fliteSettingsDialog->update(engineVoice);
-        }
         showFliteSettingsAction->setEnabled(true);
-    }
     else
-    {
         showFliteSettingsAction->setEnabled(false);
-    }
 }
 
 //ok

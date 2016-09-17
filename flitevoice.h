@@ -36,7 +36,7 @@ public:
     SltFliteVoice()
     {
         this->durationStretch = defDurationStretch;
-        this->targetMean = defSltTargetMean;
+        this->targetMean = defTargetMean;
     }
     QString getName()
     {

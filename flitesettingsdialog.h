@@ -16,13 +16,16 @@ class FliteSettingsDialog : public QDialog
 public:
     explicit FliteSettingsDialog(QString voice, QWidget *parent = 0);
     ~FliteSettingsDialog();
-    void update(QString voice);
+    void updateTargetMean();
+    void updateDurationStretch();
     unsigned int getDuration();
     unsigned int getTarget();
-//    void resetDialog();
+    bool getUseDurationStretch();
+    bool getUseTargetMean();
 
 private slots:
-    void checkBoxChanged();
+    void durationCheckboxClicked();
+    void targetMeanCheckboxClicked();
     void updateDuration();
     void updateTarget();
 
@@ -33,6 +36,8 @@ private:
     QString voice;
     unsigned int duration;
     unsigned int target;
+    bool useDurationStretch;
+    bool useTargetMean;
     void updateDurationLabel();
     void updateTargetLabel();
 };
