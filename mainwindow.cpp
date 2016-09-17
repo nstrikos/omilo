@@ -975,7 +975,6 @@ void MainWindow::hotKeyPlayPressed()
 #else
     QString text = clipboard->text(QClipboard::Selection);
 #endif
-    text = clipboard->text();
     ui->textEdit->append(text);
     cursorPosition = 0;
     speakText(text);
