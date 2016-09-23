@@ -739,3 +739,147 @@ void InstallVoicesDialog::on_IndicSxvTaFliteInstallButton_clicked()
     downloadCommand = "cd /tmp && wget -c http://sourceforge.net/projects/o-milo/files/Omilo/linux/voices/flite/cmu_indic_sxv_ta.flitevox";
     startDownload();
 }
+
+void InstallVoicesDialog::on_aewFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_aew_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_ahwFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_ahw_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_aupFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_aup_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_awb2FliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_awb_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_axbFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_axb_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_bdlFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_bdl_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_clbFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_clb_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_eeyFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_eey_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_femFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_fem_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_gkaFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_gka_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_jmkFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_jmk_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_kspFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_ksp_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_ljmFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_ljm_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_rms2FliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_rms_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_rxrFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_rxr_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_slt2FliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_slt_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_indicAupMrFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_indic_aup_mr_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_IndicAxbGuFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_indic_axb_gu_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_IndicAxbHiFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_indic_axb_hi_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_IndicKnrTeFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_indic_knr_te_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_IndicSksTaFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_indic_sks_ta_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_IndicSlpMrFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_indic_slp_mr_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_IndicSxsHiFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_indic_sxs_hi_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
+
+void InstallVoicesDialog::on_IndicSxvTaFliteRemoveButton_clicked()
+{
+    removeCommandPart2 = " /usr/share/omilo-qt5/scripts/remove_indic_sxv_ta_flite.sh";
+    removeProcess->start("sh", QStringList() << "-c" << sudoCommand + removeCommandPart2);
+}
