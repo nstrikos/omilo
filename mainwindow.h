@@ -230,6 +230,7 @@ private:
     QLabel *labelDuration;
 
     //Status bar labels
+    QLabel *maryVoicesStatusLabel;
     QLabel *selectedVoiceLabel;
     QLabel *engineStatusLabel;
     QLabel *percentStatusLabel;

@@ -249,11 +249,15 @@ void MainWindow::setupLayout()
     if (selectedVoiceLabel == NULL)
         selectedVoiceLabel = new QLabel(this);
     updateVoiceLabel();
+    maryVoicesStatusLabel = new QLabel(this);
+    QString maryVoicesStatus = tr("Loading Mary voices...");
+    maryVoicesStatusLabel->setText("<font color='red'>" + maryVoicesStatus + "</font>");
     engineStatusLabel = new QLabel(this);
     engineStatusLabel->setText(tr("Speech engine is idle"));
     percentStatusLabel = new QLabel(this);
     percentStatusLabel->setAlignment(Qt::AlignRight);
     percentStatusLabel->setText("");
+    ui->statusBar->addWidget(maryVoicesStatusLabel);
     ui->statusBar->addWidget(selectedVoiceLabel);
     ui->statusBar->addWidget(engineStatusLabel);
     ui->statusBar->addWidget(percentStatusLabel);
@@ -1310,6 +1314,7 @@ void MainWindow::showMainWindow()
         splashScreen->finish(this);
         delete splashScreen;
         splashScreen = NULL;
+        qDebug() << "Splash screen deleted.";
     }
 
 
@@ -1319,16 +1324,18 @@ void MainWindow::showMainWindow()
         maryStartupTimer->stop();
         delete maryStartupTimer;
         maryStartupTimer = NULL;
+        qDebug() << "Startup timer deleted.";
     }
 
     if (startUpThread != NULL)
     {
         delete startUpThread;
-        startUpThread = NULL;
+        startUpThread = NULL;                    
     }
 
-    qDebug() << "Show main window...";
+    //qDebug() << "Show main window...";
     this->show();
+    maryVoicesStatusLabel->setText(tr("Mary voices are active"));
 }
 
 //ok
