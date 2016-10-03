@@ -27,13 +27,11 @@ void SpeechVoice::setTargetMean(unsigned int target)
 void SpeechVoice::setUseDurationStretch(bool useDurationStretch)
 {
     this->useDurationStretch = useDurationStretch;
-    qDebug() << "Use duration stretch set to " << useDurationStretch;
 }
 
 void SpeechVoice::setUseTargetMean(bool useTargetMean)
 {
     this->useTargetMean = useTargetMean;
-    qDebug() << "Use target mean set to " << useTargetMean;
 }
 
 void SpeechVoice::setCustomCommand(QString command)

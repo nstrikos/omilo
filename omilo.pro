@@ -38,6 +38,7 @@ SOURCES += main.cpp\
     customfestivalvoice.cpp \
     maryserverforwindows.cpp \
     hotkeythreadforwindows.cpp \
+    dialoguewindow.cpp
 
 HEADERS  += mainwindow.h \
     installvoicesdialog.h \
@@ -68,6 +69,7 @@ HEADERS  += mainwindow.h \
     customfestivalvoice.h \
     maryserverforwindows.h \
     hotkeythreadforwindows.h \
+    dialoguewindow.h
 
 FORMS    += mainwindow.ui \
     installvoicesdialog.ui \
@@ -77,7 +79,8 @@ FORMS    += mainwindow.ui \
     fontsettingsdialog.ui \
     exportprogressdialog.ui \
     displaymessagedialog.ui \
-    customfestivaldialog.ui
+    customfestivaldialog.ui \
+    dialoguewindow.ui
 
 CONFIG += mobility
 MOBILITY = 

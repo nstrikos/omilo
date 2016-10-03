@@ -5,10 +5,11 @@ void FliteVoice::performSpeak(QString filename, QString text)
 {
     cancelled = false;
     this->filename = filename;
-    writeTextToTmpFile(text);
+    QString tmpFile = filename+".txt";
+    writeTextToTmpFile(tmpFile, text);
 
     //create wav file
-    QString command = "/usr/share/omilo-qt5/flite/flite " + voiceCommand() + " -f " + textFile + " -o " + filename;
+    QString command = "/usr/share/omilo-qt5/flite/flite " + voiceCommand() + " -f " + tmpFile + " -o " + filename;
 
     if ( useDurationStretch )
     {

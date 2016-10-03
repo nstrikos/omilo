@@ -53,6 +53,9 @@ MainWindow::~MainWindow()
     if (displayMessageDialog != NULL)
         delete displayMessageDialog;
 
+    if (dialogueWindow != NULL)
+        delete dialogueWindow;
+
 
     if (startUpThread != NULL)
         delete startUpThread;
@@ -149,6 +152,7 @@ void MainWindow::initVariables()
     exportProgressDialog = NULL;
     displayMessageDialog = NULL;
     customFestivalDialog = NULL;
+    dialogueWindow = NULL;
 
     selectedVoiceLabel = NULL;
     splashScreen = NULL;
@@ -366,6 +370,11 @@ void MainWindow::createActions()
     cancelAction->setEnabled(false);
     connect(cancelAction, SIGNAL(triggered()), this, SLOT(cancel()));
 
+    showDialogueAction = new QAction(tr("&Dialogue"), this);
+    showDialogueAction->setShortcut(tr("Ctrl+D"));
+    showDialogueAction->setEnabled(true);
+    connect(showDialogueAction, SIGNAL(triggered()), this, SLOT(showDialogueWindow()));
+
     aboutAction = new QAction(tr("About"), this);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(displayAboutMessage()));
 
@@ -492,6 +501,7 @@ void MainWindow::createMenus()
     speakMenu->addSeparator();
     speakMenu->addAction(speakSelectedTextAction);
     speakMenu->addAction(speakFromCurrentPositionAction);
+    speakMenu->addAction(showDialogueAction);
     speakMenu->addAction(enableSplitModeAction);
 
 #ifndef Q_OS_WIN
@@ -815,7 +825,7 @@ void MainWindow::updateControlsWhenEngineIsProcessing()
 
 void MainWindow::updateControlsWhenEngineIsIdle()
 {
-    qDebug() << "Engine is idle. Updating controls...";
+    //qDebug() << "Engine is idle. Updating controls...";
     engineIsProcessing = false;
     engineStatusLabel->setText(tr("Speech engine is idle"));
     ui->speakButton->setIcon(speakIcon);
@@ -823,6 +833,7 @@ void MainWindow::updateControlsWhenEngineIsIdle()
     exportToWavAction->setEnabled(true);
     installVoicesAction->setEnabled(true);
     cancelAction->setEnabled(false);
+    //qDebug() << "Controls set to idle state";
 }
 
 void MainWindow::cancel()
@@ -834,7 +845,7 @@ void MainWindow::cancel()
     endBlock = 0;
     beginQueue.clear();
     endQueue.clear();
-    tempFilesRemover.remove();
+    //tempFilesRemover.remove();
     controls->disablePlayButton();
     playlist->clear();
     updateControlsWhenEngineIsIdle();
@@ -1565,4 +1576,34 @@ void MainWindow::showNormalAndRaise()
     this->setWindowFlags(eFlags);
     this->show();
     this->activateWindow();
+}
+
+void MainWindow::showDialogueWindow()
+{
+    if (dialogueWindow == NULL)
+    {
+        dialogueWindow = new DialogueWindow(this);
+        dialogueWindow->setSpeechEngine(this->engine);
+        connect(engine, SIGNAL(dialogueFinished(QList<QString>)), this, SLOT(dialogueFinished(QList<QString>)));
+    }
+
+    cancel();
+    //setVariablesBeforeSpeaking();
+    dialogueWindow->setModal(true);
+    dialogueWindow->show();
+}
+
+void MainWindow::dialogueStarted()
+{
+
+}
+
+void MainWindow::dialogueFinished(QList<QString> filenames)
+{
+    player->stop();
+    playlist->clear();
+    for (int i = 0; i < filenames.size(); i++)
+    {
+        addToPlaylist(filenames.at(i), 0, 0, 0);
+    }
 }

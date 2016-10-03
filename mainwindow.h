@@ -11,6 +11,7 @@
 #include "speechengine.h"
 #include "editorvoiceoptionsdialog.h"
 #include "installvoicesdialog.h"
+#include "dialoguewindow.h"
 #include "flitesettingsdialog.h"
 #include "fontsettingsdialog.h"
 #include "playercontrols.h"
@@ -98,6 +99,9 @@ private slots:
     void setMergeId(int id, int size);
     void setMergeInfo(QString info);
     void showNormalAndRaise();
+    void showDialogueWindow();
+    void dialogueStarted();
+    void dialogueFinished(QList<QString> filenames);
 
 private:
     Ui::MainWindow *ui;
@@ -150,6 +154,7 @@ private:
     QAction *speakAction;
     QAction *cancelAction;
     QAction *voiceOptionAction;
+    QAction *showDialogueAction;
     QAction *installVoicesAction;
     QAction *customFestivalAction;
     QAction *helpAction;
@@ -194,6 +199,7 @@ private:
     DisplayMessageDialog *displayMessageDialog;
     FliteSettingsDialog *fliteSettingsDialog;
     CustomFestivalDialog *customFestivalDialog;
+    DialogueWindow *dialogueWindow;
 
     //Startup thread and splash screen variables
     StartupThread *startUpThread;

@@ -125,6 +125,7 @@ void SoundFilesMerger::finalMerge()
     }
     QString command = soxCommand + " " + mergeCommand + " " + filename;
     finalSoxProcess.start(command);
+    qDebug() << command;
     emit mergeInfo(tr("Creating file..."));
 }
 
