@@ -197,7 +197,7 @@ private:
 
     //Startup thread and splash screen variables
     StartupThread *startUpThread;
-    QSplashScreen *splashScreen;
+    QSplashScreen splashScreen;
 
     //Various classes
     TempFilesRemover tempFilesRemover;

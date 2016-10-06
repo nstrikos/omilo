@@ -75,11 +75,11 @@ MainWindow::~MainWindow()
         delete trayIcon;
     }
 
-    if (splashScreen != NULL)
-    {
-        qDebug() << "Deleting splash screen...";
-        delete splashScreen;
-    }
+//    if (splashScreen != NULL)
+//    {
+//        qDebug() << "Deleting splash screen...";
+//        delete splashScreen;
+//    }
 
     percentStatusLabel->setText(tr("Removing temporary files..."));
     tempFilesRemover.remove();
@@ -151,7 +151,7 @@ void MainWindow::initVariables()
     customFestivalDialog = NULL;
 
     selectedVoiceLabel = NULL;
-    splashScreen = NULL;
+    //splashScreen = NULL;
     maryStartupTimer = NULL;
 
     engine = new SpeechEngine(engineVoice);
@@ -540,11 +540,11 @@ void MainWindow::setupSplashScreen()
 {
     qDebug() << "Trying to set up splash screen...";
 
-    splashScreen = new QSplashScreen();
-    splashScreen->setPixmap(QPixmap(":images/audio-input-splash.png"));
-    splashScreen->show();
+    //splashScreen = new QSplashScreen();
+    splashScreen.setPixmap(QPixmap(":images/audio-input-splash.png"));
+    splashScreen.show();
     Qt::Alignment topRight = Qt::AlignRight | Qt::AlignTop;
-    splashScreen->showMessage(tr("Loading Mary voices..."), topRight, Qt::black);
+    splashScreen.showMessage(tr("Loading Mary voices..."), topRight, Qt::black);
 
     qDebug() << "Setting up splash screen completed.";
 }
@@ -1294,12 +1294,12 @@ void MainWindow::showMainWindow()
     //show the window
 
     qDebug() << "Deleting splash screen...";
-    if (splashScreen != NULL)
-    {
-        splashScreen->finish(this);
-        delete splashScreen;
-        splashScreen = NULL;
-    }
+    //if (splashScreen != NULL)
+    //{
+        splashScreen.finish(this);
+    //    delete splashScreen;
+    //    splashScreen = NULL;
+    //}
 
 
     qDebug() << "Deleting start up timer...";
