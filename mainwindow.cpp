@@ -60,8 +60,6 @@ MainWindow::~MainWindow()
     if (startUpThread != NULL)
         delete startUpThread;
 
-    if (maryStartupTimer != NULL)
-        delete maryStartupTimer;
     delete engineInfo;
     delete player;
     delete playlist;
@@ -76,12 +74,6 @@ MainWindow::~MainWindow()
     {
         qDebug() << "Deleting tray icon...";
         delete trayIcon;
-    }
-
-    if (splashScreen != NULL)
-    {
-        qDebug() << "Deleting splash screen...";
-        delete splashScreen;
     }
 
     percentStatusLabel->setText(tr("Removing temporary files..."));
@@ -119,12 +111,6 @@ void MainWindow::initFunctions()
     //Create tray icon
     createTrayIcon();
 
-    //Set up splash screen
-    setupSplashScreen();
-
-    //If splash screen takes very long a timer will show the window
-    setupMaryStartupTimer();
-
     setupPlayer();
     setupLayout();
 
@@ -155,8 +141,6 @@ void MainWindow::initVariables()
     dialogueWindow = NULL;
 
     selectedVoiceLabel = NULL;
-    splashScreen = NULL;
-    maryStartupTimer = NULL;
 
     engine = new SpeechEngine(engineVoice);
     engine->setSplitMode(splitMode);
@@ -547,33 +531,6 @@ void MainWindow::createTrayIcon()
     showHideTrayIcon();
 
     qDebug() << "Creating tray icon completed.";
-}
-
-//ok
-void MainWindow::setupSplashScreen()
-{
-    qDebug() << "Trying to set up splash screen...";
-
-    splashScreen = new QSplashScreen();
-    splashScreen->setPixmap(QPixmap(":images/audio-input-splash.png"));
-    splashScreen->show();
-    Qt::Alignment topRight = Qt::AlignRight | Qt::AlignTop;
-    splashScreen->showMessage(tr("Loading Mary voices..."), topRight, Qt::black);
-
-    qDebug() << "Setting up splash screen completed.";
-}
-
-//ok
-void MainWindow::setupMaryStartupTimer()
-{
-    qDebug() << "Set startup timer for 20 seconds...";
-
-    //We will wait for 20 seconds for mary server
-    //If timer expires we close splash screen
-
-    maryStartupTimer = new QTimer();
-    connect(maryStartupTimer, SIGNAL(timeout()), this, SLOT(splashTimerExpired()));
-    maryStartupTimer->start(20000);
 }
 
 //ok
@@ -1308,25 +1265,6 @@ void MainWindow::showMainWindow()
     //delete startup thread we dont need it any more
     //show the window
 
-    qDebug() << "Deleting splash screen...";
-    if (splashScreen != NULL)
-    {
-        splashScreen->finish(this);
-        delete splashScreen;
-        splashScreen = NULL;
-        qDebug() << "Splash screen deleted.";
-    }
-
-
-    qDebug() << "Deleting start up timer...";
-    if (maryStartupTimer != NULL)
-    {
-        maryStartupTimer->stop();
-        delete maryStartupTimer;
-        maryStartupTimer = NULL;
-        qDebug() << "Startup timer deleted.";
-    }
-
     if (startUpThread != NULL)
     {
         delete startUpThread;
@@ -1334,7 +1272,7 @@ void MainWindow::showMainWindow()
     }
 
     //qDebug() << "Show main window...";
-    this->show();
+    //this->show();
     maryVoicesStatusLabel->setText(tr("Mary voices are active"));
 }
 

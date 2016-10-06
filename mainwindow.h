@@ -5,7 +5,6 @@
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 #include <QLabel>
-#include <QSplashScreen>
 #include <QClipboard>
 #include <QSystemTrayIcon>
 #include "speechengine.h"
@@ -113,8 +112,6 @@ private:
     void createMenus();
     void createTrayIcon();
     void readSettings();
-    void setupSplashScreen();
-    void setupMaryStartupTimer();
     void setupPlayer();
     void setupLayout();
     void initVariables();
@@ -203,15 +200,12 @@ private:
 
     //Startup thread and splash screen variables
     StartupThread *startUpThread;
-    QSplashScreen *splashScreen;
 
     //Various classes
     TempFilesRemover tempFilesRemover;
     SettingsWriter settingsWriter;
 
     HotKeyThread hotKeyThread;
-
-    QTimer *maryStartupTimer;
     QClipboard *clipboard;
 
     //Player related variables

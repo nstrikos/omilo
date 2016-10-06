@@ -65,6 +65,6 @@ int main(int argc, char *argv[])
     signal(SIGTERM, signalhandler);
     MainWindow w;
 
-    //w.show();
+    w.show();
     return a.exec();
 }
