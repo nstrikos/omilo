@@ -14,6 +14,7 @@ SpeechEngine::SpeechEngine(QString voice)
     currentId = 0;
     maxId = 0;
     exportToWav = false;
+    dialogue = false;
     soundFilesMerger = new SoundFilesMerger();
     connect(soundFilesMerger, SIGNAL(mergeId(int,int)), this, SIGNAL(mergeId(int,int)));
     connect(soundFilesMerger, SIGNAL(exportFinished()), this, SIGNAL(exportFinished()));
@@ -109,6 +110,31 @@ void SpeechEngine::processList()
 
 }
 
+void SpeechEngine::processDialogue()
+{
+    if (dialogue == true) {
+        if ( currentId <= maxId)
+        {
+            QString filename = filenames.at(currentId);
+            QString text = texts.at(currentId);
+            setSpeechVoice(voices.at(currentId));
+            //speechVoice->setUseDurationStretch(false);
+            //speechVoice->setUseTargetMean(false);
+            setUseDurationStretch(false);
+            setUseTargetMean(false);
+            qDebug() << currentId << " a";
+            speechVoice->performSpeak(filename, text);
+        }
+        else
+        {
+            dialogue = false;
+            currentId = 0;
+            emit processingFinished();
+            emit dialogueFinished(filenames);
+        }
+    }
+}
+
 void SpeechEngine::exportWav(QString filename, QString text)
 {
     //    this->filename = filename;
@@ -136,10 +162,34 @@ void SpeechEngine::exportWav(QString filename, QString text)
         currentId = 0;
         maxId = textProcess->list.size() - 1;
         //mergeProcess->close();
-        emit newMaxId(maxId);
+        emit newMaxId(maxId + 1);
         processList();
     }
 }
+
+void SpeechEngine::makeDialogue(QList<QString> voices, QList<QString> texts, QList<QString> filenames)
+{
+    dialogue = true;
+    if (isProcessing == true)
+        cancel();
+
+    this->voices.clear();
+    this->texts.clear();
+    this->filenames.clear();
+    for (int i = 0; i < voices.size(); i++)
+        this->voices.append(voices.at(i));
+    for (int i = 0; i < texts.size(); i++)
+        this->texts.append(texts.at(i));
+
+    for (int i = 0; i < filenames.size(); i++)
+        this->filenames.append(filenames.at(i));
+
+    currentId = 0;
+    maxId = texts.size() - 1;
+    emit newMaxId(maxId);
+    processDialogue();
+}
+
 
 void SpeechEngine::cancel()
 {
@@ -150,6 +200,10 @@ void SpeechEngine::cancel()
     speechVoice->cancel();
     isProcessing = false;
     textProcess->list.clear();
+    filenames.clear();
+    texts.clear();
+    voices.clear();
+    dialogue = false;
     currentId = 0;
     maxId = 0;
     //    }
@@ -172,6 +226,7 @@ void SpeechEngine::createVoice(SpeechVoice *sVoice)
 
 void SpeechEngine::voiceFileCreated(QString filename)
 {
+    qDebug() << currentId << " b";
     isProcessing = false;
     if (filename != "/tmp/omilo.wav") // omilo.wav is used for checking mary server
     {
@@ -186,23 +241,33 @@ void SpeechEngine::voiceFileCreated(QString filename)
             soxProcess.start(command);
             soxProcess.waitForFinished();
         }
-
-        if (splitMode)
+        if (!dialogue)
         {
-            if (!exportToWav)
-                emit fileCreated(filename, splitMode, textProcess->list.at(currentId).begin, textProcess->list.at(currentId).end);
-            emit newId(currentId);
-            currentId++;
-            processList();
+            if (splitMode)
+            {
+                if (!exportToWav)
+                    emit fileCreated(filename, splitMode, textProcess->list.at(currentId).begin, textProcess->list.at(currentId).end);
+                emit newId(currentId);
+                currentId++;
+                processList();
+            }
+            else
+            {
+                if (!exportToWav)
+                    emit fileCreated(filename, splitMode, 0, 0);
+                if (exportToWav)
+                    emit exportFinished();
+                exportToWav = false;
+                emit processingFinished();
+            }
         }
         else
         {
-            if (!exportToWav)
-                emit fileCreated(filename, splitMode, 0, 0);
-            if (exportToWav)
-                emit exportFinished();
-            exportToWav = false;
-            emit processingFinished();
+            qDebug() << currentId << " b+";
+            //emit fileCreated(filenames.at(currentId), splitMode, 0, 0);
+            emit newId(currentId + 1);
+            currentId++;
+            processDialogue();
         }
 
     }
@@ -386,11 +451,6 @@ void SpeechEngine::setCustomFestivalCommandArguments(QString arguments)
 void SpeechEngine::setSplitMode(bool mode)
 {
     this->splitMode = mode;
-}
-
-void SpeechEngine::setExportToWav(bool value)
-{
-    exportToWav = value;
 }
 
 void SpeechEngine::setRate(double rate)

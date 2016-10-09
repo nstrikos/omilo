@@ -1,4 +1,5 @@
 #include "festivalflitevoice.h"
+#include <QDebug>
 
 FestivalFliteVoice::FestivalFliteVoice()
 {
@@ -17,10 +18,11 @@ QString FestivalFliteVoice::getLanguage()
     return QLocale::languageToString(QLocale::English);
 }
 
-void FestivalFliteVoice::writeTextToTmpFile(QString text)
+void FestivalFliteVoice::writeTextToTmpFile(QString file, QString text)
 {
     //save text to /tmp/omilo.txt
-    QFile outputFile(textFile);
+    //QFile outputFile(textFile);
+    QFile outputFile(file);
     outputFile.open(QIODevice::WriteOnly);
     QTextStream outStream(&outputFile);
     outStream << text;

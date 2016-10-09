@@ -28,6 +28,7 @@ public:
     void speak(QString text);
     void speakWithoutSplitting(QString text);
     void exportWav(QString filename, QString text);
+    void makeDialogue(QList<QString> voices, QList<QString> texts, QList<QString> filenames);
     void cancel();
     void setSpeechVoice(QString sVoice);
     void setDurationStretch(unsigned int duration);
@@ -41,7 +42,6 @@ public:
     void stopTestingMaryServer();
     bool getIsProcessing();
     void setSplitMode(bool mode);
-    void setExportToWav(bool value);
     void setRate(double rate);
 
 private:
@@ -72,15 +72,20 @@ private:
     TextProcess *textProcess;
     QQueue<QString> soxFiles;
     bool exportToWav;
+    bool dialogue;
     SoundFilesMerger *soundFilesMerger;
     double rate;
+    QList<QString> voices;
+    QList<QString> texts;
+    QList<QString> filenames;
 #ifdef Q_OS_WIN
     MaryServerForWindows maryServerForWindows;
 #endif
 
 private slots:
     void voiceFileCreated(QString filename);
-    void processList();    
+    void processList();
+    void processDialogue();
 
 signals:
     void fileCreated(QString filename, bool split, unsigned int begin, unsigned int end);
@@ -91,6 +96,7 @@ signals:
     void exportFinished();
     void mergeId(int id, int size);
     void mergeInfo(QString info);
+    void dialogueFinished(QList<QString>);
 };
 
 #endif // SPEECHENGINE_H

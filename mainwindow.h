@@ -5,12 +5,12 @@
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 #include <QLabel>
-#include <QSplashScreen>
 #include <QClipboard>
 #include <QSystemTrayIcon>
 #include "speechengine.h"
 #include "editorvoiceoptionsdialog.h"
 #include "installvoicesdialog.h"
+#include "dialoguewindow.h"
 #include "flitesettingsdialog.h"
 #include "fontsettingsdialog.h"
 #include "playercontrols.h"
@@ -59,7 +59,6 @@ private slots:
     void exportToWav();
     void selectVoice();
     void installVoices();
-    void splashTimerExpired();
     void durationChanged(qint64 duration);
     void positionChanged(qint64 progress);
     void seek(int seconds);
@@ -98,6 +97,9 @@ private slots:
     void setMergeId(int id, int size);
     void setMergeInfo(QString info);
     void showNormalAndRaise();
+    void showDialogueWindow();
+    void dialogueStarted();
+    void dialogueFinished(QList<QString> filenames);
 
 private:
     Ui::MainWindow *ui;
@@ -109,8 +111,6 @@ private:
     void createMenus();
     void createTrayIcon();
     void readSettings();
-    void setupSplashScreen();
-    void setupMaryStartupTimer();
     void setupPlayer();
     void setupLayout();
     void initVariables();
@@ -150,6 +150,7 @@ private:
     QAction *speakAction;
     QAction *cancelAction;
     QAction *voiceOptionAction;
+    QAction *showDialogueAction;
     QAction *installVoicesAction;
     QAction *customFestivalAction;
     QAction *helpAction;
@@ -194,18 +195,16 @@ private:
     DisplayMessageDialog *displayMessageDialog;
     FliteSettingsDialog *fliteSettingsDialog;
     CustomFestivalDialog *customFestivalDialog;
+    DialogueWindow *dialogueWindow;
 
     //Startup thread and splash screen variables
     StartupThread *startUpThread;
-    QSplashScreen splashScreen;
 
     //Various classes
     TempFilesRemover tempFilesRemover;
     SettingsWriter settingsWriter;
 
     HotKeyThread hotKeyThread;
-
-    QTimer *maryStartupTimer;
     QClipboard *clipboard;
 
     //Player related variables
@@ -224,6 +223,7 @@ private:
     QLabel *labelDuration;
 
     //Status bar labels
+    QLabel *maryVoicesStatusLabel;
     QLabel *selectedVoiceLabel;
     QLabel *engineStatusLabel;
     QLabel *percentStatusLabel;
@@ -255,4 +255,3 @@ private:
 };
 
 #endif // MAINWINDOW_H
-

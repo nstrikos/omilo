@@ -10,7 +10,7 @@ protected:
     FestivalFliteVoice();
     ~FestivalFliteVoice();
     virtual QString voiceCommand() = 0;
-    void writeTextToTmpFile(QString text);
+    void writeTextToTmpFile(QString file, QString text);
     QString getLanguage();
     QProcess *createWavProcess;
     void cancel();
