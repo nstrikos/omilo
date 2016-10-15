@@ -3,6 +3,8 @@
 
 #include <QComboBox>
 #include <QLineEdit>
+#include <QFileDialog>
+#include <QMessageBox>
 #include <QDebug>
 
 DialogueWindow::DialogueWindow(QWidget *parent) :
@@ -107,4 +109,54 @@ void DialogueWindow::on_okButton_clicked()
 void DialogueWindow::setSpeechEngine(SpeechEngine *speechEngine)
 {
     this->speechEngine = speechEngine;
+}
+
+void DialogueWindow::on_saveButton_clicked()
+{
+    //Set filename
+    qDebug() << "Saving as...";
+    QString filename = QFileDialog::getSaveFileName(this);
+    qDebug() << "Filename is " << filename;
+    if (filename.isEmpty())
+        return;
+
+    QFile file(filename);
+    qDebug() << "Filename is " << filename;
+    if (!file.open(QFile::WriteOnly | QFile::Text))
+    {
+        QMessageBox::warning(this, tr("Omilo"),
+                             tr("Cannot write file %1:\n%2.")
+                             .arg(filename)
+                             .arg(file.errorString()));
+        return;
+    }
+
+#ifndef QT_NO_CURSOR
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+#endif
+
+    saveToFile(file);
+
+#ifndef QT_NO_CURSOR
+    QApplication::restoreOverrideCursor();
+#endif
+}
+
+void DialogueWindow::saveToFile(QFile &file)
+{
+    //Write to file
+    QTextStream out (&file);
+
+    QList<QComboBox *> allCombos = ui->scrollArea->findChildren<QComboBox *>();
+    QList<QLineEdit *> allLineEdits = ui->scrollArea->findChildren<QLineEdit *>();
+
+
+    for (int i = 0; i < allCombos.length(); i++)
+    {
+        QComboBox *tmpCombo =  allCombos.at(i);
+        QLineEdit *tmpLineEdit =  allLineEdits.at(i);
+        out << "(";
+        out << "voice=\"" << tmpCombo->currentText() << "\",";
+        out << "text=\"" << tmpLineEdit->text() << "\")\n";
+    }
 }

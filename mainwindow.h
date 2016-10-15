@@ -98,8 +98,7 @@ private slots:
     void setMergeInfo(QString info);
     void showNormalAndRaise();
     void showDialogueWindow();
-    void dialogueStarted();
-    void dialogueFinished(QList<QString> filenames);
+    void dialogueFinished(QList<QString> voices, QList<QString> texts, QList<QString> filenames);
 
 private:
     Ui::MainWindow *ui;

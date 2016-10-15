@@ -130,7 +130,7 @@ void SpeechEngine::processDialogue()
             dialogue = false;
             currentId = 0;
             emit processingFinished();
-            emit dialogueFinished(filenames);
+            emit dialogueFinished(voices, texts, filenames);
         }
     }
 }
@@ -186,7 +186,7 @@ void SpeechEngine::makeDialogue(QList<QString> voices, QList<QString> texts, QLi
 
     currentId = 0;
     maxId = texts.size() - 1;
-    emit newMaxId(maxId);
+    emit newMaxId(maxId + 1);
     processDialogue();
 }
 

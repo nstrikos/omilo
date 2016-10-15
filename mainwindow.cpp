@@ -1486,7 +1486,8 @@ void MainWindow::showDialogueWindow()
     {
         dialogueWindow = new DialogueWindow(this);
         dialogueWindow->setSpeechEngine(this->engine);
-        connect(engine, SIGNAL(dialogueFinished(QList<QString>)), this, SLOT(dialogueFinished(QList<QString>)));
+        connect(engine, SIGNAL(dialogueFinished(QList<QString>,QList<QString>, QList<QString>)),
+                this, SLOT(dialogueFinished(QList<QString>, QList<QString>, QList<QString>)));
     }
 
     cancel();
@@ -1495,17 +1496,14 @@ void MainWindow::showDialogueWindow()
     dialogueWindow->show();
 }
 
-void MainWindow::dialogueStarted()
+void MainWindow::dialogueFinished(QList<QString> voices, QList<QString> texts, QList<QString> filenames)
 {
-
-}
-
-void MainWindow::dialogueFinished(QList<QString> filenames)
-{
+    ui->textEdit->clear();
     player->stop();
     playlist->clear();
     for (int i = 0; i < filenames.size(); i++)
     {
         addToPlaylist(filenames.at(i), 0, 0, 0);
+        ui->textEdit->append(voices.at(i) + ": \"" + texts.at(i) + "\"");
     }
 }

@@ -96,7 +96,7 @@ signals:
     void exportFinished();
     void mergeId(int id, int size);
     void mergeInfo(QString info);
-    void dialogueFinished(QList<QString>);
+    void dialogueFinished(QList<QString>, QList<QString>, QList<QString>);
 };
 
 #endif // SPEECHENGINE_H

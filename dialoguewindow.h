@@ -25,6 +25,8 @@ private slots:
 
     void on_okButton_clicked();
 
+    void on_saveButton_clicked();
+
 signals:
     void startDialogue();
 
@@ -36,6 +38,7 @@ private:
     QList<QString> voices;
     QList<QString> texts;
     QList<QString> filenames;
+    void saveToFile(QFile &file);
 };
 
 #endif // DIALOGUEWINDOW_H
