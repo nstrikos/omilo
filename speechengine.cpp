@@ -19,6 +19,7 @@ SpeechEngine::SpeechEngine(QString voice)
     connect(soundFilesMerger, SIGNAL(mergeId(int,int)), this, SIGNAL(mergeId(int,int)));
     connect(soundFilesMerger, SIGNAL(exportFinished()), this, SIGNAL(exportFinished()));
     connect(soundFilesMerger, SIGNAL(mergeInfo(QString)), this, SIGNAL(mergeInfo(QString)));
+    connect(&addPausesProcess, SIGNAL(finished(int)), this, SLOT(addPausesProcessFinished()));
     qDebug() << "Creating new speech engine completed.";
 }
 
@@ -127,10 +128,19 @@ void SpeechEngine::processDialogue()
         }
         else
         {
-            dialogue = false;
-            currentId = 0;
-            emit processingFinished();
-            emit dialogueFinished(voices, texts, filenames);
+            if (!pausesEnabled)
+            {
+                dialogue = false;
+                currentId = 0;
+                emit processingFinished();
+                emit dialogueFinished(voices, texts, filenames);
+            }
+            else
+            {
+                pausesCount = 0;
+                qDebug() << "Set pausesCount to 0";
+                addPauses();
+            }
         }
     }
 }
@@ -167,9 +177,10 @@ void SpeechEngine::exportWav(QString filename, QString text)
     }
 }
 
-void SpeechEngine::makeDialogue(QList<QString> voices, QList<QString> texts, QList<QString> filenames)
+void SpeechEngine::makeDialogue(QList<QString> voices, QList<QString> texts, QList<QString> filenames, bool pausesEnabled)
 {
     dialogue = true;
+    this->pausesEnabled = pausesEnabled;
     if (isProcessing == true)
         cancel();
 
@@ -456,4 +467,30 @@ void SpeechEngine::setSplitMode(bool mode)
 void SpeechEngine::setRate(double rate)
 {
     this->rate = rate;
+}
+
+void SpeechEngine::addPauses()
+{
+    if (pausesCount < filenames.size() )
+    {
+        QString command = "sox " + filenames.at(pausesCount) + " " + silenceFile + "   pad 2 0";
+        //QString command = ""
+        addPausesProcess.start(command);
+        qDebug() << command;
+    }
+    else
+    {
+        dialogue = false;
+        currentId = 0;
+        emit processingFinished();
+        emit dialogueFinished(voices, texts, filenames);
+    }
+}
+
+void SpeechEngine::addPausesProcessFinished()
+{
+    QFile::remove(filenames.at(pausesCount));
+    QFile::copy(silenceFile, filenames.at(pausesCount));
+    pausesCount++;
+    addPauses();
 }

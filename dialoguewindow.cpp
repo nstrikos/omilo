@@ -14,6 +14,7 @@ DialogueWindow::DialogueWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->removeButton->setEnabled(false);
     ui->saveButton->setEnabled(false);
+    pausesEnabled = true;
 }
 
 DialogueWindow::~DialogueWindow()
@@ -36,17 +37,6 @@ void DialogueWindow::on_addButton_clicked()
         tmpCombo->addItem(speechEngineInfo.installedVoices.at(i).name);
 
     checkTotalWidgets();
-}
-
-void DialogueWindow::on_loadButton_clicked()
-{
-    QList<QComboBox *> allCombos = ui->scrollArea->findChildren<QComboBox *>();
-
-    for (int i = 0; i < allCombos.length(); i++)
-    {
-        QComboBox *tmpCombo =  allCombos.at(i);
-        qDebug() << tmpCombo->currentText();
-    }
 }
 
 void DialogueWindow::on_removeButton_clicked()
@@ -83,9 +73,7 @@ void DialogueWindow::checkTotalWidgets()
 
 void DialogueWindow::on_okButton_clicked()
 {
-    voices.clear();
-    texts.clear();
-    filenames.clear();
+    clearLists();
 
     QList<QComboBox *> allCombos = ui->scrollArea->findChildren<QComboBox *>();
     QList<QLineEdit *> allLineEdits = ui->scrollArea->findChildren<QLineEdit *>();
@@ -96,13 +84,11 @@ void DialogueWindow::on_okButton_clicked()
         QLineEdit *tmpLineEdit =  allLineEdits.at(i);
 
         voices.append(tmpCombo->currentText());
-        texts.append(tmpLineEdit->text());
+        texts.append(tmpLineEdit->text().simplified());
         filenames.append(wavPrefix + QString::number(i) + ".wav");
-        qDebug() << tmpLineEdit->text();
     }
     speechEngine->setRate(1.0);
-    //emit startDialogue();
-    speechEngine->makeDialogue(voices, texts, filenames);
+    speechEngine->makeDialogue(voices, texts, filenames, pausesEnabled);
     this->hide();
 }
 
@@ -157,6 +143,113 @@ void DialogueWindow::saveToFile(QFile &file)
         QLineEdit *tmpLineEdit =  allLineEdits.at(i);
         out << "(";
         out << "voice=\"" << tmpCombo->currentText() << "\",";
-        out << "text=\"" << tmpLineEdit->text() << "\")\n";
+        out << "text=\"" << tmpLineEdit->text().simplified() << "\")\n";
     }
+}
+
+void DialogueWindow::on_loadButton_clicked()
+{
+    QString filename = QFileDialog::getOpenFileName(this);
+    qDebug() << "Filename is " << filename;
+    if (!filename.isEmpty())
+    {
+        QFile file(filename);
+        if (!file.open(QFile::ReadOnly | QFile::Text))
+        {
+            QMessageBox::warning(this, tr("Omilo"),
+                                 tr("Cannot read file %1:\n%2.")
+                                 .arg(filename)
+                                 .arg(file.errorString()));
+            return;
+        }
+
+#ifndef QT_NO_CURSOR
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+#endif
+
+        loadFromFile(file);
+
+#ifndef QT_NO_CURSOR
+        QApplication::restoreOverrideCursor();
+#endif
+        qDebug() << "Loaded file..." << filename;
+    }
+}
+
+void DialogueWindow::loadFromFile(QFile &file)
+{
+    QTextStream in (&file);
+    QString inText = in.readAll();
+    makeDialogueFromInputText(inText);
+}
+
+void DialogueWindow::makeDialogueFromInputText(QString inText)
+{
+    int count = 0;
+    int pos = 0;
+    count = inText.count("voice");
+    qDebug() << count;
+    if (count > 0)
+    {
+        removeAllWidgets();
+    }
+    while (count > 0)
+    {
+        pos = inText.indexOf("(voice=\"");
+        int pos2 = inText.indexOf("\"", 8);
+        QString voice = inText.mid(8, pos2 - 8);
+        pos = inText.indexOf("text=\"");
+        pos2 = inText.indexOf("\"", pos + 5);
+        int pos3 = inText.indexOf("\")");
+        QString text = inText.mid(pos2 + 1, pos3 - pos2 - 1);
+        text = text.simplified();
+        int pos4 = inText.indexOf("\")\n");
+        inText = inText.right(inText.size() - pos4 - 3);
+        qDebug() << voice << text;
+
+        QComboBox *tmpCombo = new QComboBox();
+        for (unsigned int i = 0; i < speechEngineInfo.installedVoices.size(); i++)
+            tmpCombo->addItem(speechEngineInfo.installedVoices.at(i).name);
+        tmpCombo->setCurrentText(voice);
+        QLineEdit *tmpLine = new QLineEdit();
+        tmpLine->setText(text);
+
+        QHBoxLayout *hBoxLayout = new QHBoxLayout();
+        hBoxLayout->addWidget(tmpCombo);
+        hBoxLayout->addWidget(tmpLine);
+
+        ui->VLayout->insertLayout(ui->VLayout->count() - 1, hBoxLayout, 0);
+
+        count--;
+    }
+    checkTotalWidgets();
+}
+
+void DialogueWindow::removeAllWidgets()
+{
+    QList<QComboBox *> allCombos = ui->scrollArea->findChildren<QComboBox *>();
+    QList<QLineEdit *> allLineEdits = ui->scrollArea->findChildren<QLineEdit *>();
+
+    for (int i = 0; i < allCombos.length(); i++)
+    {
+        QComboBox *tmpCombo =  allCombos.at(i);
+        QLineEdit *tmpLineEdit =  allLineEdits.at(i);
+
+        ui->VLayout->removeWidget(tmpCombo);
+        delete tmpCombo;
+        ui->VLayout->removeWidget(tmpLineEdit);
+        delete tmpLineEdit;
+    }
+}
+
+void DialogueWindow::clearLists()
+{
+    voices.clear();
+    texts.clear();
+    filenames.clear();
+}
+
+void DialogueWindow::on_addPausesCheckBox_clicked()
+{
+    pausesEnabled = ui->addPausesCheckBox->isChecked();
 }

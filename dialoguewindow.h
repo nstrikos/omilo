@@ -27,6 +27,8 @@ private slots:
 
     void on_saveButton_clicked();
 
+    void on_addPausesCheckBox_clicked();
+
 signals:
     void startDialogue();
 
@@ -38,7 +40,12 @@ private:
     QList<QString> voices;
     QList<QString> texts;
     QList<QString> filenames;
+    void clearLists();
     void saveToFile(QFile &file);
+    void loadFromFile(QFile &file);
+    void makeDialogueFromInputText(QString inText);
+    void removeAllWidgets();
+    bool pausesEnabled;
 };
 
 #endif // DIALOGUEWINDOW_H

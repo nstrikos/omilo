@@ -28,7 +28,7 @@ public:
     void speak(QString text);
     void speakWithoutSplitting(QString text);
     void exportWav(QString filename, QString text);
-    void makeDialogue(QList<QString> voices, QList<QString> texts, QList<QString> filenames);
+    void makeDialogue(QList<QString> voices, QList<QString> texts, QList<QString> filenames, bool pausesEnabled);
     void cancel();
     void setSpeechVoice(QString sVoice);
     void setDurationStretch(unsigned int duration);
@@ -73,6 +73,10 @@ private:
     QQueue<QString> soxFiles;
     bool exportToWav;
     bool dialogue;
+    bool pausesEnabled;
+    QProcess addPausesProcess;
+    void addPauses();
+    int pausesCount;
     SoundFilesMerger *soundFilesMerger;
     double rate;
     QList<QString> voices;
@@ -86,6 +90,7 @@ private slots:
     void voiceFileCreated(QString filename);
     void processList();
     void processDialogue();
+    void addPausesProcessFinished();
 
 signals:
     void fileCreated(QString filename, bool split, unsigned int begin, unsigned int end);

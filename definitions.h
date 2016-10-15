@@ -65,6 +65,7 @@ const QString textFile = "/tmp/omilo.txt";
 const QString voiceFile = "/tmp/omiloVoice.txt";
 const QString voiceTextEditorFile = "/tmp/omiloTextEditorVoice.txt";
 const QString showCommandFile = "/tmp/omiloShowcommand.txt";
+const QString silenceFile = "/tmp/omilo-silence.wav";
 const unsigned int maxMaryMemory = 2048;
 const unsigned int minMaryMemory = 350;
 
