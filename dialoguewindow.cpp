@@ -1,8 +1,6 @@
 #include "dialoguewindow.h"
 #include "ui_dialoguewindow.h"
 
-#include <QComboBox>
-#include <QLineEdit>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
@@ -14,7 +12,7 @@ DialogueWindow::DialogueWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->removeButton->setEnabled(false);
     ui->saveButton->setEnabled(false);
-    pausesEnabled = true;
+    ui->okButton->setEnabled(false);
 }
 
 DialogueWindow::~DialogueWindow()
@@ -24,34 +22,65 @@ DialogueWindow::~DialogueWindow()
 
 void DialogueWindow::on_addButton_clicked()
 {
+    addWidgets("", "", 0);
+}
+
+void DialogueWindow::addWidgets(QString voice, QString text, double pause)
+{
     QComboBox *tmpCombo = new QComboBox();
-    QLineEdit *tmpLine = new QLineEdit();
+    //The best way for dynamic widgets is to keep track with a list
+    qComboBoxList.push_back(tmpCombo);
+    for (unsigned int i = 0; i < speechEngineInfo.installedVoices.size(); i++)
+        tmpCombo->addItem(speechEngineInfo.installedVoices.at(i).name);
+    tmpCombo->setCurrentText(voice);
+    //Nice way to set widget name
+    //tmpCombo->setObjectName("combobox"+QString::number(qComboBoxList.count()));
+
+    QLineEdit *tmpLine = new QLineEdit(this);
+    qLineEditList.push_back(tmpLine);
+    tmpLine->setText(text);
+    //tmpLine->setObjectName("lineedit"+QString::number(qLineEditList.count()));
+
+    QDoubleSpinBox *tmpSpinBox = new QDoubleSpinBox();
+    qDoubleSpinBoxList.push_back(tmpSpinBox);
+    tmpSpinBox->setValue(pause);
+    //tmpSpinBox->setObjectName("spinbox"+QString::number(qDoubleSpinBoxList.count()));
 
     QHBoxLayout *hBoxLayout = new QHBoxLayout();
     hBoxLayout->addWidget(tmpCombo);
     hBoxLayout->addWidget(tmpLine);
+    hBoxLayout->addWidget(tmpSpinBox);
 
     ui->VLayout->insertLayout(ui->VLayout->count() - 1, hBoxLayout, 0);
-
-    for (unsigned int i = 0; i < speechEngineInfo.installedVoices.size(); i++)
-        tmpCombo->addItem(speechEngineInfo.installedVoices.at(i).name);
 
     checkTotalWidgets();
 }
 
 void DialogueWindow::on_removeButton_clicked()
 {
-    QList<QComboBox *> allCombos = ui->scrollArea->findChildren<QComboBox *>();
-    QList<QLineEdit *> allLinedits = ui->scrollArea->findChildren<QLineEdit *>();
+    //This is a nice way to get all widgets
+    //But it's not necessary in this code.
+    //QList<QComboBox *> allCombos = ui->scrollArea->findChildren<QComboBox *>();
+    //QList<QLineEdit *> allLinedits = ui->scrollArea->findChildren<QLineEdit *>();
+    //QList<QDoubleSpinBox *> allSpinboxes = ui->scrollArea->findChildren<QDoubleSpinBox *>();
 
-    if (allCombos.length() > 0)
+    if (!qComboBoxList.isEmpty())
     {
-        QComboBox *tmpCombo = allCombos.at(allCombos.length() - 1);
-        ui->VLayout->removeWidget(tmpCombo);
-        delete tmpCombo;
-        QLineEdit *tmpLineEdit = allLinedits.at(allLinedits.length() - 1);
+        QComboBox *tmpComboBox = qComboBoxList.takeLast();
+        ui->VLayout->removeWidget(tmpComboBox);
+        delete tmpComboBox;
+    }
+    if (!qLineEditList.isEmpty())
+    {
+        QLineEdit *tmpLineEdit = qLineEditList.takeLast();
         ui->VLayout->removeWidget(tmpLineEdit);
         delete tmpLineEdit;
+    }
+    if (!qDoubleSpinBoxList.isEmpty())
+    {
+        QDoubleSpinBox *tmpSpinBox = qDoubleSpinBoxList.takeLast();
+        ui->VLayout->removeWidget(tmpSpinBox);
+        delete tmpSpinBox;
     }
     checkTotalWidgets();
 }
@@ -63,11 +92,13 @@ void DialogueWindow::checkTotalWidgets()
     {
         ui->removeButton->setEnabled(false);
         ui->saveButton->setEnabled(false);
+        ui->okButton->setEnabled(false);
     }
     else if (allCombos.length() > 0)
     {
         ui->removeButton->setEnabled(true);
         ui->saveButton->setEnabled(true);
+        ui->okButton->setEnabled(true);
     }
 }
 
@@ -75,20 +106,19 @@ void DialogueWindow::on_okButton_clicked()
 {
     clearLists();
 
-    QList<QComboBox *> allCombos = ui->scrollArea->findChildren<QComboBox *>();
-    QList<QLineEdit *> allLineEdits = ui->scrollArea->findChildren<QLineEdit *>();
-
-    for (int i = 0; i < allCombos.length(); i++)
+    for (int i = 0; i < qComboBoxList.size(); i++)
     {
-        QComboBox *tmpCombo =  allCombos.at(i);
-        QLineEdit *tmpLineEdit =  allLineEdits.at(i);
-
-        voices.append(tmpCombo->currentText());
-        texts.append(tmpLineEdit->text().simplified());
+        QComboBox *combo = qComboBoxList.at(i);
+        QLineEdit *lineedit = qLineEditList.at(i);
+        QDoubleSpinBox *spin = qDoubleSpinBoxList.at(i);
+        voices.append(combo->currentText());
+        texts.append(lineedit->text().simplified());
         filenames.append(wavPrefix + QString::number(i) + ".wav");
+        pauses.append(spin->value());
+        qDebug() << combo->currentText() << lineedit->text() << spin->value();
     }
     speechEngine->setRate(1.0);
-    speechEngine->makeDialogue(voices, texts, filenames, pausesEnabled);
+    speechEngine->makeDialogue(voices, texts, pauses, filenames);
     this->hide();
 }
 
@@ -133,17 +163,14 @@ void DialogueWindow::saveToFile(QFile &file)
     //Write to file
     QTextStream out (&file);
 
-    QList<QComboBox *> allCombos = ui->scrollArea->findChildren<QComboBox *>();
-    QList<QLineEdit *> allLineEdits = ui->scrollArea->findChildren<QLineEdit *>();
-
-
-    for (int i = 0; i < allCombos.length(); i++)
+    for (int i = 0; i < qComboBoxList.size(); i++)
     {
-        QComboBox *tmpCombo =  allCombos.at(i);
-        QLineEdit *tmpLineEdit =  allLineEdits.at(i);
-        out << "(";
-        out << "voice=\"" << tmpCombo->currentText() << "\",";
-        out << "text=\"" << tmpLineEdit->text().simplified() << "\")\n";
+        QComboBox *combo = qComboBoxList.at(i);
+        QLineEdit *lineedit = qLineEditList.at(i);
+        QDoubleSpinBox *spin = qDoubleSpinBoxList.at(i);
+        out << "(" << combo->currentText() << ",";
+        out << lineedit->text().simplified() << ",";
+        out << QString::number(spin->value()) << ")\n";
     }
 }
 
@@ -186,60 +213,47 @@ void DialogueWindow::loadFromFile(QFile &file)
 void DialogueWindow::makeDialogueFromInputText(QString inText)
 {
     int count = 0;
-    int pos = 0;
-    count = inText.count("voice");
-    qDebug() << count;
+    count = inText.count("(");
     if (count > 0)
     {
         removeAllWidgets();
     }
     while (count > 0)
     {
-        pos = inText.indexOf("(voice=\"");
-        int pos2 = inText.indexOf("\"", 8);
-        QString voice = inText.mid(8, pos2 - 8);
-        pos = inText.indexOf("text=\"");
-        pos2 = inText.indexOf("\"", pos + 5);
-        int pos3 = inText.indexOf("\")");
-        QString text = inText.mid(pos2 + 1, pos3 - pos2 - 1);
-        text = text.simplified();
-        int pos4 = inText.indexOf("\")\n");
-        inText = inText.right(inText.size() - pos4 - 3);
-        qDebug() << voice << text;
+        int pos1 = inText.indexOf(",");
+        int pos2 = inText.indexOf(",", pos1 + 1);
+        int pos3 = inText.indexOf(")\n", pos2 + 1);
+        QString voice = inText.mid(1, pos1 - 1);
+        QString text = inText.mid(pos1 + 1, pos2 - pos1 - 1);
+        QString pause = inText.mid(pos2 + 1, pos3 - pos2 - 1);
 
-        QComboBox *tmpCombo = new QComboBox();
-        for (unsigned int i = 0; i < speechEngineInfo.installedVoices.size(); i++)
-            tmpCombo->addItem(speechEngineInfo.installedVoices.at(i).name);
-        tmpCombo->setCurrentText(voice);
-        QLineEdit *tmpLine = new QLineEdit();
-        tmpLine->setText(text);
-
-        QHBoxLayout *hBoxLayout = new QHBoxLayout();
-        hBoxLayout->addWidget(tmpCombo);
-        hBoxLayout->addWidget(tmpLine);
-
-        ui->VLayout->insertLayout(ui->VLayout->count() - 1, hBoxLayout, 0);
-
+        inText = inText.right(inText.size() - pos3 - 2);
+        addWidgets(voice, text, pause.toDouble());
         count--;
     }
-    checkTotalWidgets();
 }
 
 void DialogueWindow::removeAllWidgets()
 {
-    QList<QComboBox *> allCombos = ui->scrollArea->findChildren<QComboBox *>();
-    QList<QLineEdit *> allLineEdits = ui->scrollArea->findChildren<QLineEdit *>();
-
-    for (int i = 0; i < allCombos.length(); i++)
+    while (!qComboBoxList.isEmpty())
     {
-        QComboBox *tmpCombo =  allCombos.at(i);
-        QLineEdit *tmpLineEdit =  allLineEdits.at(i);
-
-        ui->VLayout->removeWidget(tmpCombo);
-        delete tmpCombo;
+        QComboBox *tmpComboBox = qComboBoxList.takeLast();
+        ui->VLayout->removeWidget(tmpComboBox);
+        delete tmpComboBox;
+    }
+    while (!qLineEditList.isEmpty())
+    {
+        QLineEdit *tmpLineEdit = qLineEditList.takeLast();
         ui->VLayout->removeWidget(tmpLineEdit);
         delete tmpLineEdit;
     }
+    while (!qDoubleSpinBoxList.isEmpty())
+    {
+        QDoubleSpinBox *tmpSpinBox = qDoubleSpinBoxList.takeLast();
+        ui->VLayout->removeWidget(tmpSpinBox);
+        delete tmpSpinBox;
+    }
+    checkTotalWidgets();
 }
 
 void DialogueWindow::clearLists()
@@ -247,9 +261,5 @@ void DialogueWindow::clearLists()
     voices.clear();
     texts.clear();
     filenames.clear();
-}
-
-void DialogueWindow::on_addPausesCheckBox_clicked()
-{
-    pausesEnabled = ui->addPausesCheckBox->isChecked();
+    pauses.clear();
 }

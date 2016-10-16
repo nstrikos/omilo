@@ -123,24 +123,12 @@ void SpeechEngine::processDialogue()
             //speechVoice->setUseTargetMean(false);
             setUseDurationStretch(false);
             setUseTargetMean(false);
-            qDebug() << currentId << " a";
             speechVoice->performSpeak(filename, text);
         }
         else
         {
-            if (!pausesEnabled)
-            {
-                dialogue = false;
-                currentId = 0;
-                emit processingFinished();
-                emit dialogueFinished(voices, texts, filenames);
-            }
-            else
-            {
-                pausesCount = 0;
-                qDebug() << "Set pausesCount to 0";
-                addPauses();
-            }
+            pausesCount = 0;
+            addPauses();
         }
     }
 }
@@ -177,21 +165,23 @@ void SpeechEngine::exportWav(QString filename, QString text)
     }
 }
 
-void SpeechEngine::makeDialogue(QList<QString> voices, QList<QString> texts, QList<QString> filenames, bool pausesEnabled)
+void SpeechEngine::makeDialogue(QList<QString> voices, QList<QString> texts, QList<double> pauses, QList<QString> filenames)
 {
+    tempFileremover.remove();
     dialogue = true;
-    this->pausesEnabled = pausesEnabled;
     if (isProcessing == true)
         cancel();
 
     this->voices.clear();
     this->texts.clear();
+    this->pauses.clear();
     this->filenames.clear();
     for (int i = 0; i < voices.size(); i++)
         this->voices.append(voices.at(i));
     for (int i = 0; i < texts.size(); i++)
         this->texts.append(texts.at(i));
-
+    for (int i = 0; i < pauses.size(); i++)
+        this->pauses.append(pauses.at(i));
     for (int i = 0; i < filenames.size(); i++)
         this->filenames.append(filenames.at(i));
 
@@ -237,7 +227,6 @@ void SpeechEngine::createVoice(SpeechVoice *sVoice)
 
 void SpeechEngine::voiceFileCreated(QString filename)
 {
-    qDebug() << currentId << " b";
     isProcessing = false;
     if (filename != "/tmp/omilo.wav") // omilo.wav is used for checking mary server
     {
@@ -248,7 +237,6 @@ void SpeechEngine::voiceFileCreated(QString filename)
             QFile::rename(filename, tempFile);
             //QString command = "sox /tmp/omilo-tmp.wav " + filename + " tempo " + QString::number(rate);
             QString command = soxCommand +  " " + tempFile + " " + filename + " tempo " + QString::number(rate);
-            qDebug() << command;
             soxProcess.start(command);
             soxProcess.waitForFinished();
         }
@@ -274,7 +262,6 @@ void SpeechEngine::voiceFileCreated(QString filename)
         }
         else
         {
-            qDebug() << currentId << " b+";
             //emit fileCreated(filenames.at(currentId), splitMode, 0, 0);
             emit newId(currentId + 1);
             currentId++;
@@ -473,10 +460,9 @@ void SpeechEngine::addPauses()
 {
     if (pausesCount < filenames.size() )
     {
-        QString command = "sox " + filenames.at(pausesCount) + " " + silenceFile + "   pad 2 0";
+        QString command = "sox " + filenames.at(pausesCount) + " " + silenceFile + " pad " + QString::number(pauses.at(pausesCount)) + " 0";
         //QString command = ""
         addPausesProcess.start(command);
-        qDebug() << command;
     }
     else
     {

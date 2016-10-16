@@ -4,6 +4,9 @@
 #include "speechengineinfo.h"
 #include "speechengine.h"
 #include <QDialog>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QDoubleSpinBox>
 
 namespace Ui {
 class DialogueWindow;
@@ -22,12 +25,8 @@ private slots:
     void on_addButton_clicked();
     void on_loadButton_clicked();
     void on_removeButton_clicked();
-
     void on_okButton_clicked();
-
     void on_saveButton_clicked();
-
-    void on_addPausesCheckBox_clicked();
 
 signals:
     void startDialogue();
@@ -40,12 +39,16 @@ private:
     QList<QString> voices;
     QList<QString> texts;
     QList<QString> filenames;
+    QList<double> pauses;
     void clearLists();
     void saveToFile(QFile &file);
     void loadFromFile(QFile &file);
     void makeDialogueFromInputText(QString inText);
     void removeAllWidgets();
-    bool pausesEnabled;
+    void addWidgets(QString voice, QString text, double pause);
+    QList<QLineEdit*> qLineEditList;
+    QList<QComboBox*> qComboBoxList;
+    QList<QDoubleSpinBox*> qDoubleSpinBoxList;
 };
 
 #endif // DIALOGUEWINDOW_H

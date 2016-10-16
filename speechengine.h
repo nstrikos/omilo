@@ -11,6 +11,7 @@
 #include "downloadmanager.h"
 #include "textprocess.h"
 #include "soundfilesmerger.h"
+#include "tempfilesremover.h"
 #include <QMediaPlaylist>
 #include <QTimer>
 #include <QQueue>
@@ -28,7 +29,7 @@ public:
     void speak(QString text);
     void speakWithoutSplitting(QString text);
     void exportWav(QString filename, QString text);
-    void makeDialogue(QList<QString> voices, QList<QString> texts, QList<QString> filenames, bool pausesEnabled);
+    void makeDialogue(QList<QString> voices, QList<QString> texts, QList<double> pauses, QList<QString> filenames);
     void cancel();
     void setSpeechVoice(QString sVoice);
     void setDurationStretch(unsigned int duration);
@@ -73,7 +74,6 @@ private:
     QQueue<QString> soxFiles;
     bool exportToWav;
     bool dialogue;
-    bool pausesEnabled;
     QProcess addPausesProcess;
     void addPauses();
     int pausesCount;
@@ -81,7 +81,9 @@ private:
     double rate;
     QList<QString> voices;
     QList<QString> texts;
+    QList<double> pauses;
     QList<QString> filenames;
+    TempFilesRemover tempFileremover;
 #ifdef Q_OS_WIN
     MaryServerForWindows maryServerForWindows;
 #endif
