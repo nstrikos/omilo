@@ -168,8 +168,10 @@ void DialogueWindow::saveToFile(QFile &file)
         QComboBox *combo = qComboBoxList.at(i);
         QLineEdit *lineedit = qLineEditList.at(i);
         QDoubleSpinBox *spin = qDoubleSpinBoxList.at(i);
-        out << "(" << combo->currentText() << ",";
-        out << lineedit->text().simplified() << ",";
+        out << "(" << combo->currentText() << "#";
+        QString text = lineedit->text().simplified();
+        text.replace("#", " ");
+        out << text << "#";
         out << QString::number(spin->value()) << ")\n";
     }
 }
@@ -220,8 +222,8 @@ void DialogueWindow::makeDialogueFromInputText(QString inText)
     }
     while (count > 0)
     {
-        int pos1 = inText.indexOf(",");
-        int pos2 = inText.indexOf(",", pos1 + 1);
+        int pos1 = inText.indexOf("#");
+        int pos2 = inText.indexOf("#", pos1 + 1);
         int pos3 = inText.indexOf(")\n", pos2 + 1);
         QString voice = inText.mid(1, pos1 - 1);
         QString text = inText.mid(pos1 + 1, pos2 - pos1 - 1);
