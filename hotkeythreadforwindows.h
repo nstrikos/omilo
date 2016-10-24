@@ -5,12 +5,12 @@
 #include <QtWidgets>
 #include <QClipboard>
 
-class HotkeyThread : public QThread
+class HotKeyThread : public QThread
  {
      Q_OBJECT
 public:
-    HotkeyThread();
-    ~HotkeyThread();
+    HotKeyThread();
+    ~HotKeyThread();
 
 
 protected:

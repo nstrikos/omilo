@@ -489,7 +489,9 @@ void MainWindow::createMenus()
     speakMenu->addSeparator();
     speakMenu->addAction(speakSelectedTextAction);
     speakMenu->addAction(speakFromCurrentPositionAction);
+#ifndef Q_OS_WIN
     speakMenu->addAction(showDialogueAction);
+#endif
     speakMenu->addAction(enableSplitModeAction);
 
 #ifndef Q_OS_WIN

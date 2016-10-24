@@ -6,12 +6,12 @@
 #define MOD_ALT         0x0001
 #define MOD_CONTROL     0x0002
 
-HotkeyThread::HotkeyThread()
+HotKeyThread::HotKeyThread()
 {
     clipBoard = QApplication::clipboard();
 }
 
-HotkeyThread::~HotkeyThread()
+HotKeyThread::~HotKeyThread()
 {
     if (clipBoard != NULL)
     {
@@ -19,7 +19,7 @@ HotkeyThread::~HotkeyThread()
     }
 }
 
-void HotkeyThread::run()
+void HotKeyThread::run()
 {
     RegisterHotKey(NULL,1, MOD_NOREPEAT,0x79); //F10
     RegisterHotKey(NULL,2, MOD_NOREPEAT,0x7A); //F11
