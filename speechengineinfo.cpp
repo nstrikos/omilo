@@ -85,7 +85,8 @@ void SpeechEngineInfo::update()
 
     voiceToAdd.mode = flite;
     voiceToAdd.language = QLocale::languageToString(QLocale::English);
-    if (QFile::exists("/usr/share/omilo-qt5/flite/flite"))
+    if (QFile::exists("/usr/share/omilo-qt5/flite/flite") ||
+        QFile::exists(QDir::currentPath() + "\\flite.exe")    )
     {
         voiceToAdd.name = RmsFlite;
         installedVoices.push_back(voiceToAdd);

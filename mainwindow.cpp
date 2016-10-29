@@ -494,10 +494,10 @@ void MainWindow::createMenus()
 #endif
     speakMenu->addAction(enableSplitModeAction);
 
-#ifndef Q_OS_WIN
     optionsMenu = menuBar()->addMenu(tr("&Options"));
-    optionsMenu->addAction(installVoicesAction);
     optionsMenu->addAction(showFliteSettingsAction);
+#ifndef Q_OS_WIN
+    optionsMenu->addAction(installVoicesAction);
     optionsMenu->addAction(customFestivalAction);
 #endif
 
@@ -1202,7 +1202,7 @@ void MainWindow::showFliteDialog()
 void MainWindow::setDefaultVoice()
 {
     qDebug() << "Setting default voice...";
-    engineVoice = KalFestival;
+    engineVoice = defaultVoice;
     engine->setSpeechVoice(engineVoice);
     updateVoiceLabel();
 }

@@ -9,8 +9,11 @@ void FliteVoice::performSpeak(QString filename, QString text)
     writeTextToTmpFile(tmpFile, text);
 
     //create wav file
+#ifdef Q_OS_WIN
+    QString command = QDir::currentPath() + "\\flite.exe " + voiceCommand() + " -f " + tmpFile + " -o " + filename;
+#else
     QString command = "/usr/share/omilo-qt5/flite/flite " + voiceCommand() + " -f " + tmpFile + " -o " + filename;
-
+#endif
     if ( useDurationStretch )
     {
         QString duration = QString::number(durationStretch/100.0);
