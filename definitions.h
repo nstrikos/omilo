@@ -84,7 +84,7 @@ const QString maryHttpAddress = "http://localhost:59125/process?INPUT_TEXT=";
 const QString soxCommand = QDir::currentPath() + "\\sox\\sox.exe";
 const QString dummyCommand = soxCommand;
 const QString maryInstallationDir = QDir::currentPath() + "\\marytts\\lib\\";
-#define defaultVoice SpikeMary;
+#define defaultVoice RmsFlite;
 
 #else
 const QString maryHttpAddress = "http://localhost:59127/process?INPUT_TEXT=";
