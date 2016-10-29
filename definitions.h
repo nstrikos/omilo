@@ -81,7 +81,8 @@ const QString expTempFile = tempPath + "omilo-exp-tmp.wav";
 
 #ifdef Q_OS_WIN
 const QString maryHttpAddress = "http://localhost:59125/process?INPUT_TEXT=";
-const QString soxCommand = QDir::currentPath() + "\\sox\\sox.exe";
+const QString soxCommand = "\"" + QDir::currentPath() + "/sox/sox.exe\"";
+const QString fliteCommand = "\"" + QDir::currentPath() + "/flite.exe\"";
 const QString dummyCommand = soxCommand;
 const QString maryInstallationDir = QDir::currentPath() + "\\marytts\\lib\\";
 #define defaultVoice RmsFlite;
@@ -90,6 +91,7 @@ const QString maryInstallationDir = QDir::currentPath() + "\\marytts\\lib\\";
 const QString maryHttpAddress = "http://localhost:59127/process?INPUT_TEXT=";
 const QString soxCommand = "sox ";
 const QString dummyCommand = "echo foo";
+const QString fliteCommand = "/usr/share/omilo-qt5/flite/flite";
 const QString maryInstallationDir = "/usr/share/omilo-qt5/marytts-5.0";
 #define defaultVoice KalFestival;
 #endif

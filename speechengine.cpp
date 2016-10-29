@@ -236,7 +236,11 @@ void SpeechEngine::voiceFileCreated(QString filename)
             QFile::remove(tempFile);
             QFile::rename(filename, tempFile);
             //QString command = "sox /tmp/omilo-tmp.wav " + filename + " tempo " + QString::number(rate);
+#ifdef Q_OS_WIN
             QString command = soxCommand +  " " + tempFile + " " + filename + " tempo " + QString::number(rate);
+#else
+            QString command = soxCommand +  " " + tempFile + " " + filename + " tempo " + QString::number(rate);
+#endif
             soxProcess.start(command);
             soxProcess.waitForFinished();
         }

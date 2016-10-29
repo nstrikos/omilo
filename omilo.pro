@@ -103,3 +103,5 @@ unix: {
     HEADERS -= hotkeythreadforwindows.h
     LIBS += -lX11
 }
+
+win32:RC_ICONS += omilo.ico

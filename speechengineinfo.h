@@ -5,6 +5,7 @@
 using namespace std;
 
 #include <QDir>
+#include <QCoreApplication>
 #include <QDebug>
 #include "speechvoice.h"
 #include "definitions.h"
