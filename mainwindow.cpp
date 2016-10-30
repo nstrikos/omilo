@@ -423,7 +423,11 @@ void MainWindow::createActions()
     connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormalAndRaise()));
     showWindowAction = new QAction(tr("&Show window"), this);
     connect(showWindowAction, SIGNAL(triggered()), this, SLOT(showNormalAndRaise()));
+#ifdef Q_OS_WIN
+    showWindowAction->setShortcut(tr("Alt + Space"));
+#else
     showWindowAction->setShortcut(tr("F12"));
+#endif
     quitAction = new QAction(tr("&Quit"), this);
     quitAction->setShortcut(tr("Ctrl+Q"));
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));

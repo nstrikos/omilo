@@ -23,6 +23,7 @@ void HotKeyThread::run()
 {
     RegisterHotKey(NULL,1, MOD_NOREPEAT,0x79); //F10
     RegisterHotKey(NULL,2, MOD_NOREPEAT,0x7A); //F11
+    //RegisterHotKey(NULL,3, MOD_NOREPEAT,0x7B); //F12
     RegisterHotKey(NULL,3, MOD_ALT | MOD_NOREPEAT,0x20); //Alt + Space
     RegisterHotKey(NULL,4, MOD_NOREPEAT,0x78); //F9
 
