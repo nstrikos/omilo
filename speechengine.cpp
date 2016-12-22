@@ -464,7 +464,7 @@ void SpeechEngine::addPauses()
 {
     if (pausesCount < filenames.size() )
     {
-        QString command = "sox " + filenames.at(pausesCount) + " " + silenceFile + " pad " + QString::number(pauses.at(pausesCount)) + " 0";
+        QString command = "sox " + filenames.at(pausesCount) + " " + silenceFile + " pad " + " 0 " + QString::number(pauses.at(pausesCount));
         //QString command = ""
         addPausesProcess.start(command);
     }

@@ -1494,6 +1494,7 @@ void MainWindow::showDialogueWindow()
         dialogueWindow->setSpeechEngine(this->engine);
         connect(engine, SIGNAL(dialogueFinished(QList<QString>,QList<QString>, QList<QString>)),
                 this, SLOT(dialogueFinished(QList<QString>, QList<QString>, QList<QString>)));
+        connect(dialogueWindow, SIGNAL(clearPlaylist()), this, SLOT(clearPlaylist()));
     }
 
     cancel();
@@ -1512,4 +1513,11 @@ void MainWindow::dialogueFinished(QList<QString> voices, QList<QString> texts, Q
         addToPlaylist(filenames.at(i), 0, 0, 0);
         ui->textEdit->append(voices.at(i) + ": \"" + texts.at(i) + "\"");
     }
+}
+
+void MainWindow::clearPlaylist()
+{
+    player->stop();
+    playlist->clear();
+    qDebug() << "Playlist cleared";
 }

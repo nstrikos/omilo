@@ -34,21 +34,23 @@ void DialogueWindow::addWidgets(QString voice, QString text, double pause)
         tmpCombo->addItem(speechEngineInfo.installedVoices.at(i).name);
     tmpCombo->setCurrentText(voice);
     //Nice way to set widget name
-    //tmpCombo->setObjectName("combobox"+QString::number(qComboBoxList.count()));
+    tmpCombo->setObjectName("combobox"+QString::number(qComboBoxList.count()));
 
-    QLineEdit *tmpLine = new QLineEdit(this);
-    qLineEditList.push_back(tmpLine);
-    tmpLine->setText(text);
-    //tmpLine->setObjectName("lineedit"+QString::number(qLineEditList.count()));
+    //QLineEdit *tmpLine = new QLineEdit(this);
+    CustomTextEdit *tmpTextEdit = new CustomTextEdit(this);
+    connect(tmpTextEdit, SIGNAL(customTextChanged(QString,QString)), this, SLOT(setSelectedText(QString,QString)));
+    qTextEditList.push_back(tmpTextEdit);
+    tmpTextEdit->appendPlainText(text);
+    tmpTextEdit->setObjectName("textedit"+QString::number(qTextEditList.count()));
 
     QDoubleSpinBox *tmpSpinBox = new QDoubleSpinBox();
     qDoubleSpinBoxList.push_back(tmpSpinBox);
     tmpSpinBox->setValue(pause);
-    //tmpSpinBox->setObjectName("spinbox"+QString::number(qDoubleSpinBoxList.count()));
+    tmpSpinBox->setObjectName("spinbox"+QString::number(qDoubleSpinBoxList.count()));
 
     QHBoxLayout *hBoxLayout = new QHBoxLayout();
     hBoxLayout->addWidget(tmpCombo);
-    hBoxLayout->addWidget(tmpLine);
+    hBoxLayout->addWidget(tmpTextEdit);
     hBoxLayout->addWidget(tmpSpinBox);
 
     ui->VLayout->insertLayout(ui->VLayout->count() - 1, hBoxLayout, 0);
@@ -70,11 +72,11 @@ void DialogueWindow::on_removeButton_clicked()
         ui->VLayout->removeWidget(tmpComboBox);
         delete tmpComboBox;
     }
-    if (!qLineEditList.isEmpty())
+    if (!qTextEditList.isEmpty())
     {
-        QLineEdit *tmpLineEdit = qLineEditList.takeLast();
-        ui->VLayout->removeWidget(tmpLineEdit);
-        delete tmpLineEdit;
+        CustomTextEdit *tmpTextEdit = qTextEditList.takeLast();
+        ui->VLayout->removeWidget(tmpTextEdit);
+        delete tmpTextEdit;
     }
     if (!qDoubleSpinBoxList.isEmpty())
     {
@@ -109,13 +111,13 @@ void DialogueWindow::on_okButton_clicked()
     for (int i = 0; i < qComboBoxList.size(); i++)
     {
         QComboBox *combo = qComboBoxList.at(i);
-        QLineEdit *lineedit = qLineEditList.at(i);
+        CustomTextEdit *textedit = qTextEditList.at(i);
         QDoubleSpinBox *spin = qDoubleSpinBoxList.at(i);
         voices.append(combo->currentText());
-        texts.append(lineedit->text().simplified());
+        texts.append(textedit->document()->toPlainText().simplified());
         filenames.append(wavPrefix + QString::number(i) + ".wav");
         pauses.append(spin->value());
-        qDebug() << combo->currentText() << lineedit->text() << spin->value();
+        qDebug() << combo->currentText() << textedit->document()->toPlainText().simplified() << spin->value();
     }
     speechEngine->setRate(1.0);
     speechEngine->makeDialogue(voices, texts, pauses, filenames);
@@ -166,10 +168,10 @@ void DialogueWindow::saveToFile(QFile &file)
     for (int i = 0; i < qComboBoxList.size(); i++)
     {
         QComboBox *combo = qComboBoxList.at(i);
-        QLineEdit *lineedit = qLineEditList.at(i);
+        QPlainTextEdit *textedit = qTextEditList.at(i);
         QDoubleSpinBox *spin = qDoubleSpinBoxList.at(i);
         out << "(" << combo->currentText() << "#";
-        QString text = lineedit->text().simplified();
+        QString text = textedit->document()->toPlainText().simplified();
         text.replace("#", " ");
         out << text << "#";
         out << QString::number(spin->value()) << ")\n";
@@ -243,11 +245,11 @@ void DialogueWindow::removeAllWidgets()
         ui->VLayout->removeWidget(tmpComboBox);
         delete tmpComboBox;
     }
-    while (!qLineEditList.isEmpty())
+    while (!qTextEditList.isEmpty())
     {
-        QLineEdit *tmpLineEdit = qLineEditList.takeLast();
-        ui->VLayout->removeWidget(tmpLineEdit);
-        delete tmpLineEdit;
+        QPlainTextEdit *tmpTextEdit = qTextEditList.takeLast();
+        ui->VLayout->removeWidget(tmpTextEdit);
+        delete tmpTextEdit;
     }
     while (!qDoubleSpinBoxList.isEmpty())
     {
@@ -264,4 +266,31 @@ void DialogueWindow::clearLists()
     texts.clear();
     filenames.clear();
     pauses.clear();
+}
+
+void DialogueWindow::on_speakButton_clicked()
+{
+    emit clearPlaylist();
+    speechEngine->setRate(1.0);
+    speechEngine->setSpeechVoice(selectedVoice);
+    speechEngine->setSplitMode(false);
+    speechEngine->speakWithoutSplitting(selectedText);
+}
+
+void DialogueWindow::setSelectedText(QString name, QString text)
+{
+    QString selVoice;
+    QString selText = text;
+    QString selName = name;
+    this->selectedText = selText;
+    if (selText.size() > 0)
+        ui->speakButton->setEnabled(true);
+    else
+        ui->speakButton->setEnabled(false);
+    selName.replace("textedit", "");
+    int number = selName.toInt();
+    if (number > 0)
+        selVoice = qComboBoxList.at(number - 1)->currentText();
+    this->selectedVoice = selVoice;
+    qDebug() << selName << selVoice << selText;
 }

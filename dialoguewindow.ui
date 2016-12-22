@@ -24,7 +24,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>458</width>
+        <width>430</width>
         <height>445</height>
        </rect>
       </property>
@@ -81,6 +81,16 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="speakButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Speak selection</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="okButton">
        <property name="text">
         <string>OK</string>
@@ -110,6 +120,7 @@
   <tabstop>removeButton</tabstop>
   <tabstop>loadButton</tabstop>
   <tabstop>saveButton</tabstop>
+  <tabstop>speakButton</tabstop>
   <tabstop>okButton</tabstop>
  </tabstops>
  <resources/>

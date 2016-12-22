@@ -99,6 +99,7 @@ private slots:
     void showNormalAndRaise();
     void showDialogueWindow();
     void dialogueFinished(QList<QString> voices, QList<QString> texts, QList<QString> filenames);
+    void clearPlaylist();
 
 private:
     Ui::MainWindow *ui;
