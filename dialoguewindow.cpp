@@ -13,10 +13,16 @@ DialogueWindow::DialogueWindow(QWidget *parent) :
     ui->removeButton->setEnabled(false);
     ui->saveButton->setEnabled(false);
     ui->okButton->setEnabled(false);
+    ui->exportButton->setEnabled(false);
+
+    displayMessageDialog = NULL;
+    exporting = false;
 }
 
 DialogueWindow::~DialogueWindow()
 {
+    if (displayMessageDialog != NULL)
+        delete displayMessageDialog;
     delete ui;
 }
 
@@ -95,17 +101,20 @@ void DialogueWindow::checkTotalWidgets()
         ui->removeButton->setEnabled(false);
         ui->saveButton->setEnabled(false);
         ui->okButton->setEnabled(false);
+        ui->exportButton->setEnabled(false);
     }
     else if (allCombos.length() > 0)
     {
         ui->removeButton->setEnabled(true);
         ui->saveButton->setEnabled(true);
         ui->okButton->setEnabled(true);
+        ui->exportButton->setEnabled(true);
     }
 }
 
 void DialogueWindow::on_okButton_clicked()
 {
+    exporting = false;
     clearLists();
 
     for (int i = 0; i < qComboBoxList.size(); i++)
@@ -293,4 +302,49 @@ void DialogueWindow::setSelectedText(QString name, QString text)
         selVoice = qComboBoxList.at(number - 1)->currentText();
     this->selectedVoice = selVoice;
     qDebug() << selName << selVoice << selText;
+}
+
+void DialogueWindow::on_exportButton_clicked()
+{
+
+    QString filename = QFileDialog::getSaveFileName(this);
+    if (!filename.isEmpty())
+    {
+        if (!filename.endsWith(".wav"))
+        {
+            if (displayMessageDialog == NULL)
+            {
+                displayMessageDialog = new DisplayMessageDialog();
+            }
+            this->hide();
+            displayMessageDialog->setText(tr("Not a wav file.\n .wav will be added."));
+            displayMessageDialog->show();
+            displayMessageDialog->raise();
+            displayMessageDialog->exec();
+            filename += ".wav";
+        }
+
+        this->exportFilename = filename;
+
+        exporting = true;
+
+        //This is duplicate from on_okButton_clicked method
+        //Needs refactoring
+        clearLists();
+
+        for (int i = 0; i < qComboBoxList.size(); i++)
+        {
+            QComboBox *combo = qComboBoxList.at(i);
+            CustomTextEdit *textedit = qTextEditList.at(i);
+            QDoubleSpinBox *spin = qDoubleSpinBoxList.at(i);
+            voices.append(combo->currentText());
+            texts.append(textedit->document()->toPlainText().simplified());
+            filenames.append(wavPrefix + QString::number(i) + ".wav");
+            pauses.append(spin->value());
+            qDebug() << combo->currentText() << textedit->document()->toPlainText().simplified() << spin->value();
+        }
+        speechEngine->setRate(1.0);
+        speechEngine->makeDialogue(voices, texts, pauses, filenames);
+        this->hide();
+    }
 }

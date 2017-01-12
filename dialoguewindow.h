@@ -7,6 +7,7 @@
 #include <QComboBox>
 #include <QDoubleSpinBox>
 #include "customtextedit.h"
+#include "displaymessagedialog.h"
 
 namespace Ui {
 class DialogueWindow;
@@ -19,6 +20,8 @@ class DialogueWindow : public QDialog
 public:
     explicit DialogueWindow(QWidget *parent = 0);
     void setSpeechEngine(SpeechEngine *speechEngine);
+    bool exporting;
+    QString exportFilename;
     ~DialogueWindow();
 
 private slots:
@@ -29,6 +32,7 @@ private slots:
     void on_saveButton_clicked();
     void setSelectedText(QString name, QString text);
     void on_speakButton_clicked();
+    void on_exportButton_clicked();
 
 signals:
     void startDialogue();
@@ -53,6 +57,7 @@ private:
     QList<QComboBox*> qComboBoxList;
     QList<QDoubleSpinBox*> qDoubleSpinBoxList;
     QString selectedVoice, selectedText;
+    DisplayMessageDialog *displayMessageDialog;
 };
 
 #endif // DIALOGUEWINDOW_H

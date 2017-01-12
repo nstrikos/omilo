@@ -56,9 +56,14 @@ MainWindow::~MainWindow()
     if (dialogueWindow != NULL)
         delete dialogueWindow;
 
-
     if (startUpThread != NULL)
         delete startUpThread;
+
+    if (soundFilesMerger != NULL)
+        delete soundFilesMerger;
+
+    if (exportDialogueList != NULL)
+        delete exportDialogueList;
 
     delete engineInfo;
     delete player;
@@ -175,6 +180,9 @@ void MainWindow::initVariables()
     qDebug() << "Setup icons...";
     speakIcon = QIcon(":/images/speak.png");
     cancelIcon = QIcon(":images/cancel.png");
+
+    soundFilesMerger = NULL;
+    exportDialogueList = NULL;
 
     qDebug() << "All application variables are initialized.";
 }
@@ -1152,7 +1160,7 @@ void MainWindow::displayAboutMessage()
     {
         displayMessageDialog = new DisplayMessageDialog(this);
     }
-    displayMessageDialog->setText(tr("Omilo - Text To Speech\nVersion 0.3\nDeveloper : nstrikos@yahoo.gr\nWebpage : http://anoikto.webs.com/omilo\nGerman translation : Heinrich Schwietering\nheinrich.schwietering@gmx.de\nIcons: Gartoon Redux 1.11 "));
+    displayMessageDialog->setText(tr("Omilo - Text To Speech\nVersion 0.4\nDeveloper : nstrikos@yahoo.gr\nWebpage : http://anoikto.webs.com/omilo\nGerman translation : Heinrich Schwietering\nheinrich.schwietering@gmx.de\nIcons: Gartoon Redux 1.11 "));
     displayMessageDialog->show();
     displayMessageDialog->setModal(true);
     displayMessageDialog->exec();
@@ -1498,20 +1506,46 @@ void MainWindow::showDialogueWindow()
     }
 
     cancel();
-    //setVariablesBeforeSpeaking();
     dialogueWindow->setModal(true);
     dialogueWindow->show();
 }
 
 void MainWindow::dialogueFinished(QList<QString> voices, QList<QString> texts, QList<QString> filenames)
 {
-    ui->textEdit->clear();
-    player->stop();
-    playlist->clear();
-    for (int i = 0; i < filenames.size(); i++)
+    if (dialogueWindow != NULL)
     {
-        addToPlaylist(filenames.at(i), 0, 0, 0);
-        ui->textEdit->append(voices.at(i) + ": \"" + texts.at(i) + "\"");
+        if (dialogueWindow->exporting == false)
+        {
+            ui->textEdit->clear();
+            player->stop();
+            playlist->clear();
+            for (int i = 0; i < filenames.size(); i++)
+            {
+                addToPlaylist(filenames.at(i), 0, 0, 0);
+                ui->textEdit->append(voices.at(i) + ": \"" + texts.at(i) + "\"");
+            }
+        }
+        else
+        {
+            if (exportDialogueList == NULL)
+                exportDialogueList = new QQueue<TextProcessItem>;
+            if (exportDialogueList->size() > 0)
+                exportDialogueList->clear();
+            for (int i = 0; i < filenames.length(); i++)
+            {
+                TextProcessItem item;
+                item.id = i;
+                item.text = texts.at(i);
+                item.filename = filenames.at(i);
+                item.begin = 0;
+                item.end = 0;
+                exportDialogueList->enqueue(item);
+            }
+
+            if (soundFilesMerger == NULL)
+                soundFilesMerger = new SoundFilesMerger();
+            soundFilesMerger->mergeSoundFiles(exportDialogueList, dialogueWindow->exportFilename);
+        }
     }
 }
 

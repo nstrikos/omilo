@@ -17,6 +17,9 @@
 #include "playlistmodel.h"
 #include "startupthread.h"
 
+#include "textprocess.h"
+#include "soundfilesmerger.h"
+
 #ifdef Q_OS_WIN
 #include "hotkeythreadforwindows.h"
 #else
@@ -252,6 +255,9 @@ private:
     QString customFestivalCommandArguments;
     int maxId;
     int currentId;
+
+    SoundFilesMerger *soundFilesMerger;
+    QQueue<TextProcessItem> *exportDialogueList;
 };
 
 #endif // MAINWINDOW_H

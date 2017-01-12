@@ -24,7 +24,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>430</width>
+        <width>448</width>
         <height>445</height>
        </rect>
       </property>
@@ -91,6 +91,16 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="exportButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Export</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="okButton">
        <property name="text">
         <string>OK</string>
@@ -121,6 +131,7 @@
   <tabstop>loadButton</tabstop>
   <tabstop>saveButton</tabstop>
   <tabstop>speakButton</tabstop>
+  <tabstop>exportButton</tabstop>
   <tabstop>okButton</tabstop>
  </tabstops>
  <resources/>
