@@ -12,6 +12,13 @@
 #include <QScrollBar>
 #include <QDesktopServices>
 
+//Workaround for ubuntu unity bug QTBUG-58723
+#ifdef Q_OS_LINUX
+#include <QDBusMessage>
+#include <QDBusObjectPath>
+#include <QDBusConnection>
+#endif
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -1484,6 +1491,21 @@ void MainWindow::showCustomFestivalDialog()
 
 void MainWindow::showNormalAndRaise()
 {
+    // re-register global D-Bus menu (needed on Ubuntu with Unity)
+    // and https://bugreports.qt.io/browse/QTBUG-58723
+#if defined(Q_OS_LINUX) && ! defined(QT_NO_DBUS)
+    QDBusMessage msg = QDBusMessage::createMethodCall(
+                "com.canonical.AppMenu.Registrar",
+                "/com/canonical/AppMenu/Registrar",
+                "com.canonical.AppMenu.Registrar",
+                "RegisterWindow");
+    QList<QVariant> args;
+    args << QVariant::fromValue(static_cast<uint32_t>(winId()))
+         << QVariant::fromValue(QDBusObjectPath("/MenuBar/1"));
+    msg.setArguments(args);
+    QDBusConnection::sessionBus().send(msg);
+#endif
+
     Qt::WindowFlags eFlags = this->windowFlags();
     eFlags |= Qt::WindowStaysOnTopHint;
     this->setWindowFlags(eFlags);

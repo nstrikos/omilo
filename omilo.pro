@@ -104,6 +104,7 @@ unix: {
     HEADERS -= maryserverforwindows.h
     HEADERS -= hotkeythreadforwindows.h
     LIBS += -lX11
+    QT += dbus
 }
 
 win32:RC_ICONS += omilo.ico
