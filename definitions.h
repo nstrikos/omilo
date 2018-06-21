@@ -56,6 +56,7 @@
 #define PoppyMary "Mary Poppy"
 #define PrudenceMary "Mary Prudence"
 #define SpikeMary "Mary Spike"
+#define CoriMary "Mary Cori"
 
 #define defDurationStretch 100
 #define defTargetMean 100

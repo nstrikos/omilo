@@ -330,6 +330,8 @@ void SpeechEngineInfo::update()
         installedVoices.push_back(voiceToAdd);
         voiceToAdd.name = SpikeMary;
         installedVoices.push_back(voiceToAdd);
+        voiceToAdd.name = CoriMary;
+        installedVoices.push_back(voiceToAdd);
     }
 }
 

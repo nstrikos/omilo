@@ -247,4 +247,20 @@ class SpikeMaryVoice : public MaryVoice
     }
 };
 
+class CoriMaryVoice : public MaryVoice
+{
+    QString getName()
+    {
+        return CoriMary;
+    }
+    QString getLanguage()
+    {
+        return QLocale::languageToString(QLocale::English);
+    }
+    QString voiceCommand()
+    {
+        return "LOCALE=en_US&VOICE=cori-2740-hsmm";
+    }
+};
+
 #endif // MARYVOICE_H

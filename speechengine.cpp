@@ -239,7 +239,7 @@ void SpeechEngine::voiceFileCreated(QString filename)
 #ifdef Q_OS_WIN
             QString command = soxCommand +  " " + tempFile + " " + filename + " tempo " + QString::number(rate);
 #else
-            QString command = soxCommand +  " " + tempFile + " " + filename + " tempo " + QString::number(rate);
+            QString command = soxCommand +  " " + tempFile + " " + filename + " speed " + QString::number(rate);
 #endif
             soxProcess.start(command);
             soxProcess.waitForFinished();
@@ -379,6 +379,8 @@ void SpeechEngine::setSpeechVoice(QString sVoice)
         createVoice(new PrudenceMaryVoice());
     else if (sVoice == SpikeMary)
         createVoice(new SpikeMaryVoice());
+    else if (sVoice == CoriMary)
+        createVoice(new CoriMaryVoice());
     else
         createVoice(new KalDiphoneFestivalVoice());
     this->voice = sVoice;
