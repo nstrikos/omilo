@@ -231,15 +231,19 @@ void SpeechEngine::voiceFileCreated(QString filename)
     if (filename != "/tmp/omilo.wav") // omilo.wav is used for checking mary server
     {
 
-        if (rate != 1)
+        double tmpRate = rate;
+        if (speechVoice->getName() == GreekHercules)
+            tmpRate = rate - 0.1;
+
+        if (tmpRate != 1)
         {
             QFile::remove(tempFile);
             QFile::rename(filename, tempFile);
             //QString command = "sox /tmp/omilo-tmp.wav " + filename + " tempo " + QString::number(rate);
 #ifdef Q_OS_WIN
-            QString command = soxCommand +  " " + tempFile + " " + filename + " tempo " + QString::number(rate);
+            QString command = soxCommand +  " " + tempFile + " " + filename + " speed " + QString::number(tmpRate);
 #else
-            QString command = soxCommand +  " " + tempFile + " " + filename + " speed " + QString::number(rate);
+            QString command = soxCommand +  " " + tempFile + " " + filename + " speed " + QString::number(tmpRate);
 #endif
             soxProcess.start(command);
             soxProcess.waitForFinished();

@@ -152,6 +152,7 @@ private:
     QAction *selectAllAction;
     QAction *speakAction;
     QAction *cancelAction;
+    QAction *trayCancelAction;
     QAction *voiceOptionAction;
     QAction *showDialogueAction;
     QAction *installVoicesAction;
@@ -159,6 +160,8 @@ private:
     QAction *helpAction;
     QAction *aboutAction;
     QAction *playAction;
+    QAction *trayPlayAction;
+    QAction *hotKeyPlayAction;
     QAction *stopAction;
     QAction *rateUpAction;
     QAction *rateDownAction;

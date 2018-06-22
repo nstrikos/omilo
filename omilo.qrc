@@ -7,5 +7,8 @@
         <file>images/pause.png</file>
         <file>images/cancel.png</file>
         <file>images/audio-input-splash.png</file>
+        <file>images/restore.png</file>
+        <file>images/close.png</file>
+        <file>images/speak-highlighted-text.png</file>
     </qresource>
 </RCC>

@@ -30,7 +30,7 @@ void HotKeyThread::run()
     char text[255];
 
     unsigned int    modifiers = 0;
-    unsigned int    modifiers2 = ControlMask;
+    //unsigned int    modifiers2 = ControlMask;
     int             keycode         = XKeysymToKeycode(dpy, XK_F10);
     int             keycode2        = XKeysymToKeycode(dpy, XK_F11);
     int             keycode3        = XKeysymToKeycode(dpy, XK_F12);

@@ -2,6 +2,7 @@
 
 CustomTextEdit::CustomTextEdit(QWidget *parent)
 {
+    Q_UNUSED(parent)
     connect(this, SIGNAL(selectionChanged()), this, SLOT(handleTextChanged()));
 }
 

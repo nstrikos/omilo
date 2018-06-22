@@ -40,7 +40,7 @@ MainWindow::~MainWindow()
 
     hotKeyThread.terminate();
 
-    settingsWriter.write(pos(), size(), recentFiles, engineVoice, useTrayIcon, splitMode, customFestivalCommand, customFestivalCommandArguments);
+    settingsWriter.write(pos(), size(), recentFiles, engineVoice, controls->getPlaybackRate(), useTrayIcon, splitMode, customFestivalCommand, customFestivalCommandArguments);
 
     if (editorVoiceOptionsDialog != NULL)
         delete editorVoiceOptionsDialog;
@@ -139,7 +139,7 @@ void MainWindow::initVariables()
 
 
     setCurrentFile("");
-    rate = 1.0;
+    //rate = 1.0;
 
     //Initialize forms
 
@@ -213,6 +213,8 @@ void MainWindow::setupPlayer()
 
     controls = new PlayerControls(this);
     controls->setState(player->state());
+    qDebug() << "Set rate to: " << rate;
+    controls->setPlaybackRate(rate);
 
     connect(player, SIGNAL(durationChanged(qint64)), SLOT(durationChanged(qint64)));
     connect(player, SIGNAL(positionChanged(qint64)), SLOT(positionChanged(qint64)));
@@ -366,12 +368,23 @@ void MainWindow::createActions()
     speakSelectedTextAction->setShortcut(tr("F7"));
     connect(speakSelectedTextAction, SIGNAL(triggered()), this, SLOT(speakSelectedText()));
 
+    hotKeyPlayAction = new QAction(tr("&Speak selected text"), this);
+    QIcon hotKeyPlayActionIcon = QIcon(":/images/speak-highlighted-text.png");
+    hotKeyPlayAction->setIcon(hotKeyPlayActionIcon);
+    //speakAction->setShortcut(tr("F2"));
+    connect(hotKeyPlayAction, SIGNAL(triggered()), this, SLOT(hotKeyPlayPressed()));
+    //ui->speakButton->setIcon(speakIcon);
+
     cancelAction = new QAction(tr("Cance&l"), this);
     cancelAction->setShortcut(tr("F3"));
     QIcon cancelIcon = QIcon(":/images/stop.png");
     cancelAction->setIcon(cancelIcon);
     cancelAction->setEnabled(false);
     connect(cancelAction, SIGNAL(triggered()), this, SLOT(cancel()));
+
+    trayCancelAction = new QAction(tr("Stop"), this);
+    trayCancelAction->setIcon(QIcon(":/images/stop.png"));
+    connect(trayCancelAction, SIGNAL(triggered()), this, SLOT(cancel()));
 
     showDialogueAction = new QAction(tr("&Dialogue"), this);
     showDialogueAction->setShortcut(tr("Ctrl+D"));
@@ -425,6 +438,9 @@ void MainWindow::createActions()
     playAction->setShortcut(tr("Ctrl+3"));
     playAction->setIcon(QIcon(":/images/play.png"));
     connect(playAction, SIGNAL(triggered()), this, SLOT(play()));
+    trayPlayAction = new QAction(tr("Play/Pause"), this);
+    trayPlayAction->setIcon(QIcon(":/images/play.png"));
+    connect(trayPlayAction, SIGNAL(triggered()), this, SLOT(play()));
     rateDownAction = new QAction(tr("Decrease rate"), this);
     rateDownAction->setShortcut(tr("Ctrl+8"));
     connect(rateDownAction, SIGNAL(triggered()), this, SLOT(rateDown()));
@@ -435,6 +451,8 @@ void MainWindow::createActions()
     showFliteSettingsAction->setShortcut(tr("F6"));
     connect(showFliteSettingsAction, SIGNAL(triggered()), this, SLOT(showFliteDialog()));
     restoreAction = new QAction(tr("&Restore"), this);
+    QIcon restoreActionIcon = QIcon(":/images/restore.png");
+    restoreAction->setIcon(restoreActionIcon);
     connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormalAndRaise()));
     showWindowAction = new QAction(tr("&Show window"), this);
     connect(showWindowAction, SIGNAL(triggered()), this, SLOT(showNormalAndRaise()));
@@ -445,6 +463,8 @@ void MainWindow::createActions()
 #endif
     quitAction = new QAction(tr("&Quit"), this);
     quitAction->setShortcut(tr("Ctrl+Q"));
+    QIcon quitActionIcon = QIcon(":/images/close.png");
+    quitAction->setIcon(quitActionIcon);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     cutAction->setEnabled(false);
     copyAction->setEnabled(false);
@@ -541,6 +561,10 @@ void MainWindow::createTrayIcon()
 
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(restoreAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(hotKeyPlayAction);
+    trayIconMenu->addAction(trayPlayAction);
+    trayIconMenu->addAction(trayCancelAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
 
@@ -778,6 +802,9 @@ void MainWindow::readSettings()
     if (engineVoice == "" )
         engineVoice = defaultVoice;
 
+    rate = settings.value("Rate").toDouble();
+    if (rate < 0.1 || rate > 2.0)
+        rate = 1.0;
     useTrayIcon = settings.value("useTrayIcon").toBool();
     toggleUseTrayIconAction->setChecked(useTrayIcon);
     splitMode = settings.value("SplitMode").toBool();

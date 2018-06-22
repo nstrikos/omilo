@@ -9,7 +9,7 @@
 class SettingsWriter
 {
 public:
-    void write(QPoint pos, QSize size, QStringList recentFiles, QString engineVoice,
+    void write(QPoint pos, QSize size, QStringList recentFiles, QString engineVoice, double rate,
                                bool useTrayIcon, bool splitMode, QString customFestivalCommand, QString customFestivalCommandArguments);
 
 };
