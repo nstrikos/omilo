@@ -38,9 +38,11 @@ MainWindow::~MainWindow()
 
     qDebug() << "Terminate hot keys.";
 
+    clipboard = NULL;
+
     hotKeyThread.terminate();
 
-    settingsWriter.write(pos(), size(), recentFiles, engineVoice, controls->getPlaybackRate(), useTrayIcon, splitMode, customFestivalCommand, customFestivalCommandArguments);
+    settingsWriter.write(pos(), size(), recentFiles, engineVoice, controls->getPlaybackRate(), useTrayIcon, splitMode, useClipboard, customFestivalCommand, customFestivalCommandArguments);
 
     if (editorVoiceOptionsDialog != NULL)
         delete editorVoiceOptionsDialog;
@@ -190,6 +192,7 @@ void MainWindow::initVariables()
 
     soundFilesMerger = NULL;
     exportDialogueList = NULL;
+    clipboard = QApplication::clipboard();
 
     qDebug() << "All application variables are initialized.";
 }
@@ -285,6 +288,7 @@ void MainWindow::connectSignalsToSlots()
     connect(&hotKeyThread, SIGNAL(showWindowPressed()), this, SLOT(showNormalAndRaise()));
     connect(&hotKeyThread, SIGNAL(pausePressed()), this, SLOT(play()));
     connect(playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(highlightSelection()));
+    connect(clipboard, SIGNAL(dataChanged()), this, SLOT(handleClipboard()));
     qDebug() << "All Qt signals are connected.";
 }
 
@@ -374,6 +378,11 @@ void MainWindow::createActions()
     //speakAction->setShortcut(tr("F2"));
     connect(hotKeyPlayAction, SIGNAL(triggered()), this, SLOT(hotKeyPlayPressed()));
     //ui->speakButton->setIcon(speakIcon);
+
+    handleClipboardAction = new QAction(tr("&Activate clipboard"), this);
+    handleClipboardAction->setCheckable(true);
+    //newAction->setShortcut(QKeySequence::New);
+    connect(handleClipboardAction, SIGNAL(triggered()), this, SLOT(setUseClipboard()));
 
     cancelAction = new QAction(tr("Cance&l"), this);
     cancelAction->setShortcut(tr("F3"));
@@ -532,6 +541,7 @@ void MainWindow::createMenus()
     speakMenu->addAction(showDialogueAction);
 #endif
     speakMenu->addAction(enableSplitModeAction);
+    speakMenu->addAction(handleClipboardAction);
 
     optionsMenu = menuBar()->addMenu(tr("&Options"));
     optionsMenu->addAction(showFliteSettingsAction);
@@ -563,6 +573,8 @@ void MainWindow::createTrayIcon()
     trayIconMenu->addAction(restoreAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(hotKeyPlayAction);
+    trayIconMenu->addAction(handleClipboardAction);
+    trayIconMenu->addSeparator();
     trayIconMenu->addAction(trayPlayAction);
     trayIconMenu->addAction(trayCancelAction);
     trayIconMenu->addSeparator();
@@ -809,6 +821,8 @@ void MainWindow::readSettings()
     toggleUseTrayIconAction->setChecked(useTrayIcon);
     splitMode = settings.value("SplitMode").toBool();
     enableSplitModeAction->setChecked(splitMode);
+    useClipboard = settings.value("useClipboard").toBool();
+    handleClipboardAction->setChecked(useClipboard);
     customFestivalCommand = settings.value("customFestivalCommand").toString();
     if (customFestivalCommand == "")
         customFestivalCommand = defaultFestivalCommand;
@@ -1603,4 +1617,27 @@ void MainWindow::clearPlaylist()
     player->stop();
     playlist->clear();
     qDebug() << "Playlist cleared";
+}
+
+void MainWindow::handleClipboard()
+{
+    if (useClipboard == true) {
+        ui->textEdit->clear();
+#ifdef Q_OS_WIN
+        QString text = clipboard->text();
+#else
+        QString text = clipboard->text();
+#endif
+        ui->textEdit->append(text);
+        cursorPosition = 0;
+        speakText(text);
+    }
+}
+
+void MainWindow::setUseClipboard()
+{
+    if (handleClipboardAction->isChecked())
+        useClipboard = true;
+    else
+        useClipboard = false;
 }

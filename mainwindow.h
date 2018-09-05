@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QClipboard>
 #include <QSystemTrayIcon>
+#include <QClipboard>
 #include "speechengine.h"
 #include "editorvoiceoptionsdialog.h"
 #include "installvoicesdialog.h"
@@ -103,6 +104,8 @@ private slots:
     void showDialogueWindow();
     void dialogueFinished(QList<QString> voices, QList<QString> texts, QList<QString> filenames);
     void clearPlaylist();
+    void handleClipboard();
+    void setUseClipboard();
 
 private:
     Ui::MainWindow *ui;
@@ -162,6 +165,7 @@ private:
     QAction *playAction;
     QAction *trayPlayAction;
     QAction *hotKeyPlayAction;
+    QAction *handleClipboardAction;
     QAction *stopAction;
     QAction *rateUpAction;
     QAction *rateDownAction;
@@ -212,6 +216,7 @@ private:
 
     HotKeyThread hotKeyThread;
     QClipboard *clipboard;
+    bool useClipboard;
 
     //Player related variables
     PlayerControls *controls;
