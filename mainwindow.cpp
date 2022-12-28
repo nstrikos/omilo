@@ -42,7 +42,7 @@ MainWindow::~MainWindow()
 
     hotKeyThread.terminate();
 
-    settingsWriter.write(pos(), size(), recentFiles, engineVoice, controls->getPlaybackRate(), useTrayIcon, splitMode, useClipboard, customFestivalCommand, customFestivalCommandArguments);
+    settingsWriter.write(pos(), size(), recentFiles, engineVoice, controls->getPlaybackRate(), useTrayIcon, splitMode, useClipboard, customFestivalCommand, customFestivalCommandArguments, appFont, docFont);
 
     if (editorVoiceOptionsDialog != NULL)
         delete editorVoiceOptionsDialog;
@@ -411,6 +411,9 @@ void MainWindow::createActions()
     showFontSettingsDialogAction->setShortcut(tr("Ctrl+F"));
     connect(showFontSettingsDialogAction, SIGNAL(triggered()), this, SLOT(showFontSettingsDialog()));
 
+    showAppSettingsAction = new QAction(tr("Aplication settings..."), this);
+    connect(showAppSettingsAction, SIGNAL(triggered()), this, SLOT(showAppSettingsDialog()));
+
     customFestivalAction = new QAction(tr("Custom festival command settings..."), this);
     customFestivalAction->setShortcut(tr("Ctrl+U"));
     connect(customFestivalAction, SIGNAL(triggered()), this, SLOT(showCustomFestivalDialog()));
@@ -545,6 +548,7 @@ void MainWindow::createMenus()
 
     optionsMenu = menuBar()->addMenu(tr("&Options"));
     optionsMenu->addAction(showFliteSettingsAction);
+    optionsMenu->addAction(showAppSettingsAction);
 #ifndef Q_OS_WIN
     optionsMenu->addAction(installVoicesAction);
     optionsMenu->addAction(customFestivalAction);
@@ -829,6 +833,21 @@ void MainWindow::readSettings()
     customFestivalCommandArguments = settings.value("customFestivalCommandArguments").toString();
     if (customFestivalCommandArguments == "")
         customFestivalCommandArguments = defaultFestivalCommandArguments;
+
+    appFontFamily = settings.value("fontFamily", QString()).toString();
+    appFontSize = settings.value("fontSize", 12).toInt();
+    appFont.setFamily(appFontFamily);
+    appFont.setPointSize(appFontSize);
+
+    QApplication::setFont(appFont);
+
+    docFontFamily = settings.value("docfontFamily", QString()).toString();
+    docFontSize = settings.value("docfontSize", 12).toInt();
+    docBold = settings.value("docBold", false).toBool();
+    docFont.setFamily(docFontFamily);
+    docFont.setPointSize(docFontSize);
+    docFont.setBold(docBold);
+    ui->textEdit->setFont(docFont);
 
     qDebug() << "Reading user settings completed.";
 }
@@ -1425,16 +1444,40 @@ void MainWindow::showFontSettingsDialog()
         fontSettingsDialog = new FontSettingsDialog();
     }
     fontSettingsDialog->setModal(true);
+    fontSettingsDialog->setFont(docFont);
+    fontSettingsDialog->setPointSize(docFontSize);
 
     if (fontSettingsDialog->exec())
     {
-        QFont font = fontSettingsDialog->getFont();
-        font.setPointSize(fontSettingsDialog->getPointSize());
-        font.setBold(boldAction->isChecked());
-        ui->textEdit->setFont(font);
-        qDebug() << "Font family: " << font.family();
-        qDebug() << "Point size: " << font.pointSize();
+        docFont = fontSettingsDialog->getFont();
+        docFontSize = fontSettingsDialog->getPointSize();
+        docFont.setPointSize(docFontSize);
+        docFont.setBold(boldAction->isChecked());
+        ui->textEdit->setFont(docFont);
+        qDebug() << "Font family: " << docFont.family();
+        qDebug() << "Point size: " << docFont.pointSize();
         qDebug() << "Bold: " << boldAction->isChecked();
+    }
+}
+
+void MainWindow::showAppSettingsDialog()
+{
+    if (fontSettingsDialog == NULL)
+    {
+        qDebug() << "Font settings dialog created...";
+        fontSettingsDialog = new FontSettingsDialog();
+    }
+    fontSettingsDialog->setModal(true);
+    fontSettingsDialog->setFont(appFont);
+    fontSettingsDialog->setPointSize(appFontSize);
+
+    if (fontSettingsDialog->exec())
+    {
+        appFont = fontSettingsDialog->getFont();
+        appFontSize = fontSettingsDialog->getPointSize();
+        appFont.setPointSize(appFontSize);
+        appFont.setBold(boldAction->isChecked());
+        QApplication::setFont(appFont);
     }
 }
 

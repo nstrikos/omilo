@@ -15,7 +15,9 @@ public:
     explicit FontSettingsDialog(QWidget *parent = 0);
     ~FontSettingsDialog();
     QFont getFont();
+    void setFont(QFont font);
     unsigned int getPointSize();
+    void setPointSize(int size);
 
 private slots:
     void okButtonClicked();

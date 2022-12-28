@@ -89,6 +89,7 @@ private slots:
     void speakSelectedText();
     void invertPalette();
     void showFontSettingsDialog();
+    void showAppSettingsDialog();
     void setBold();
     void updateControlsWhenEngineIsIdle();
     void enableSplitMode();
@@ -172,6 +173,7 @@ private:
     QAction *showFliteSettingsAction;
     QAction *speakSelectedTextAction;
     QAction *showFontSettingsDialogAction;
+    QAction *showAppSettingsAction;
     QAction *boldAction;
     QAction *invertColorsAction;
     QAction *enableSplitModeAction;
@@ -266,6 +268,11 @@ private:
 
     SoundFilesMerger *soundFilesMerger;
     QQueue<TextProcessItem> *exportDialogueList;
+
+    QFont appFont, docFont;
+    QString appFontFamily, docFontFamily;
+    int appFontSize, docFontSize;
+    bool docBold;
 };
 
 #endif // MAINWINDOW_H

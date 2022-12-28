@@ -39,7 +39,17 @@ QFont FontSettingsDialog::getFont()
     return font;
 }
 
+void FontSettingsDialog::setFont(QFont font)
+{
+    ui->fontComboBox->setCurrentFont(font);
+}
+
 unsigned int FontSettingsDialog::getPointSize()
 {
     return pointSize;
+}
+
+void FontSettingsDialog::setPointSize(int size)
+{
+    ui->spinBox->setValue(size);
 }

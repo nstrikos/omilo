@@ -1,8 +1,10 @@
 #include "settingswriter.h"
+#include <QFont>
 #include <QDebug>
 
 void SettingsWriter::write(QPoint pos, QSize size, QStringList recentFiles, QString engineVoice, double rate,
-                           bool useTrayIcon, bool splitMode, bool useClipboard, QString customFestivalCommand, QString customFestivalCommandArguments)
+                           bool useTrayIcon, bool splitMode, bool useClipboard, QString customFestivalCommand, QString customFestivalCommandArguments,
+                           QFont appFont, QFont docFont)
 {
     qDebug() << "Writing user settings...";
     QSettings settings("Omilo-qt5", "Omilo-qt5");
@@ -16,6 +18,11 @@ void SettingsWriter::write(QPoint pos, QSize size, QStringList recentFiles, QStr
     settings.setValue("useClipboard", useClipboard);
     settings.setValue("customFestivalCommand", customFestivalCommand);
     settings.setValue("customFestivalCommandArguments", customFestivalCommandArguments);
+    settings.setValue("fontFamily", appFont.family());
+    settings.setValue("fontSize", appFont.pointSize());
+    settings.setValue("docfontFamily", docFont.family());
+    settings.setValue("docfontSize", docFont.pointSize());
+    settings.setValue("docBold", docFont.bold());
     qDebug() << "Writing user settings completed.";
 }
 
