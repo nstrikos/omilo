@@ -273,6 +273,7 @@ private:
     QString appFontFamily, docFontFamily;
     int appFontSize, docFontSize;
     bool docBold;
+    bool trayIsSupported;
 };
 
 #endif // MAINWINDOW_H

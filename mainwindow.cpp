@@ -26,9 +26,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //Is it necessary to set fonts?
-    //QFont font("Liberation Sans", 12);
-    //QApplication::setFont(font);
+    //    QFont font("Liberation Sans", 12);
+    //    QApplication::setFont(font);
 
+    trayIsSupported = true;
+    if (!QSystemTrayIcon::isSystemTrayAvailable())
+        trayIsSupported = false;
     initFunctions();
 }
 
@@ -123,7 +126,8 @@ void MainWindow::initFunctions()
     initVariables();
 
     //Create tray icon
-    createTrayIcon();
+    if (trayIsSupported)
+        createTrayIcon();
 
     setupPlayer();
     setupLayout();
@@ -193,6 +197,8 @@ void MainWindow::initVariables()
     soundFilesMerger = NULL;
     exportDialogueList = NULL;
     clipboard = QApplication::clipboard();
+
+    trayIconMenu = NULL;
 
     qDebug() << "All application variables are initialized.";
 }
@@ -433,10 +439,12 @@ void MainWindow::createActions()
     enableSplitModeAction->setCheckable(true);
     connect(enableSplitModeAction, SIGNAL(triggered()), this, SLOT(enableSplitMode()));
 
-    toggleUseTrayIconAction = new QAction(tr("Show icon in system tray"), this);
-    toggleUseTrayIconAction->setShortcut(tr("Ctrl+T"));
-    toggleUseTrayIconAction->setCheckable(true);
-    connect(toggleUseTrayIconAction, SIGNAL(triggered()), this, SLOT(toggleUseTrayIcon()));
+    if (trayIsSupported) {
+        toggleUseTrayIconAction = new QAction(tr("Show icon in system tray"), this);
+        toggleUseTrayIconAction->setShortcut(tr("Ctrl+T"));
+        toggleUseTrayIconAction->setCheckable(true);
+        connect(toggleUseTrayIconAction, SIGNAL(triggered()), this, SLOT(toggleUseTrayIcon()));
+    }
 
     speakFromCurrentPositionAction = new QAction(tr("Speak from current position"), this);
     speakFromCurrentPositionAction->setShortcut(tr("Ctrl+F2"));
@@ -558,7 +566,8 @@ void MainWindow::createMenus()
     viewMenu->addAction(showFontSettingsDialogAction);
     viewMenu->addAction(boldAction);
     viewMenu->addAction(invertColorsAction);
-    viewMenu->addAction(toggleUseTrayIconAction);
+    if (trayIsSupported)
+        viewMenu->addAction(toggleUseTrayIconAction);
     viewMenu->addAction(showWindowAction);
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
@@ -819,10 +828,14 @@ void MainWindow::readSettings()
         engineVoice = defaultVoice;
 
     rate = settings.value("Rate").toDouble();
+
     if (rate < 0.1 || rate > 2.0)
         rate = 1.0;
-    useTrayIcon = settings.value("useTrayIcon").toBool();
-    toggleUseTrayIconAction->setChecked(useTrayIcon);
+
+    if (trayIsSupported) {
+        useTrayIcon = settings.value("useTrayIcon", false).toBool();
+        toggleUseTrayIconAction->setChecked(useTrayIcon);
+    }
     splitMode = settings.value("SplitMode").toBool();
     enableSplitModeAction->setChecked(splitMode);
     useClipboard = settings.value("useClipboard").toBool();
@@ -834,12 +847,22 @@ void MainWindow::readSettings()
     if (customFestivalCommandArguments == "")
         customFestivalCommandArguments = defaultFestivalCommandArguments;
 
-    appFontFamily = settings.value("fontFamily", QString()).toString();
+    appFontFamily = settings.value("fontFamily").toString();
     appFontSize = settings.value("fontSize", 12).toInt();
     appFont.setFamily(appFontFamily);
     appFont.setPointSize(appFontSize);
 
-    QApplication::setFont(appFont);
+    qDebug() << appFontFamily;
+
+    if (appFontFamily == "") {
+        int id = QFontDatabase::addApplicationFont("/usr/share/omilo-qt5/LiberationSans-Regular.ttf");
+        QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+        QFont monospace(family);
+        monospace.setPointSize(12);
+        QApplication::setFont(monospace);
+    } else {
+        QApplication::setFont(appFont);
+    }
 
     docFontFamily = settings.value("docfontFamily", QString()).toString();
     docFontSize = settings.value("docfontSize", 12).toInt();
@@ -847,7 +870,17 @@ void MainWindow::readSettings()
     docFont.setFamily(docFontFamily);
     docFont.setPointSize(docFontSize);
     docFont.setBold(docBold);
-    ui->textEdit->setFont(docFont);
+
+    if (docFontFamily == "") {
+        int id = QFontDatabase::addApplicationFont("/usr/share/omilo-qt5/LiberationSans-Regular.ttf");
+        QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+        QFont monospace(family);
+        monospace.setPointSize(12);
+        ui->textEdit->setFont(docFont);
+
+    } else {
+        ui->textEdit->setFont(docFont);
+    }
 
     qDebug() << "Reading user settings completed.";
 }
