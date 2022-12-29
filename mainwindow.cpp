@@ -199,6 +199,7 @@ void MainWindow::initVariables()
     clipboard = QApplication::clipboard();
 
     trayIconMenu = NULL;
+    trayIcon = NULL;
 
     qDebug() << "All application variables are initialized.";
 }
