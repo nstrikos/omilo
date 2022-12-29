@@ -1261,7 +1261,7 @@ void MainWindow::displayAboutMessage()
     {
         displayMessageDialog = new DisplayMessageDialog(this);
     }
-    displayMessageDialog->setText(tr("Omilo - Text To Speech\nVersion 0.4\nDeveloper : nstrikos@yahoo.gr\nWebpage : http://anoikto.webs.com/omilo\nGerman translation : Heinrich Schwietering\nheinrich.schwietering@gmx.de\nIcons: Gartoon Redux 1.11 "));
+    displayMessageDialog->setText(tr("Omilo - Text To Speech\nVersion 0.5\nDeveloper : nstrikos@yahoo.gr\nGerman translation : Heinrich Schwietering\nheinrich.schwietering@gmx.de\nIcons: Gartoon Redux 1.11 "));
     displayMessageDialog->show();
     displayMessageDialog->setModal(true);
     displayMessageDialog->exec();
