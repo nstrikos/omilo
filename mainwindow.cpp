@@ -418,7 +418,7 @@ void MainWindow::createActions()
     showFontSettingsDialogAction->setShortcut(tr("Ctrl+F"));
     connect(showFontSettingsDialogAction, SIGNAL(triggered()), this, SLOT(showFontSettingsDialog()));
 
-    showAppSettingsAction = new QAction(tr("Aplication settings..."), this);
+    showAppSettingsAction = new QAction(tr("Application settings..."), this);
     connect(showAppSettingsAction, SIGNAL(triggered()), this, SLOT(showAppSettingsDialog()));
 
     customFestivalAction = new QAction(tr("Custom festival command settings..."), this);
