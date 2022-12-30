@@ -18,8 +18,10 @@ void SettingsWriter::write(QPoint pos, QSize size, QStringList recentFiles, QStr
     settings.setValue("useClipboard", useClipboard);
     settings.setValue("customFestivalCommand", customFestivalCommand);
     settings.setValue("customFestivalCommandArguments", customFestivalCommandArguments);
+#ifndef Q_OS_WIN
     settings.setValue("fontFamily", appFont.family());
     settings.setValue("fontSize", appFont.pointSize());
+#endif
     settings.setValue("docfontFamily", docFont.family());
     settings.setValue("docfontSize", docFont.pointSize());
     settings.setValue("docBold", docFont.bold());

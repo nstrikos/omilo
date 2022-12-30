@@ -557,12 +557,11 @@ void MainWindow::createMenus()
 
     optionsMenu = menuBar()->addMenu(tr("&Options"));
     optionsMenu->addAction(showFliteSettingsAction);
-    optionsMenu->addAction(showAppSettingsAction);
 #ifndef Q_OS_WIN
+    optionsMenu->addAction(showAppSettingsAction);
     optionsMenu->addAction(installVoicesAction);
     optionsMenu->addAction(customFestivalAction);
 #endif
-
     viewMenu = menuBar()->addMenu(tr("&View"));
     viewMenu->addAction(showFontSettingsDialogAction);
     viewMenu->addAction(boldAction);
@@ -849,12 +848,10 @@ void MainWindow::readSettings()
         customFestivalCommandArguments = defaultFestivalCommandArguments;
 
     appFontFamily = settings.value("fontFamily").toString();
+#ifndef Q_OS_WIN
     appFontSize = settings.value("fontSize", 12).toInt();
     appFont.setFamily(appFontFamily);
     appFont.setPointSize(appFontSize);
-
-    qDebug() << appFontFamily;
-
     if (appFontFamily == "") {
         int id = QFontDatabase::addApplicationFont("/usr/share/omilo-qt5/LiberationSans-Regular.ttf");
         QString family = QFontDatabase::applicationFontFamilies(id).at(0);
@@ -864,7 +861,7 @@ void MainWindow::readSettings()
     } else {
         QApplication::setFont(appFont);
     }
-
+#endif
     docFontFamily = settings.value("docfontFamily", QString()).toString();
     docFontSize = settings.value("docfontSize", 12).toInt();
     docBold = settings.value("docBold", false).toBool();
@@ -872,6 +869,9 @@ void MainWindow::readSettings()
     docFont.setPointSize(docFontSize);
     docFont.setBold(docBold);
 
+#ifdef Q_OS_WIN
+    ui->textEdit->setFont(docFont);
+#else
     if (docFontFamily == "") {
         int id = QFontDatabase::addApplicationFont("/usr/share/omilo-qt5/LiberationSans-Regular.ttf");
         QString family = QFontDatabase::applicationFontFamilies(id).at(0);
@@ -882,7 +882,7 @@ void MainWindow::readSettings()
     } else {
         ui->textEdit->setFont(docFont);
     }
-
+#endif
     qDebug() << "Reading user settings completed.";
 }
 
